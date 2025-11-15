@@ -1,0 +1,26 @@
+# Default pipeline hyperparameters
+workflow:
+  output_root: "outputs"
+  sample_rate: 44100
+  beat_duration_seconds: 30
+  beat_preset: "facebook/musicgen-small"
+  target_bpm: 120
+  voice_model_path: "models/neffex_placeholder.wav"
+  rvc_config: "neffex_voice"
+  mixdown_filename: "thread_to_hit.wav"
+
+anthropic:
+  model: "claude-3-haiku-20240307"
+  max_output_tokens: 800
+
+lyrics:
+  temperature: 0.7
+  verse_count: 2
+  hook_count: 1
+
+mixing:
+  vocal_gain_db: -1.0
+  instrumental_gain_db: -3.0
+  limiter_threshold_db: -0.3
+  echo_delay_seconds: 0.25
+  echo_decay: 0.35
