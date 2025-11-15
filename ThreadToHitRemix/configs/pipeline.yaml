@@ -8,6 +8,8 @@ workflow:
   voice_model_path: "models/neffex_placeholder.wav"
   rvc_config: "neffex_voice"
   mixdown_filename: "thread_to_hit.wav"
+  use_rvc: true  # Toggle RVC voice conversion on/off
+  vocal_mode: "rvc"  # Options: raw (no processing), enhanced (enhancer only), rvc (enhancer + RVC)
 
 anthropic:
   model: "claude-3-haiku-20240307"
@@ -24,3 +26,17 @@ mixing:
   limiter_threshold_db: -0.3
   echo_delay_seconds: 0.25
   echo_decay: 0.35
+
+# Vocal processing and enhancement
+vocals:
+  pitch_correction: true  # Enable automatic pitch correction (requires librosa.pyin)
+  target_key: "auto"  # Auto-detect key or specify (e.g., "C", "F#m")
+  rvc_blend: 0.7  # Mix ratio: 0.0 = all enhanced/original, 1.0 = all RVC
+  enhancer:
+    denoise_db: 18  # Spectral noise gate threshold in dB (higher = more aggressive)
+    formant_shift: -1.2  # Semitones to shift formants (negative = darker, positive = brighter) - TODO: not yet implemented
+    doubler_mix: 0.35  # Blend amount for vocal doubler effect (0.0 = off, 1.0 = full)
+
+# Final mastering and loudness normalization
+mastering:
+  target_lufs: -9.5  # Target integrated loudness (LUFS) for streaming platforms (-14 to -9 typical)
