@@ -178,7 +178,7 @@ class VocalEnhancer:
         try:
             mono = librosa.to_mono(audio.T)
 
-            f0, voiced_flag, voiced_probs = librosa.pyin(
+            f0, voiced_flag, _ = librosa.pyin(
                 mono,
                 fmin=librosa.note_to_hz("C2"),
                 fmax=librosa.note_to_hz("C6"),
@@ -186,12 +186,23 @@ class VocalEnhancer:
             )
 
             voiced_pitches = f0[voiced_flag]
+            median_pitch = float(np.median(voiced_pitches)) if len(voiced_pitches) else None
 
-            if len(voiced_pitches) == 0:
+            dominant_pitch = self._dominant_frequency(mono)
+
+            if dominant_pitch is not None:
+                if median_pitch is None:
+                    median_pitch = dominant_pitch
+                else:
+                    ratio = dominant_pitch / max(median_pitch, 1e-6)
+                    if ratio > 1.8 or ratio < 0.55:
+                        median_pitch = dominant_pitch
+                    else:
+                        median_pitch = float((median_pitch + dominant_pitch) / 2.0)
+
+            if median_pitch is None:
                 logger.warning("No pitched content detected")
                 return None, None
-
-            median_pitch = float(np.median(voiced_pitches))
 
             note_number = librosa.hz_to_midi(median_pitch)
             note_name = librosa.midi_to_note(int(round(note_number)))
@@ -204,6 +215,20 @@ class VocalEnhancer:
         except Exception as e:
             logger.warning(f"Pitch detection failed: {e}")
             return None, None
+
+    def _dominant_frequency(self, mono: np.ndarray) -> Optional[float]:
+        """Estimate dominant frequency via FFT peak detection."""
+        try:
+            window = np.hanning(len(mono))
+            spectrum = np.fft.rfft(mono * window)
+            freqs = np.fft.rfftfreq(len(mono), 1 / self.sample_rate)
+            idx = int(np.argmax(np.abs(spectrum)))
+            if idx <= 0 or idx >= len(freqs):
+                return None
+            return float(freqs[idx])
+        except Exception as exc:  # pragma: no cover - defensive fallback
+            logger.debug(f"Dominant frequency estimation failed: {exc}")
+            return None
 
     def _apply_doubler(self, audio: np.ndarray) -> np.ndarray:
         """

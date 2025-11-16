@@ -5,6 +5,32 @@ from pathlib import Path
 from typing import Optional
 
 import torch
+
+
+def _ensure_torch_pytree_shim() -> None:
+    """Bridge missing APIs for older torch builds."""
+
+    try:
+        from torch.utils import _pytree as torch_pytree
+
+        if not hasattr(torch_pytree, "register_pytree_node") and hasattr(
+            torch_pytree, "_register_pytree_node"
+        ):
+
+            def _legacy_wrapper(node_type, flatten_fn, unflatten_fn, **_kwargs):
+                return torch_pytree._register_pytree_node(
+                    node_type,
+                    flatten_fn,
+                    unflatten_fn,
+                )
+
+            torch_pytree.register_pytree_node = _legacy_wrapper
+    except Exception:  # pragma: no cover - best-effort compatibility shim
+        pass
+
+
+_ensure_torch_pytree_shim()
+
 from audiocraft.models import MusicGen
 
 

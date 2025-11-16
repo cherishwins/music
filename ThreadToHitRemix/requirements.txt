@@ -3,8 +3,10 @@ accelerate>=0.32.1
 audiocraft>=1.2.0
 librosa>=0.10.2
 soundfile>=0.12.1
-torch>=2.3.0
-numpy>=1.26.0
+torch==2.1.0
+torchvision==0.16.0
+torchaudio==2.1.0
+numpy>=1.24.0,<2.0.0
 python-dotenv>=1.0.1
 pyyaml>=6.0.1
 requests>=2.32.0

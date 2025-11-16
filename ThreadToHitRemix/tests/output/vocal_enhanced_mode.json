@@ -1,0 +1,13 @@
+{
+  "detected_key": "A",
+  "median_pitch_hz": 440.0,
+  "snr_db": 92.26011049579675,
+  "processing_applied": {
+    "spectral_denoise": true,
+    "highpass_filter": true,
+    "pitch_detection": true,
+    "pitch_correction": false,
+    "formant_shift": false,
+    "vocal_doubler": true
+  }
+}
