@@ -1,20 +1,16 @@
 /**
  * Voice Generation with ElevenLabs
+ * Using direct API calls for reliability
  */
 
-import { ElevenLabsClient } from "elevenlabs";
+const ELEVENLABS_API_BASE = "https://api.elevenlabs.io/v1";
 
-let client: ElevenLabsClient | null = null;
-
-function getClient(): ElevenLabsClient {
-  if (!client) {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
-    if (!apiKey) {
-      throw new Error("ELEVENLABS_API_KEY is not configured");
-    }
-    client = new ElevenLabsClient({ apiKey });
+function getApiKey(): string {
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  if (!apiKey) {
+    throw new Error("ELEVENLABS_API_KEY is not configured");
   }
-  return client;
+  return apiKey;
 }
 
 // Popular voice IDs from ElevenLabs
@@ -32,7 +28,7 @@ export const VOICES = {
 export type VoiceId = keyof typeof VOICES;
 
 /**
- * Generate speech from text
+ * Generate speech from text using direct API call
  */
 export async function generateSpeech(
   text: string,
@@ -43,29 +39,36 @@ export async function generateSpeech(
     style?: number;
   } = {}
 ): Promise<Buffer> {
-  const elevenlabs = getClient();
+  const apiKey = getApiKey();
 
-  const audioStream = await elevenlabs.textToSpeech.convert(
-    VOICES[voiceId],
+  const response = await fetch(
+    `${ELEVENLABS_API_BASE}/text-to-speech/${VOICES[voiceId]}`,
     {
-      text,
-      model_id: "eleven_multilingual_v2",
-      voice_settings: {
-        stability: options.stability ?? 0.5,
-        similarity_boost: options.similarityBoost ?? 0.75,
-        style: options.style ?? 0.5,
-        use_speaker_boost: true,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": apiKey,
       },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: {
+          stability: options.stability ?? 0.5,
+          similarity_boost: options.similarityBoost ?? 0.75,
+          style: options.style ?? 0.5,
+          use_speaker_boost: true,
+        },
+      }),
     }
   );
 
-  // Convert stream to buffer
-  const chunks: Buffer[] = [];
-  for await (const chunk of audioStream) {
-    chunks.push(Buffer.from(chunk));
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`ElevenLabs API error: ${response.status} - ${error}`);
   }
 
-  return Buffer.concat(chunks);
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
 }
 
 /**
@@ -79,11 +82,21 @@ export async function getVoices(): Promise<
     description: string;
   }>
 > {
-  const elevenlabs = getClient();
+  const apiKey = getApiKey();
 
-  const response = await elevenlabs.voices.getAll();
+  const response = await fetch(`${ELEVENLABS_API_BASE}/voices`, {
+    headers: {
+      "xi-api-key": apiKey,
+    },
+  });
 
-  return response.voices.map((voice) => ({
+  if (!response.ok) {
+    throw new Error(`Failed to fetch voices: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+
+  return data.voices.map((voice: { voice_id: string; name?: string; category?: string; description?: string }) => ({
     id: voice.voice_id,
     name: voice.name || "Unknown",
     category: String(voice.category || "generated"),
@@ -100,15 +113,28 @@ export async function cloneVoice(
   description: string,
   audioFiles: Blob[]
 ): Promise<string> {
-  const elevenlabs = getClient();
+  const apiKey = getApiKey();
 
-  const response = await elevenlabs.voices.add({
-    name,
-    description,
-    files: audioFiles as unknown as File[],
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  audioFiles.forEach((file, i) => formData.append(`files`, file, `sample${i}.mp3`));
+
+  const response = await fetch(`${ELEVENLABS_API_BASE}/voices/add`, {
+    method: "POST",
+    headers: {
+      "xi-api-key": apiKey,
+    },
+    body: formData,
   });
 
-  return response.voice_id;
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Voice cloning error: ${error}`);
+  }
+
+  const data = await response.json();
+  return data.voice_id;
 }
 
 /**

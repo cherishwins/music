@@ -37,7 +37,7 @@ export async function generateSong(
 ): Promise<SunoGenerateResponse> {
   const apiKey = getApiKey();
 
-  const response = await fetch(`${SUNO_API_BASE}/v1/generate`, {
+  const response = await fetch(`${SUNO_API_BASE}/api/v1/generate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export async function checkGenerationStatus(
   const apiKey = getApiKey();
 
   const response = await fetch(
-    `${SUNO_API_BASE}/v1/generations/${generationId}`,
+    `${SUNO_API_BASE}/api/v1/generations/${generationId}`,
     {
       headers: {
         Authorization: `Bearer ${apiKey}`,

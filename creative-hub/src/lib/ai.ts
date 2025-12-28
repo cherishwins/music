@@ -6,6 +6,30 @@ import Anthropic from "@anthropic-ai/sdk";
 
 let anthropic: Anthropic | null = null;
 
+/**
+ * Extract JSON from Claude response that might be wrapped in markdown code blocks
+ */
+function extractJSON<T>(text: string): T {
+  // Try direct parse first
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Try to extract from markdown code blocks
+    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch && jsonMatch[1]) {
+      return JSON.parse(jsonMatch[1].trim());
+    }
+
+    // Try to find JSON object boundaries
+    const objectMatch = text.match(/\{[\s\S]*\}/);
+    if (objectMatch) {
+      return JSON.parse(objectMatch[0]);
+    }
+
+    throw new Error("No valid JSON found in response");
+  }
+}
+
 function getClient(): Anthropic {
   if (!anthropic) {
     const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -63,8 +87,9 @@ Respond with ONLY the JSON object, no other text.`,
     response.content[0].type === "text" ? response.content[0].text : "";
 
   try {
-    return JSON.parse(text);
-  } catch {
+    return extractJSON(text);
+  } catch (e) {
+    console.error("Story extraction parse error:", e, "Raw text:", text.slice(0, 500));
     throw new Error("Failed to parse story extraction response");
   }
 }
@@ -173,8 +198,9 @@ Respond with ONLY the JSON object.`,
     response.content[0].type === "text" ? response.content[0].text : "";
 
   try {
-    return JSON.parse(text);
-  } catch {
+    return extractJSON(text);
+  } catch (e) {
+    console.error("Slide content parse error:", e, "Raw text:", text.slice(0, 500));
     throw new Error("Failed to parse slide content response");
   }
 }
@@ -222,8 +248,9 @@ Respond with ONLY the JSON object.`,
     response.content[0].type === "text" ? response.content[0].text : "";
 
   try {
-    return JSON.parse(text);
-  } catch {
+    return extractJSON(text);
+  } catch (e) {
+    console.error("Video prompt parse error:", e, "Raw text:", text.slice(0, 500));
     throw new Error("Failed to parse video prompt response");
   }
 }
