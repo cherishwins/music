@@ -118,12 +118,46 @@ interface GenerationResult {
   error?: string;
 }
 
+// Voice options for Thread-to-Hit
+const VOICES = [
+  { id: "adam", name: "Adam", description: "Deep male - great for hype content" },
+  { id: "arnold", name: "Arnold", description: "Strong male - powerful delivery" },
+  { id: "josh", name: "Josh", description: "Casual male - authentic vibe" },
+  { id: "sam", name: "Sam", description: "Narrator - professional" },
+  { id: "antoni", name: "Antoni", description: "Warm male - emotional" },
+  { id: "rachel", name: "Rachel", description: "Calm female - soothing" },
+  { id: "domi", name: "Domi", description: "Energetic female - dynamic" },
+  { id: "bella", name: "Bella", description: "Soft female - gentle" },
+];
+
+const STYLES = [
+  { id: "hype", name: "Hype", description: "Energetic, motivational delivery" },
+  { id: "emotional", name: "Emotional", description: "Heartfelt storytelling" },
+  { id: "narration", name: "Narration", description: "Clean, professional" },
+  { id: "intense", name: "Intense", description: "Aggressive, powerful" },
+];
+
+const LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "ko", name: "Korean" },
+  { code: "ja", name: "Japanese" },
+  { code: "zh", name: "Chinese" },
+  { code: "es", name: "Spanish" },
+  { code: "fr", name: "French" },
+  { code: "de", name: "German" },
+];
+
 export default function CreatePage() {
   const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const [inputType, setInputType] = useState<"text" | "url" | "file">("text");
   const [inputValue, setInputValue] = useState("");
   const [status, setStatus] = useState<GenerationStatus>("idle");
   const [result, setResult] = useState<GenerationResult | null>(null);
+
+  // Thread-to-Hit options
+  const [selectedVoice, setSelectedVoice] = useState("adam");
+  const [selectedStyle, setSelectedStyle] = useState("hype");
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   const selectedModeData = creationModes.find((m) => m.id === selectedMode);
 
@@ -140,7 +174,9 @@ export default function CreatePage() {
       switch (selectedMode) {
         case "thread-to-hit":
           body.content = inputValue;
-          body.style = "motivational hip-hop";
+          body.voice = selectedVoice;
+          body.style = selectedStyle;
+          body.language = selectedLanguage;
           break;
         case "quantum-slides":
           body.topic = inputValue;
@@ -152,7 +188,7 @@ export default function CreatePage() {
           break;
         case "voice-studio":
           body.text = inputValue;
-          body.voiceId = "adam";
+          body.voiceId = selectedVoice;
           break;
       }
 
@@ -352,6 +388,62 @@ export default function CreatePage() {
                   <p className="text-white/40 text-sm">
                     Supports: TXT, PDF, DOCX, MP3, WAV, MP4
                   </p>
+                </div>
+              )}
+
+              {/* Voice/Style/Language options for Thread-to-Hit */}
+              {(selectedMode === "thread-to-hit" || selectedMode === "voice-studio") && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 p-4 bg-white/5 rounded-xl">
+                  {/* Voice Selection */}
+                  <div>
+                    <label className="block text-sm text-white/60 mb-2">Voice</label>
+                    <select
+                      value={selectedVoice}
+                      onChange={(e) => setSelectedVoice(e.target.value)}
+                      className="w-full p-3 bg-white/10 rounded-lg border border-white/10 focus:border-gold-400 focus:outline-none text-white"
+                      disabled={status === "generating"}
+                    >
+                      {VOICES.map((voice) => (
+                        <option key={voice.id} value={voice.id} className="bg-obsidian">
+                          {voice.name} - {voice.description}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Style Selection */}
+                  <div>
+                    <label className="block text-sm text-white/60 mb-2">Style</label>
+                    <select
+                      value={selectedStyle}
+                      onChange={(e) => setSelectedStyle(e.target.value)}
+                      className="w-full p-3 bg-white/10 rounded-lg border border-white/10 focus:border-gold-400 focus:outline-none text-white"
+                      disabled={status === "generating"}
+                    >
+                      {STYLES.map((style) => (
+                        <option key={style.id} value={style.id} className="bg-obsidian">
+                          {style.name} - {style.description}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Language Selection */}
+                  <div>
+                    <label className="block text-sm text-white/60 mb-2">Language</label>
+                    <select
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value)}
+                      className="w-full p-3 bg-white/10 rounded-lg border border-white/10 focus:border-gold-400 focus:outline-none text-white"
+                      disabled={status === "generating"}
+                    >
+                      {LANGUAGES.map((lang) => (
+                        <option key={lang.code} value={lang.code} className="bg-obsidian">
+                          {lang.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               )}
 
