@@ -15,6 +15,8 @@ import {
   Check,
   Download,
   Play,
+  Palette,
+  Coins,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -79,6 +81,21 @@ const creationModes = [
     ],
     endpoint: "/api/generate/voice",
   },
+  {
+    id: "brand-forge",
+    title: "Brand Forge",
+    description:
+      "Mint your meme coin identity. Generate name, ticker, logo prompts, colors, and social kit in one click.",
+    icon: Coins,
+    color: "from-purple-500 to-gold",
+    features: [
+      "Name & ticker",
+      "Logo concepts",
+      "Color palette",
+      "Social media kit",
+    ],
+    endpoint: "/api/generate/brand",
+  },
 ];
 
 type GenerationStatus = "idle" | "generating" | "complete" | "error";
@@ -114,6 +131,23 @@ interface GenerationResult {
   simpleAudio?: string;
   format?: string;
 
+  // Brand
+  brand?: {
+    name: string;
+    ticker: string;
+    tagline?: string;
+    colors?: {
+      primary: string;
+      secondary: string;
+      accent: string;
+      background: string;
+    };
+    logoPrompt?: string;
+    socialBio?: string;
+    elevator?: string;
+  };
+  tier?: string;
+
   // Error
   error?: string;
 }
@@ -147,6 +181,14 @@ const LANGUAGES = [
   { code: "de", name: "German" },
 ];
 
+// Brand tiers for Brand Forge
+const BRAND_TIERS = [
+  { id: "standard", name: "Standard", description: "Clean, modern, professional" },
+  { id: "outlier", name: "Outlier", description: "Luxury hip-hop, urban elite" },
+  { id: "1929", name: "1929.world", description: "Art deco luxury, gilded mystique" },
+  { id: "juche", name: "Juche", description: "Revolutionary, bold, purposeful" },
+];
+
 export default function CreatePage() {
   const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const [inputType, setInputType] = useState<"text" | "url" | "file">("text");
@@ -158,6 +200,9 @@ export default function CreatePage() {
   const [selectedVoice, setSelectedVoice] = useState("adam");
   const [selectedStyle, setSelectedStyle] = useState("hype");
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+
+  // Brand Forge options
+  const [selectedBrandTier, setSelectedBrandTier] = useState("standard");
 
   const selectedModeData = creationModes.find((m) => m.id === selectedMode);
 
@@ -189,6 +234,10 @@ export default function CreatePage() {
         case "voice-studio":
           body.text = inputValue;
           body.voiceId = selectedVoice;
+          break;
+        case "brand-forge":
+          body.concept = inputValue;
+          body.tier = selectedBrandTier;
           break;
       }
 
@@ -388,6 +437,30 @@ export default function CreatePage() {
                   <p className="text-white/40 text-sm">
                     Supports: TXT, PDF, DOCX, MP3, WAV, MP4
                   </p>
+                </div>
+              )}
+
+              {/* Brand Tier selection for Brand Forge */}
+              {selectedMode === "brand-forge" && (
+                <div className="mt-6 p-4 bg-white/5 rounded-xl">
+                  <label className="block text-sm text-white/60 mb-3">Brand Aesthetic</label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {BRAND_TIERS.map((tier) => (
+                      <button
+                        key={tier.id}
+                        onClick={() => setSelectedBrandTier(tier.id)}
+                        disabled={status === "generating"}
+                        className={`p-3 rounded-lg border text-left transition-all ${
+                          selectedBrandTier === tier.id
+                            ? "border-gold-400 bg-gold-500/20"
+                            : "border-white/10 bg-white/5 hover:bg-white/10"
+                        }`}
+                      >
+                        <div className="font-medium text-sm">{tier.name}</div>
+                        <div className="text-xs text-white/50 mt-1">{tier.description}</div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 

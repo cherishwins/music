@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.1",
     "@anthropic-ai/sdk": "^0.71.2",
     "@mux/mux-player-react": "^3.2.0",
     "@react-three/drei": "^9.120.0",
@@ -16,6 +17,7 @@
     "@react-three/postprocessing": "^2.16.0",
     "@tonconnect/ui-react": "^2.0.9",
     "@twa-dev/sdk": "^7.10.0",
+    "ai": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "elevenlabs": "^1.59.0",
