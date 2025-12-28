@@ -36,18 +36,14 @@ export default function HomePage() {
   const [showScene, setShowScene] = useState(false);
   const [videoOpacity, setVideoOpacity] = useState(1);
 
-  // Simulate progressive loading
+  // Fast loading - skip waiting for video/scene
   useEffect(() => {
-    const interval = setInterval(() => {
-      useAppStore.setState((state) => {
-        const newProgress = Math.min(state.loadingProgress + 5, 90);
-        return { loadingProgress: newProgress };
-      });
-    }, 100);
+    const timer = setTimeout(() => {
+      setLoadingProgress(100);
+    }, 1500); // Complete after 1.5s regardless of video/scene
 
-    // Clear interval when video or scene reports ready
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [setLoadingProgress]);
 
   // Handle video ready - start loading Three.js scene
   const handleVideoReady = () => {
