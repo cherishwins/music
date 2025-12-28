@@ -47,6 +47,8 @@ export function VideoHero({
 
   const handleError = () => {
     setUseFallback(true);
+    setIsReady(true);
+    onVideoReady?.(); // Still trigger ready so loading completes
   };
 
   return (
