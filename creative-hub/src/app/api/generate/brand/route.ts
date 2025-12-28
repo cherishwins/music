@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createOpenAI } from "@ai-sdk/openai";
-import { generateText } from "ai";
+import { generateText, gateway } from "ai";
 
-// Vercel AI Gateway - routes through Vercel's managed infrastructure
-// Supports Google, Anthropic, OpenAI through unified interface
-const gateway = createOpenAI({
-  baseURL: "https://gateway.vercel.ai/v1",
-  apiKey: process.env.VERCEL_AI_GATEWAY_SECRET || "",
-});
+// Vercel AI Gateway - unified access to 20+ providers
+// Models: xai/grok-4.1-fast, google/gemini-2.0-flash, anthropic/claude-3-5-haiku
+// Env: AI_GATEWAY_API_KEY (set in Vercel dashboard)
 
 // Brand style tiers matching the ecosystem
 const BRAND_TIERS = {
@@ -49,9 +45,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.VERCEL_AI_GATEWAY_SECRET) {
+    if (!process.env.AI_GATEWAY_API_KEY) {
       return NextResponse.json(
-        { error: "VERCEL_AI_GATEWAY_SECRET not configured" },
+        { error: "AI_GATEWAY_API_KEY not configured" },
         { status: 500 }
       );
     }
@@ -82,10 +78,10 @@ For serious projects, emphasize utility and vision.
 
 IMPORTANT: Return ONLY valid JSON, no markdown or explanation.`;
 
-    // Use Vercel AI Gateway to route to Google Gemini
-    // Gateway model format: provider/model-name
+    // xAI Grok 4.1 Fast Non-Reasoning - best value for speed ($0.20/$0.50 per 1M tokens)
+    // Alternatives: xai/grok-4.1-fast-reasoning, google/gemini-2.0-flash
     const result = await generateText({
-      model: gateway("google/gemini-2.0-flash"),
+      model: gateway("xai/grok-4.1-fast-non-reasoning"),
       prompt,
     });
 

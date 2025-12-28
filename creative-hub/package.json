@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.1",
-    "@ai-sdk/openai": "^3.0.1",
     "@anthropic-ai/sdk": "^0.71.2",
     "@mux/mux-player-react": "^3.2.0",
     "@react-three/drei": "^9.120.0",
