@@ -8,6 +8,7 @@ import {
   type VoicePreset,
   type LanguageCode,
 } from "@/lib/voice";
+import { generateBeatBase64 } from "@/lib/beats";
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,6 +20,8 @@ export async function POST(request: NextRequest) {
       language,
       includeIntro = false,
       includeOutro = false,
+      includeBeat = false,
+      beatStyle = "hiphop",
     } = body;
 
     if (!content || content.length < 50) {
@@ -76,6 +79,22 @@ export async function POST(request: NextRequest) {
       includeOutro,
     });
 
+    // Generate beat if requested (uses Replicate/MusicGen)
+    let beatAudio: string | undefined;
+    if (includeBeat && process.env.REPLICATE_API_TOKEN) {
+      try {
+        beatAudio = await generateBeatBase64({
+          prompt: `${result.title} - motivational anthem`,
+          duration: 30,
+          bpm: 120,
+          style: beatStyle as "trap" | "lofi" | "edm" | "cinematic" | "hiphop",
+        });
+      } catch (beatError) {
+        console.error("Beat generation failed:", beatError);
+        // Continue without beat - don't fail the whole request
+      }
+    }
+
     // Return audio as base64
     return NextResponse.json({
       title: result.title,
@@ -84,11 +103,13 @@ export async function POST(request: NextRequest) {
         main: result.mainAudio.toString("base64"),
         intro: result.introAudio?.toString("base64"),
         outro: result.outroAudio?.toString("base64"),
+        beat: beatAudio,
       },
       format: "mp3",
       voice,
       style,
       language: language || "en",
+      hasBeat: !!beatAudio,
     });
   } catch (error) {
     console.error("Thread to hit error:", error);
