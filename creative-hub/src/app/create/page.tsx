@@ -23,14 +23,14 @@ const creationModes = [
     id: "thread-to-hit",
     title: "Thread to Hit",
     description:
-      "Transmute forum threads or social posts into polished songs with AI-forged lyrics, beats, and vocals.",
+      "Transmute any content into powerful spoken word audio with AI-crafted lyrics and professional voice delivery.",
     icon: Music,
     color: "from-gold to-gold-muted",
     features: [
       "Story essence extraction",
       "AI lyric synthesis",
-      "Suno music generation",
-      "Multiple styles",
+      "8 premium voices",
+      "13 languages",
     ],
     endpoint: "/api/generate/thread-to-hit",
   },
@@ -85,9 +85,16 @@ type GenerationStatus = "idle" | "generating" | "complete" | "error";
 
 interface GenerationResult {
   // Thread to hit
-  generationId?: string;
   title?: string;
   lyrics?: string;
+  audio?: {
+    main?: string;
+    intro?: string;
+    outro?: string;
+  };
+  voice?: string;
+  style?: string;
+  language?: string;
 
   // Slides
   slides?: Array<{
@@ -103,8 +110,8 @@ interface GenerationResult {
   duration?: string;
   mood?: string;
 
-  // Voice
-  audio?: string;
+  // Voice (simple)
+  simpleAudio?: string;
   format?: string;
 
   // Error
@@ -172,10 +179,10 @@ export default function CreatePage() {
     }
   };
 
-  const handleDownloadAudio = () => {
-    if (!result?.audio) return;
+  const handleDownloadAudio = (audioData?: string, filename = "audio.mp3") => {
+    if (!audioData) return;
 
-    const byteCharacters = atob(result.audio);
+    const byteCharacters = atob(audioData);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -186,7 +193,7 @@ export default function CreatePage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "voice-generation.mp3";
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -397,23 +404,51 @@ export default function CreatePage() {
                         </h3>
 
                         {/* Thread to Hit Result */}
-                        {result.lyrics && (
-                          <div className="space-y-4">
+                        {result.lyrics && result.audio?.main && (
+                          <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                              <h4 className="font-semibold text-lg">
+                              <h4 className="font-semibold text-xl gradient-text-gold">
                                 {result.title}
                               </h4>
-                              <span className="text-white/40 text-sm">
-                                ID: {result.generationId}
-                              </span>
+                              <div className="flex items-center gap-2 text-white/40 text-sm">
+                                <span className="px-2 py-1 bg-white/10 rounded">{result.voice}</span>
+                                <span className="px-2 py-1 bg-white/10 rounded">{result.style}</span>
+                                <span className="px-2 py-1 bg-white/10 rounded">{result.language}</span>
+                              </div>
                             </div>
-                            <pre className="p-4 bg-white/5 rounded-xl text-white/80 whitespace-pre-wrap text-sm max-h-96 overflow-y-auto">
-                              {result.lyrics}
-                            </pre>
-                            <p className="text-gold text-sm">
-                              Song is being transmuted by Suno. Check back in a
-                              few minutes!
-                            </p>
+
+                            {/* Audio Player */}
+                            <div className="p-4 bg-white/5 rounded-xl space-y-4">
+                              <div className="flex items-center gap-4">
+                                <Play className="w-8 h-8 text-gold" />
+                                <div className="flex-1">
+                                  <audio
+                                    controls
+                                    src={`data:audio/mpeg;base64,${result.audio.main}`}
+                                    className="w-full"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleDownloadAudio(result.audio?.main, `${result.title?.replace(/\s+/g, '-').toLowerCase() || 'track'}.mp3`)}
+                                  className="btn-secondary flex items-center gap-2 text-sm"
+                                >
+                                  <Download className="w-4 h-4" />
+                                  Download Track
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Lyrics */}
+                            <details className="group">
+                              <summary className="cursor-pointer text-gold-400 hover:text-gold-300 transition-colors">
+                                View Lyrics
+                              </summary>
+                              <pre className="mt-4 p-4 bg-white/5 rounded-xl text-white/80 whitespace-pre-wrap text-sm max-h-96 overflow-y-auto">
+                                {result.lyrics}
+                              </pre>
+                            </details>
                           </div>
                         )}
 
@@ -487,17 +522,17 @@ export default function CreatePage() {
                         )}
 
                         {/* Voice Result */}
-                        {result.audio && (
+                        {result.simpleAudio && (
                           <div className="space-y-4">
                             <h4 className="font-semibold">Audio Generated</h4>
                             <div className="flex items-center gap-4">
                               <audio
                                 controls
-                                src={`data:audio/mpeg;base64,${result.audio}`}
+                                src={`data:audio/mpeg;base64,${result.simpleAudio}`}
                                 className="flex-1"
                               />
                               <button
-                                onClick={handleDownloadAudio}
+                                onClick={() => handleDownloadAudio(result.simpleAudio, "voice-generation.mp3")}
                                 className="btn-secondary flex items-center gap-2"
                               >
                                 <Download className="w-4 h-4" />

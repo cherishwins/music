@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     // Return audio as base64
     return NextResponse.json({
-      audio: audioBuffer.toString("base64"),
+      simpleAudio: audioBuffer.toString("base64"),
       format: "mp3",
       voiceId: voice,
       characters: text.length,
