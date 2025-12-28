@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { google } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
 import { generateText } from "ai";
+
+// Vercel AI Gateway - routes through Vercel's managed infrastructure
+// Supports Google, Anthropic, OpenAI through unified interface
+const gateway = createOpenAI({
+  baseURL: "https://gateway.vercel.ai/v1",
+  apiKey: process.env.VERCEL_AI_GATEWAY_SECRET || "",
+});
 
 // Brand style tiers matching the ecosystem
 const BRAND_TIERS = {
@@ -42,9 +49,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    if (!process.env.VERCEL_AI_GATEWAY_SECRET) {
       return NextResponse.json(
-        { error: "GOOGLE_GENERATIVE_AI_API_KEY not configured" },
+        { error: "VERCEL_AI_GATEWAY_SECRET not configured" },
         { status: 500 }
       );
     }
@@ -75,8 +82,10 @@ For serious projects, emphasize utility and vision.
 
 IMPORTANT: Return ONLY valid JSON, no markdown or explanation.`;
 
+    // Use Vercel AI Gateway to route to Google Gemini
+    // Gateway model format: provider/model-name
     const result = await generateText({
-      model: google("gemini-2.0-flash"),
+      model: gateway("google/gemini-2.0-flash"),
       prompt,
     });
 
