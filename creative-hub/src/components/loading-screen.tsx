@@ -41,7 +41,7 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
               className="absolute inset-0 rounded-full"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%)",
+                  "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)",
                 filter: "blur(20px)",
               }}
               animate={{
@@ -58,7 +58,7 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
             {/* Logo icon */}
             <div className="relative w-24 h-24 flex items-center justify-center">
               <motion.div
-                className="w-16 h-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-600"
+                className="w-16 h-16 rounded-full bg-gradient-to-br from-gold-muted to-gold"
                 animate={{
                   rotate: 360,
                 }}
@@ -68,13 +68,13 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
                   ease: "linear",
                 }}
               >
-                <div className="absolute inset-2 rounded-full bg-[#0a0a0f]" />
-                <div className="absolute inset-4 rounded-full bg-gradient-to-br from-cosmic-600 to-cosmic-800" />
+                <div className="absolute inset-2 rounded-full bg-obsidian" />
+                <div className="absolute inset-4 rounded-full bg-gradient-to-br from-crucible to-obsidian" />
               </motion.div>
 
               {/* Orbiting dot */}
               <motion.div
-                className="absolute w-2 h-2 rounded-full bg-gold-400"
+                className="absolute w-2 h-2 rounded-full bg-gold"
                 animate={{
                   rotate: -360,
                 }}
@@ -95,12 +95,12 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
 
           {/* Title */}
           <motion.h1
-            className="text-3xl md:text-4xl font-display gradient-text mb-4"
+            className="text-3xl md:text-4xl font-headline gradient-text-gold mb-4"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Creative Hub
+            ALCHEMY
           </motion.h1>
 
           {/* Tagline */}
@@ -110,7 +110,7 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            Entering the Multiverse...
+            Preparing transmutation...
           </motion.p>
 
           {/* Progress bar */}
@@ -121,7 +121,7 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
             transition={{ delay: 0.7, duration: 0.4 }}
           >
             <motion.div
-              className="h-full bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600"
+              className="h-full bg-gradient-to-r from-gold-muted via-gold to-gold-light"
               initial={{ width: "0%" }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}
@@ -130,7 +130,7 @@ export function LoadingScreen({ isLoading, progress = 0 }: LoadingScreenProps) {
 
           {/* Progress text */}
           <motion.span
-            className="mt-3 text-gold-400/80 text-xs font-mono"
+            className="mt-3 text-gold/80 text-xs font-mono"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}

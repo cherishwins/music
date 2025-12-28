@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Cinzel_Decorative, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
@@ -8,27 +8,36 @@ const inter = Inter({
   variable: "--font-body",
 });
 
-const playfair = Playfair_Display({
+const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
-  variable: "--font-display",
+  weight: ["400", "700", "900"],
+  variable: "--font-headline",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "Creative Hub | Quantum Asset Protection for Digital Creators",
+  title: "ALCHEMY | Transmute Noise into Gold",
   description:
-    "Transform threads into hits, protect your assets across the multiverse. AI-powered creative tools with blockchain payments.",
+    "The ancient science of transformation applied to modern audio production. Turn community chaos into polished hits with AI-powered music creation.",
   keywords: [
-    "creative hub",
+    "alchemy",
     "AI music",
-    "digital assets",
+    "audio production",
+    "thread to hit",
+    "music generation",
+    "vocal synthesis",
     "TON",
     "Telegram",
-    "content creation",
   ],
-  authors: [{ name: "Creative Hub" }],
+  authors: [{ name: "ALCHEMY" }],
+  manifest: "/manifest.json",
   openGraph: {
-    title: "Creative Hub",
-    description: "Your multiverse creative platform",
+    title: "ALCHEMY",
+    description: "Transmute Noise into Gold.",
     type: "website",
   },
 };
@@ -37,7 +46,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0a0a0f",
+  themeColor: "#0A0A0A",
 };
 
 export default function RootLayout({
@@ -46,8 +55,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="bg-[#0a0a0f] text-white antialiased">
+    <html
+      lang="en"
+      className={`${inter.variable} ${cinzel.variable} ${jetbrains.variable}`}
+    >
+      <body className="bg-obsidian text-white antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

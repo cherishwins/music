@@ -21,8 +21,8 @@ import { TonConnectButton } from "@tonconnect/ui-react";
 
 // Dashboard stats
 const stats = [
-  { label: "Credits", value: "847", icon: Sparkles, change: "+12%" },
-  { label: "Content Created", value: "24", icon: FileText, change: "+5" },
+  { label: "Essence", value: "847", icon: Sparkles, change: "+12%" },
+  { label: "Transmutations", value: "24", icon: FileText, change: "+5" },
   { label: "Total Views", value: "12.4K", icon: TrendingUp, change: "+23%" },
   { label: "Followers", value: "1.2K", icon: Users, change: "+8%" },
 ];
@@ -31,7 +31,7 @@ const stats = [
 const recentContent = [
   {
     id: 1,
-    title: "Quantum Finance Deck",
+    title: "Philosopher's Portfolio Deck",
     type: "slide",
     status: "published",
     views: 234,
@@ -39,7 +39,7 @@ const recentContent = [
   },
   {
     id: 2,
-    title: "Multiverse Passport Guide",
+    title: "The Alchemist's Journey",
     type: "video",
     status: "processing",
     views: 0,
@@ -47,7 +47,7 @@ const recentContent = [
   },
   {
     id: 3,
-    title: "Thread Remix #47",
+    title: "Thread Transmutation #47",
     type: "music",
     status: "published",
     views: 1203,
@@ -55,7 +55,7 @@ const recentContent = [
   },
   {
     id: 4,
-    title: "Eigen-Contract Strategy",
+    title: "Elemental Balance Strategy",
     type: "slide",
     status: "draft",
     views: 0,
@@ -91,14 +91,14 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-obsidian">
       {/* Header */}
-      <header className="sticky top-0 z-50 glass border-b border-white/10">
+      <header className="sticky top-0 z-50 glass-gold border-b border-gold/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-display gradient-text">Creative Hub</h1>
-            <span className="text-white/40">/</span>
-            <span className="text-white/60">Dashboard</span>
+            <h1 className="text-xl font-headline gradient-text-gold">ALCHEMY</h1>
+            <span className="text-gold-muted">/</span>
+            <span className="text-white/60">Archive</span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -186,8 +186,8 @@ export default function DashboardPage() {
                       transition={{ delay: index * 0.1 }}
                       className="flex items-center gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
                     >
-                      <div className="w-12 h-12 rounded-lg bg-cosmic-800 flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-cosmic-400" />
+                      <div className="w-12 h-12 rounded-lg bg-crucible flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-gold" />
                       </div>
 
                       <div className="flex-1">
@@ -262,11 +262,11 @@ export default function DashboardPage() {
 
             {/* Upgrade CTA */}
             <div className="glass-gold rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-2">Need More Credits?</h2>
+              <h2 className="text-xl font-semibold mb-2">Need More Essence?</h2>
               <p className="text-white/60 text-sm mb-4">
-                Upgrade your plan for unlimited creative power.
+                Upgrade your plan for unlimited transmutation power.
               </p>
-              <button className="w-full py-3 bg-gradient-to-r from-gold-400 to-gold-600 text-black font-semibold rounded-lg hover:from-gold-300 hover:to-gold-500 transition-all">
+              <button className="w-full py-3 bg-gradient-to-r from-gold-muted to-gold text-obsidian font-semibold rounded-lg hover:from-gold hover:to-gold-light transition-all">
                 Upgrade Plan
               </button>
             </div>

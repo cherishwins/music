@@ -1,71 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// This endpoint creates Telegram Stars invoices
-// In production, this would interact with your Telegram Bot API
+import { createStarsInvoice, STAR_PLANS, type PlanId } from "@/lib/telegram";
 
 export async function POST(request: NextRequest) {
   try {
-    const { planId, amount, currency } = await request.json();
+    const { planId, userId } = await request.json();
 
-    // Validate request
-    if (!planId || !amount || currency !== "XTR") {
+    // Validate plan
+    if (!planId || !STAR_PLANS[planId as PlanId]) {
       return NextResponse.json(
-        { error: "Invalid request parameters" },
+        { error: "Invalid plan selected" },
         { status: 400 }
       );
     }
 
-    // Get plan details
-    const plans: Record<string, { title: string; description: string; credits: number }> = {
-      starter: {
-        title: "Starter Plan",
-        description: "100 AI generation credits",
-        credits: 100,
-      },
-      creator: {
-        title: "Creator Plan",
-        description: "500 AI generation credits",
-        credits: 500,
-      },
-      studio: {
-        title: "Studio Plan",
-        description: "2000 AI generation credits",
-        credits: 2000,
-      },
-    };
-
-    const plan = plans[planId];
-    if (!plan) {
-      return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+    // Check if Telegram bot is configured
+    if (!process.env.TELEGRAM_BOT_TOKEN) {
+      // Return mock for development
+      console.warn("TELEGRAM_BOT_TOKEN not set - returning mock invoice");
+      return NextResponse.json({
+        invoiceUrl: `https://t.me/$CreativeHubBot?startattach=invoice_${planId}_${Date.now()}`,
+        planId,
+        mock: true,
+      });
     }
 
-    // In production, call Telegram Bot API to create invoice
-    // Using grammY or direct HTTP to Bot API:
-    //
-    // const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN!);
-    // const invoiceLink = await bot.api.createInvoiceLink({
-    //   title: plan.title,
-    //   description: plan.description,
-    //   payload: JSON.stringify({ planId, userId: "user-id-here" }),
-    //   provider_token: "", // Empty for digital goods
-    //   currency: "XTR",
-    //   prices: [{ label: plan.title, amount: amount }],
-    // });
-
-    // For demo, return a mock invoice URL
-    // Replace with actual Telegram Bot API integration
-    const mockInvoiceUrl = `https://t.me/$CreativeHubBot?startattach=invoice_${planId}_${Date.now()}`;
+    // Create real Telegram Stars invoice
+    const invoiceUrl = await createStarsInvoice(
+      planId as PlanId,
+      userId || "anonymous"
+    );
 
     return NextResponse.json({
-      invoiceUrl: mockInvoiceUrl,
+      invoiceUrl,
       planId,
-      amount,
+      amount: STAR_PLANS[planId as PlanId].stars,
     });
   } catch (error) {
     console.error("Create invoice error:", error);
-    return NextResponse.json(
-      { error: "Failed to create invoice" },
-      { status: 500 }
-    );
+
+    const message =
+      error instanceof Error ? error.message : "Failed to create invoice";
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

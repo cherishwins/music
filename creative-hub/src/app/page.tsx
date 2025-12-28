@@ -64,7 +64,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#0a0a0f]">
+    <main className="relative min-h-screen bg-obsidian">
       {/* Loading screen */}
       <LoadingScreen isLoading={isLoading} progress={loadingProgress} />
 
@@ -96,42 +96,42 @@ export default function HomePage() {
         <PricingSection />
 
         {/* Footer */}
-        <footer className="py-12 px-6 border-t border-white/10">
+        <footer className="py-12 px-6 border-t border-gold/10">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
               {/* Brand */}
               <div>
-                <h3 className="text-xl font-display gradient-text mb-4">
-                  Creative Hub
+                <h3 className="text-xl font-headline gradient-text-gold mb-4">
+                  ALCHEMY
                 </h3>
                 <p className="text-white/60 text-sm">
-                  Your multiverse creative platform. Transform ideas into
-                  reality across infinite timelines.
+                  Transmute Noise into Gold.
+                  AI-powered audio production applying ancient transformation principles.
                 </p>
               </div>
 
               {/* Products */}
               <div>
-                <h4 className="font-semibold mb-4">Products</h4>
+                <h4 className="font-semibold mb-4 text-gold-light">Laboratory</h4>
                 <ul className="space-y-2 text-white/60 text-sm">
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
+                    <a href="/create" className="hover:text-gold transition-colors">
                       Thread to Hit
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      Slide Generator
+                    <a href="/create" className="hover:text-gold transition-colors">
+                      Voice Crucible
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      Voice Studio
+                    <a href="/create" className="hover:text-gold transition-colors">
+                      Forge Chamber
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      Video Creator
+                    <a href="/create" className="hover:text-gold transition-colors">
+                      Arcane Slides
                     </a>
                   </li>
                 </ul>
@@ -139,26 +139,26 @@ export default function HomePage() {
 
               {/* Resources */}
               <div>
-                <h4 className="font-semibold mb-4">Resources</h4>
+                <h4 className="font-semibold mb-4 text-gold-light">Knowledge</h4>
                 <ul className="space-y-2 text-white/60 text-sm">
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      Documentation
+                    <a href="#" className="hover:text-gold transition-colors">
+                      The Process
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      API Reference
+                    <a href="#" className="hover:text-gold transition-colors">
+                      Transmutations
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      Tutorials
+                    <a href="#" className="hover:text-gold transition-colors">
+                      Pricing
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      Community
+                    <a href="#" className="hover:text-gold transition-colors">
+                      FAQ
                     </a>
                   </li>
                 </ul>
@@ -166,26 +166,26 @@ export default function HomePage() {
 
               {/* Connect */}
               <div>
-                <h4 className="font-semibold mb-4">Connect</h4>
+                <h4 className="font-semibold mb-4 text-gold-light">Guild</h4>
                 <ul className="space-y-2 text-white/60 text-sm">
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
+                    <a href="#" className="hover:text-gold transition-colors">
                       Telegram
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
+                    <a href="#" className="hover:text-gold transition-colors">
                       X (Twitter)
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
+                    <a href="#" className="hover:text-gold transition-colors">
                       Discord
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold-400 transition-colors">
-                      GitHub
+                    <a href="#" className="hover:text-gold transition-colors">
+                      YouTube
                     </a>
                   </li>
                 </ul>
@@ -193,20 +193,16 @@ export default function HomePage() {
             </div>
 
             {/* Bottom bar */}
-            <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="pt-8 border-t border-gold/10 flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-white/40 text-sm">
-                &copy; 2024 Creative Hub. All rights reserved across all
-                timelines.
+                &copy; 2024 ALCHEMY. All rights reserved.
               </p>
               <div className="flex items-center gap-6 text-white/40 text-sm">
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Privacy
                 </a>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Terms
-                </a>
-                <a href="#" className="hover:text-white transition-colors">
-                  Cookies
                 </a>
               </div>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Sparkles } from "lucide-react";
+import { ArrowRight, Play, Sparkles, Mic2 } from "lucide-react";
 import Link from "next/link";
 
 export function HeroSection() {
@@ -13,11 +13,11 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-gold mb-8"
         >
-          <Sparkles className="w-4 h-4 text-gold-400" />
+          <Sparkles className="w-4 h-4 text-gold" />
           <span className="text-sm text-white/80">
-            Quantum Asset Protection for Digital Creators
+            The Ancient Science of Audio Transformation
           </span>
         </motion.div>
 
@@ -26,23 +26,33 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display leading-tight mb-6"
+          className="text-5xl md:text-7xl lg:text-8xl font-headline leading-tight mb-6"
         >
-          <span className="text-white">Your </span>
-          <span className="gradient-text">Multiverse</span>
-          <br />
-          <span className="text-white">Creative Platform</span>
+          <span className="gradient-text-gold">ALCHEMY</span>
         </motion.h1>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="text-2xl md:text-3xl text-gold font-headline tracking-wide mb-4"
+        >
+          Transmute Noise into Gold
+        </motion.p>
 
         {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto mb-10"
+          className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10"
         >
-          Transform threads into hits. Generate slides that bend reality.
-          Protect your digital assets across timelines.
+          Transform community chaos into polished hits.
+          <br />
+          <span className="text-white/40">
+            AI-powered audio production applying ancient transformation principles.
+          </span>
         </motion.p>
 
         {/* CTA Buttons */}
@@ -52,14 +62,15 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/create" className="btn-primary flex items-center gap-2">
-            Start Creating
+          <Link href="/create" className="btn-transmute flex items-center gap-2">
+            <Mic2 className="w-5 h-5" />
+            Begin Transmutation
             <ArrowRight className="w-5 h-5" />
           </Link>
 
           <button className="btn-secondary flex items-center gap-2">
             <Play className="w-5 h-5" />
-            Watch Demo
+            Hear Examples
           </button>
         </motion.div>
 
@@ -71,12 +82,12 @@ export function HeroSection() {
           className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: "10K+", label: "Creators" },
-            { value: "50K+", label: "Assets Generated" },
-            { value: "100%", label: "Quantum Safe" },
+            { value: "10K+", label: "Transmutations" },
+            { value: "50K+", label: "Alchemists" },
+            { value: "24k", label: "Pure Gold" },
           ].map((stat, i) => (
             <div key={i} className="text-center">
-              <div className="text-2xl md:text-3xl font-bold gradient-text">
+              <div className="text-2xl md:text-3xl font-bold gradient-text-gold">
                 {stat.value}
               </div>
               <div className="text-white/40 text-sm">{stat.label}</div>
@@ -95,9 +106,9 @@ export function HeroSection() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center pt-2"
+          className="w-6 h-10 rounded-full border-2 border-gold/30 flex items-start justify-center pt-2"
         >
-          <div className="w-1 h-2 bg-gold-400 rounded-full" />
+          <div className="w-1 h-2 bg-gold rounded-full" />
         </motion.div>
       </motion.div>
     </section>

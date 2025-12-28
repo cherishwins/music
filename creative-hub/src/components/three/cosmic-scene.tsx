@@ -66,7 +66,7 @@ function GoldParticles({ count = 500 }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.05}
-        color="#fbbf24"
+        color="#D4AF37"
         transparent
         opacity={0.8}
         sizeAttenuation
@@ -91,19 +91,19 @@ function CosmicOrb() {
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
       <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
         <MeshDistortMaterial
-          color="#1e3a8a"
+          color="#8C7330"
           attach="material"
           distort={0.4}
           speed={2}
           roughness={0.2}
-          metalness={0.8}
-          emissive="#4c6ef5"
+          metalness={0.9}
+          emissive="#D4AF37"
           emissiveIntensity={0.3}
         />
       </Sphere>
       {/* Inner glow sphere */}
       <Sphere args={[1.2, 32, 32]} position={[0, 0, 0]}>
-        <meshBasicMaterial color="#fbbf24" transparent opacity={0.1} />
+        <meshBasicMaterial color="#D4AF37" transparent opacity={0.12} />
       </Sphere>
     </Float>
   );
@@ -135,15 +135,15 @@ function OrbitalRings() {
     <group>
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
         <torusGeometry args={[3, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#fbbf24" transparent opacity={0.6} />
+        <meshBasicMaterial color="#D4AF37" transparent opacity={0.6} />
       </mesh>
       <mesh ref={ring2Ref} rotation={[Math.PI / 4, Math.PI / 4, 0]}>
         <torusGeometry args={[3.5, 0.015, 16, 100]} />
-        <meshBasicMaterial color="#f59e0b" transparent opacity={0.4} />
+        <meshBasicMaterial color="#8C7330" transparent opacity={0.4} />
       </mesh>
       <mesh ref={ring3Ref} rotation={[Math.PI / 6, -Math.PI / 3, 0]}>
         <torusGeometry args={[4, 0.01, 16, 100]} />
-        <meshBasicMaterial color="#d97706" transparent opacity={0.3} />
+        <meshBasicMaterial color="#E5C76B" transparent opacity={0.3} />
       </mesh>
     </group>
   );
@@ -198,8 +198,8 @@ function Scene({ onLoaded }: { onLoaded?: () => void }) {
     <>
       {/* Ambient and directional lighting */}
       <ambientLight intensity={0.2} />
-      <directionalLight position={[5, 5, 5]} intensity={0.5} color="#fbbf24" />
-      <pointLight position={[-5, -5, -5]} intensity={0.3} color="#4c6ef5" />
+      <directionalLight position={[5, 5, 5]} intensity={0.5} color="#D4AF37" />
+      <pointLight position={[-5, -5, -5]} intensity={0.3} color="#8C7330" />
 
       {/* Background stars */}
       <Stars

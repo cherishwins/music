@@ -22,12 +22,12 @@ export function PricingSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-display mb-4">
-            <span className="gradient-text">Simple</span> Pricing
+          <h2 className="text-4xl md:text-5xl font-headline mb-4">
+            <span className="gradient-text-gold">Fair Exchange</span>
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Pay with Telegram Stars or TON. No KYC, no friction, just pure
-            creative freedom.
+            Pay with Telegram Stars or TON. No subscriptions, no hidden fees.
+            Credits for transmutations — nothing more.
           </p>
         </motion.div>
 
@@ -51,7 +51,7 @@ export function PricingSection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-16 flex flex-wrap items-center justify-center gap-8 text-white/40"
+          className="mt-16 flex flex-wrap items-center justify-center gap-8 text-gold-muted"
         >
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -63,13 +63,13 @@ export function PricingSection() {
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <span className="text-sm">Quantum Encrypted</span>
+            <span className="text-sm">Alchemically Sealed</span>
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
             </svg>
-            <span className="text-sm">Instant Delivery</span>
+            <span className="text-sm">Instant Transmutation</span>
           </div>
         </motion.div>
       </div>
