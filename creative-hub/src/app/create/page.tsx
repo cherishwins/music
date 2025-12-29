@@ -25,16 +25,17 @@ const creationModes = [
     id: "thread-to-hit",
     title: "Thread to Hit",
     description:
-      "Transmute any content into powerful spoken word audio with AI-crafted lyrics and professional voice delivery.",
+      "Transform any story into a REAL SONG with vocals + music. Powered by ElevenLabs Music AI.",
     icon: Music,
     color: "from-gold to-gold-muted",
     features: [
-      "Story essence extraction",
-      "AI lyric synthesis",
-      "8 premium voices",
-      "13 languages",
+      "Real vocals + music",
+      "Multiple genres",
+      "AI lyrics from your story",
+      "Download ready MP3",
     ],
     endpoint: "/api/generate/thread-to-hit",
+    credits: 10, // Credits required
   },
   {
     id: "quantum-slides",
@@ -101,17 +102,14 @@ const creationModes = [
 type GenerationStatus = "idle" | "generating" | "complete" | "error";
 
 interface GenerationResult {
-  // Thread to hit
+  // Thread to hit (new music API)
   title?: string;
   lyrics?: string;
-  audio?: {
-    main?: string;
-    intro?: string;
-    outro?: string;
-  };
-  voice?: string;
+  downloadUrl?: string;      // Direct download link!
+  audio?: string;            // Base64 fallback
+  songId?: string;
   style?: string;
-  language?: string;
+  durationMs?: number;
 
   // Slides
   slides?: Array<{
@@ -164,11 +162,23 @@ const VOICES = [
   { id: "bella", name: "Bella", description: "Soft female - gentle" },
 ];
 
-const STYLES = [
+// Voice styles (for voice studio)
+const VOICE_STYLES = [
   { id: "hype", name: "Hype", description: "Energetic, motivational delivery" },
   { id: "emotional", name: "Emotional", description: "Heartfelt storytelling" },
   { id: "narration", name: "Narration", description: "Clean, professional" },
   { id: "intense", name: "Intense", description: "Aggressive, powerful" },
+];
+
+// Music styles (for Thread-to-Hit)
+const MUSIC_STYLES = [
+  { id: "trap", name: "Trap", description: "808s, hi-hats, dark atmosphere" },
+  { id: "drill", name: "Drill", description: "Sliding 808s, dark piano, aggressive" },
+  { id: "boombap", name: "Boom Bap", description: "90s hip hop, vinyl samples" },
+  { id: "rnb", name: "R&B", description: "Smooth, soulful, romantic" },
+  { id: "pop", name: "Pop", description: "Catchy, radio-friendly, upbeat" },
+  { id: "cinematic", name: "Cinematic", description: "Epic, orchestral, dramatic" },
+  { id: "lofi", name: "Lo-Fi", description: "Chill, dusty samples, relaxing" },
 ];
 
 const LANGUAGES = [
@@ -196,9 +206,12 @@ export default function CreatePage() {
   const [status, setStatus] = useState<GenerationStatus>("idle");
   const [result, setResult] = useState<GenerationResult | null>(null);
 
-  // Thread-to-Hit options
+  // Thread-to-Hit options (music generation)
+  const [selectedMusicStyle, setSelectedMusicStyle] = useState("trap");
+
+  // Voice Studio options
   const [selectedVoice, setSelectedVoice] = useState("adam");
-  const [selectedStyle, setSelectedStyle] = useState("hype");
+  const [selectedVoiceStyle, setSelectedVoiceStyle] = useState("hype");
   const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   // Brand Forge options
@@ -219,9 +232,8 @@ export default function CreatePage() {
       switch (selectedMode) {
         case "thread-to-hit":
           body.content = inputValue;
-          body.voice = selectedVoice;
-          body.style = selectedStyle;
-          body.language = selectedLanguage;
+          body.style = selectedMusicStyle;
+          body.durationMs = "120000"; // 2 minutes
           break;
         case "quantum-slides":
           body.topic = inputValue;
@@ -464,10 +476,33 @@ export default function CreatePage() {
                 </div>
               )}
 
-              {/* Voice/Style/Language options for Thread-to-Hit */}
-              {(selectedMode === "thread-to-hit" || selectedMode === "voice-studio") && (
+              {/* Music Style Selection for Thread-to-Hit */}
+              {selectedMode === "thread-to-hit" && (
+                <div className="mt-6 p-4 bg-white/5 rounded-xl">
+                  <label className="block text-sm text-white/60 mb-3">Music Genre</label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {MUSIC_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        onClick={() => setSelectedMusicStyle(style.id)}
+                        disabled={status === "generating"}
+                        className={`p-3 rounded-lg border text-left transition-all ${
+                          selectedMusicStyle === style.id
+                            ? "border-gold-400 bg-gold-500/20"
+                            : "border-white/10 bg-white/5 hover:bg-white/10"
+                        }`}
+                      >
+                        <div className="font-medium text-sm">{style.name}</div>
+                        <div className="text-xs text-white/50 mt-1">{style.description}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Voice options for Voice Studio */}
+              {selectedMode === "voice-studio" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 p-4 bg-white/5 rounded-xl">
-                  {/* Voice Selection */}
                   <div>
                     <label className="block text-sm text-white/60 mb-2">Voice</label>
                     <select
@@ -483,25 +518,21 @@ export default function CreatePage() {
                       ))}
                     </select>
                   </div>
-
-                  {/* Style Selection */}
                   <div>
                     <label className="block text-sm text-white/60 mb-2">Style</label>
                     <select
-                      value={selectedStyle}
-                      onChange={(e) => setSelectedStyle(e.target.value)}
+                      value={selectedVoiceStyle}
+                      onChange={(e) => setSelectedVoiceStyle(e.target.value)}
                       className="w-full p-3 bg-white/10 rounded-lg border border-white/10 focus:border-gold-400 focus:outline-none text-white"
                       disabled={status === "generating"}
                     >
-                      {STYLES.map((style) => (
+                      {VOICE_STYLES.map((style) => (
                         <option key={style.id} value={style.id} className="bg-obsidian">
                           {style.name} - {style.description}
                         </option>
                       ))}
                     </select>
                   </div>
-
-                  {/* Language Selection */}
                   <div>
                     <label className="block text-sm text-white/60 mb-2">Language</label>
                     <select
@@ -568,49 +599,61 @@ export default function CreatePage() {
                           Transmutation Complete!
                         </h3>
 
-                        {/* Thread to Hit Result */}
-                        {result.lyrics && result.audio?.main && (
+                        {/* Thread to Hit Result - NEW MUSIC API */}
+                        {result.lyrics && (result.downloadUrl || result.audio) && (
                           <div className="space-y-6">
                             <div className="flex items-center justify-between">
                               <h4 className="font-semibold text-xl gradient-text-gold">
-                                {result.title}
+                                🎵 {result.title}
                               </h4>
                               <div className="flex items-center gap-2 text-white/40 text-sm">
-                                <span className="px-2 py-1 bg-white/10 rounded">{result.voice}</span>
-                                <span className="px-2 py-1 bg-white/10 rounded">{result.style}</span>
-                                <span className="px-2 py-1 bg-white/10 rounded">{result.language}</span>
+                                <span className="px-2 py-1 bg-gold-500/20 rounded text-gold-400">{result.style}</span>
+                                <span className="px-2 py-1 bg-white/10 rounded">{Math.round((result.durationMs || 120000) / 1000)}s</span>
                               </div>
                             </div>
 
                             {/* Audio Player */}
-                            <div className="p-4 bg-white/5 rounded-xl space-y-4">
+                            <div className="p-4 bg-gradient-to-br from-gold-500/10 to-transparent rounded-xl space-y-4 border border-gold-500/20">
                               <div className="flex items-center gap-4">
-                                <Play className="w-8 h-8 text-gold" />
+                                <div className="w-12 h-12 rounded-full bg-gold-500/20 flex items-center justify-center">
+                                  <Play className="w-6 h-6 text-gold" />
+                                </div>
                                 <div className="flex-1">
                                   <audio
                                     controls
-                                    src={`data:audio/mpeg;base64,${result.audio.main}`}
+                                    src={result.downloadUrl || `data:audio/mpeg;base64,${result.audio}`}
                                     className="w-full"
                                   />
                                 </div>
                               </div>
                               <div className="flex gap-2">
-                                <button
-                                  onClick={() => handleDownloadAudio(result.audio?.main, `${result.title?.replace(/\s+/g, '-').toLowerCase() || 'track'}.mp3`)}
-                                  className="btn-secondary flex items-center gap-2 text-sm"
-                                >
-                                  <Download className="w-4 h-4" />
-                                  Download Track
-                                </button>
+                                {result.downloadUrl ? (
+                                  <a
+                                    href={result.downloadUrl}
+                                    download={`${result.title?.replace(/\s+/g, '-').toLowerCase() || 'track'}.mp3`}
+                                    className="btn-primary flex items-center gap-2 text-sm"
+                                  >
+                                    <Download className="w-4 h-4" />
+                                    Download Your Song
+                                  </a>
+                                ) : (
+                                  <button
+                                    onClick={() => handleDownloadAudio(result.audio, `${result.title?.replace(/\s+/g, '-').toLowerCase() || 'track'}.mp3`)}
+                                    className="btn-primary flex items-center gap-2 text-sm"
+                                  >
+                                    <Download className="w-4 h-4" />
+                                    Download Your Song
+                                  </button>
+                                )}
                               </div>
                             </div>
 
                             {/* Lyrics */}
-                            <details className="group">
-                              <summary className="cursor-pointer text-gold-400 hover:text-gold-300 transition-colors">
-                                View Lyrics
+                            <details className="group" open>
+                              <summary className="cursor-pointer text-gold-400 hover:text-gold-300 transition-colors font-semibold">
+                                📝 View Lyrics
                               </summary>
-                              <pre className="mt-4 p-4 bg-white/5 rounded-xl text-white/80 whitespace-pre-wrap text-sm max-h-96 overflow-y-auto">
+                              <pre className="mt-4 p-4 bg-white/5 rounded-xl text-white/80 whitespace-pre-wrap text-sm max-h-96 overflow-y-auto border border-white/10">
                                 {result.lyrics}
                               </pre>
                             </details>
