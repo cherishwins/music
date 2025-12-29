@@ -1,0 +1,5 @@
+{
+  "total_songs": 1000,
+  "embedding_dim": 384,
+  "model": "all-MiniLM-L6-v2"
+}

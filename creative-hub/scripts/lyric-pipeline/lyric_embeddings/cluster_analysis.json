@@ -1,0 +1,1034 @@
+{
+  "7": {
+    "size": 73,
+    "distinctive_terms": [
+      {
+        "term": "love",
+        "score": 0.11118619127433489
+      },
+      {
+        "term": "just",
+        "score": 0.08385590580900275
+      },
+      {
+        "term": "like",
+        "score": 0.05854019869912799
+      },
+      {
+        "term": "girl",
+        "score": 0.055156688191626606
+      },
+      {
+        "term": "ll",
+        "score": 0.0493058492607459
+      },
+      {
+        "term": "man",
+        "score": 0.04785709212126619
+      },
+      {
+        "term": "don",
+        "score": 0.04590990456074988
+      },
+      {
+        "term": "know",
+        "score": 0.045466361751007996
+      },
+      {
+        "term": "oh",
+        "score": 0.04348772579524608
+      },
+      {
+        "term": "said",
+        "score": 0.043140741798213394
+      },
+      {
+        "term": "little",
+        "score": 0.04058848666620253
+      },
+      {
+        "term": "gonna",
+        "score": 0.03949534266033914
+      },
+      {
+        "term": "got",
+        "score": 0.0394915084498435
+      },
+      {
+        "term": "woman",
+        "score": 0.03764576687046872
+      },
+      {
+        "term": "time",
+        "score": 0.03748326208942133
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "ABBA": 13,
+      "Alabama": 8,
+      "Aerosmith": 6,
+      "Air Supply": 6,
+      "Alice Cooper": 5
+    },
+    "sample_titles": [
+      "Ahe's My Kind Of Girl",
+      "Bang",
+      "Bang-A-Boomerang",
+      "Crazy World",
+      "Does Your Mother Know"
+    ],
+    "structural": {
+      "avg_word_count": 234.16438356164383,
+      "avg_unique_ratio": 0.43656019843806904,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.23280077350244885
+    }
+  },
+  "4": {
+    "size": 175,
+    "distinctive_terms": [
+      {
+        "term": "don",
+        "score": 0.05759803073088676
+      },
+      {
+        "term": "got",
+        "score": 0.05437520778476284
+      },
+      {
+        "term": "gonna",
+        "score": 0.05430858843111148
+      },
+      {
+        "term": "like",
+        "score": 0.05343473890904365
+      },
+      {
+        "term": "know",
+        "score": 0.04734421009408551
+      },
+      {
+        "term": "yeah",
+        "score": 0.04727830998634341
+      },
+      {
+        "term": "oh",
+        "score": 0.04632609996183717
+      },
+      {
+        "term": "just",
+        "score": 0.04542385734458559
+      },
+      {
+        "term": "ll",
+        "score": 0.04470695625628782
+      },
+      {
+        "term": "love",
+        "score": 0.04410679067241562
+      },
+      {
+        "term": "baby",
+        "score": 0.043290744341137
+      },
+      {
+        "term": "let",
+        "score": 0.040840521105541525
+      },
+      {
+        "term": "time",
+        "score": 0.040766222627085194
+      },
+      {
+        "term": "ain",
+        "score": 0.039542348525269055
+      },
+      {
+        "term": "come",
+        "score": 0.03558869890176123
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Aerosmith": 45,
+      "Alabama": 25,
+      "ABBA": 18,
+      "America": 14,
+      "Arlo Guthrie": 14
+    },
+    "sample_titles": [
+      "Andante, Andante",
+      "Crying Over You",
+      "Dancing Queen",
+      "Dream World",
+      "Dum Dum Diddle"
+    ],
+    "structural": {
+      "avg_word_count": 211.02285714285713,
+      "avg_unique_ratio": 0.44733733345476406,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.2253638986262762
+    }
+  },
+  "0": {
+    "size": 183,
+    "distinctive_terms": [
+      {
+        "term": "love",
+        "score": 0.11985685590761
+      },
+      {
+        "term": "know",
+        "score": 0.08292014434731755
+      },
+      {
+        "term": "don",
+        "score": 0.07716416019771921
+      },
+      {
+        "term": "want",
+        "score": 0.06614350149129641
+      },
+      {
+        "term": "ll",
+        "score": 0.06550157684754838
+      },
+      {
+        "term": "just",
+        "score": 0.06505799455062072
+      },
+      {
+        "term": "baby",
+        "score": 0.05745932427702846
+      },
+      {
+        "term": "ve",
+        "score": 0.056807388352255815
+      },
+      {
+        "term": "like",
+        "score": 0.05457277974806282
+      },
+      {
+        "term": "cause",
+        "score": 0.050246792850842825
+      },
+      {
+        "term": "oh",
+        "score": 0.04959444983831721
+      },
+      {
+        "term": "time",
+        "score": 0.04707488055492295
+      },
+      {
+        "term": "let",
+        "score": 0.04554885077037097
+      },
+      {
+        "term": "heart",
+        "score": 0.04450322437864674
+      },
+      {
+        "term": "say",
+        "score": 0.04401582381093313
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Air Supply": 39,
+      "Backstreet Boys": 24,
+      "ABBA": 20,
+      "Avril Lavigne": 20,
+      "Alabama": 11
+    },
+    "sample_titles": [
+      "As Good As New",
+      "Givin' A Little Bit More",
+      "Gonna Sing You My Lovesong",
+      "Here We'll Stay",
+      "I Am Just A Girl"
+    ],
+    "structural": {
+      "avg_word_count": 234.81420765027323,
+      "avg_unique_ratio": 0.40582968349397536,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.23483072434224136
+    }
+  },
+  "9": {
+    "size": 57,
+    "distinctive_terms": [
+      {
+        "term": "ll",
+        "score": 0.06119601425299759
+      },
+      {
+        "term": "world",
+        "score": 0.04764150196417617
+      },
+      {
+        "term": "like",
+        "score": 0.0462853763597218
+      },
+      {
+        "term": "just",
+        "score": 0.04624455456103765
+      },
+      {
+        "term": "don",
+        "score": 0.04533852435444939
+      },
+      {
+        "term": "time",
+        "score": 0.04476164097457251
+      },
+      {
+        "term": "know",
+        "score": 0.04244137314031329
+      },
+      {
+        "term": "people",
+        "score": 0.03793125730376028
+      },
+      {
+        "term": "sea",
+        "score": 0.03449762434912896
+      },
+      {
+        "term": "away",
+        "score": 0.03383683210921008
+      },
+      {
+        "term": "say",
+        "score": 0.03380540946865222
+      },
+      {
+        "term": "gonna",
+        "score": 0.03378760602131683
+      },
+      {
+        "term": "home",
+        "score": 0.033433773466041906
+      },
+      {
+        "term": "high",
+        "score": 0.03319275972981643
+      },
+      {
+        "term": "want",
+        "score": 0.032140111598984826
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Alphaville": 11,
+      "Arlo Guthrie": 8,
+      "Alabama": 6,
+      "America": 6,
+      "ABBA": 5
+    },
+    "sample_titles": [
+      "Burning My Bridges",
+      "Eagle",
+      "Fernando",
+      "Happy New Year",
+      "When All Is Said And Done"
+    ],
+    "structural": {
+      "avg_word_count": 200.28070175438597,
+      "avg_unique_ratio": 0.5249656282512764,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.14660031569619575
+    }
+  },
+  "11": {
+    "size": 53,
+    "distinctive_terms": [
+      {
+        "term": "know",
+        "score": 0.0643943595117918
+      },
+      {
+        "term": "just",
+        "score": 0.05402475896699011
+      },
+      {
+        "term": "feel",
+        "score": 0.04907187510502122
+      },
+      {
+        "term": "ve",
+        "score": 0.04709181073195226
+      },
+      {
+        "term": "like",
+        "score": 0.046074904800757335
+      },
+      {
+        "term": "don",
+        "score": 0.04543284697650329
+      },
+      {
+        "term": "want",
+        "score": 0.04372922989460363
+      },
+      {
+        "term": "life",
+        "score": 0.040843255435361506
+      },
+      {
+        "term": "come",
+        "score": 0.04029470531993152
+      },
+      {
+        "term": "turn",
+        "score": 0.03879076874069381
+      },
+      {
+        "term": "love",
+        "score": 0.038668066971851274
+      },
+      {
+        "term": "somebody",
+        "score": 0.03854931498511196
+      },
+      {
+        "term": "ll",
+        "score": 0.03834012329345705
+      },
+      {
+        "term": "make",
+        "score": 0.0380317260107531
+      },
+      {
+        "term": "believe",
+        "score": 0.0373701294464489
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "ABBA": 13,
+      "Alan Parsons Project": 12,
+      "Air Supply": 6,
+      "Alice Cooper": 4,
+      "Alison Krauss": 3
+    },
+    "sample_titles": [
+      "Cassandra",
+      "Every Good Man",
+      "Happy Hawaii",
+      "I Wonder (Departure)",
+      "I Wonder (Departure) [Live]"
+    ],
+    "structural": {
+      "avg_word_count": 240.0188679245283,
+      "avg_unique_ratio": 0.43421531775129846,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.24810674777081196
+    }
+  },
+  "2": {
+    "size": 110,
+    "distinctive_terms": [
+      {
+        "term": "ve",
+        "score": 0.07271213061905357
+      },
+      {
+        "term": "don",
+        "score": 0.07243820940110081
+      },
+      {
+        "term": "just",
+        "score": 0.06208331929004574
+      },
+      {
+        "term": "love",
+        "score": 0.05796847711205239
+      },
+      {
+        "term": "ll",
+        "score": 0.05550700235467574
+      },
+      {
+        "term": "know",
+        "score": 0.053755378134044324
+      },
+      {
+        "term": "time",
+        "score": 0.05300359203795206
+      },
+      {
+        "term": "want",
+        "score": 0.05258762093855789
+      },
+      {
+        "term": "way",
+        "score": 0.04866735333576628
+      },
+      {
+        "term": "away",
+        "score": 0.04843275343115107
+      },
+      {
+        "term": "let",
+        "score": 0.04322341189423007
+      },
+      {
+        "term": "oh",
+        "score": 0.04322268024147908
+      },
+      {
+        "term": "like",
+        "score": 0.04274242122557702
+      },
+      {
+        "term": "come",
+        "score": 0.04078836047245622
+      },
+      {
+        "term": "say",
+        "score": 0.04050428894984189
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Air Supply": 22,
+      "Avril Lavigne": 18,
+      "ABBA": 13,
+      "Alison Krauss": 8,
+      "Allman Brothers Band": 7
+    },
+    "sample_titles": [
+      "Chiquitita",
+      "Dance",
+      "Disillusion",
+      "Hey Hey Helen",
+      "I Saw It In The Mirror"
+    ],
+    "structural": {
+      "avg_word_count": 206.71818181818182,
+      "avg_unique_ratio": 0.4431029520164576,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.23676025218721813
+    }
+  },
+  "5": {
+    "size": 11,
+    "distinctive_terms": [
+      {
+        "term": "na",
+        "score": 0.2060470910735545
+      },
+      {
+        "term": "sa",
+        "score": 0.1849229298831487
+      },
+      {
+        "term": "ang",
+        "score": 0.17004174100232713
+      },
+      {
+        "term": "ko",
+        "score": 0.11515870074545326
+      },
+      {
+        "term": "like",
+        "score": 0.102159014216351
+      },
+      {
+        "term": "lo",
+        "score": 0.08676891042811731
+      },
+      {
+        "term": "sana",
+        "score": 0.08675647448122815
+      },
+      {
+        "term": "di",
+        "score": 0.08598921753076635
+      },
+      {
+        "term": "ng",
+        "score": 0.08443417404865332
+      },
+      {
+        "term": "world",
+        "score": 0.07304480443360789
+      },
+      {
+        "term": "mahal",
+        "score": 0.0720612916475469
+      },
+      {
+        "term": "kong",
+        "score": 0.07078643288113326
+      },
+      {
+        "term": "ni",
+        "score": 0.0705781674013623
+      },
+      {
+        "term": "mo",
+        "score": 0.06728490693822053
+      },
+      {
+        "term": "ikaw",
+        "score": 0.06685351205410663
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Aiza Seguerra": 6,
+      "Andrea Bocelli": 2,
+      "ABBA": 1,
+      "America": 1,
+      "Ariel Rivera": 1
+    },
+    "sample_titles": [
+      "Fernando (In Spanish)",
+      "Huwag Mong Iwan Ang Puso",
+      "Ikaw Ang Aking Mahal",
+      "Ikaw Na Ang Bahala: Panalangin",
+      "Pakisabi Na Lang"
+    ],
+    "structural": {
+      "avg_word_count": 158.0,
+      "avg_unique_ratio": 0.48383990227968016,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.26274579906433254
+    }
+  },
+  "3": {
+    "size": 32,
+    "distinctive_terms": [
+      {
+        "term": "like",
+        "score": 0.06031845222201839
+      },
+      {
+        "term": "don",
+        "score": 0.055451022493255904
+      },
+      {
+        "term": "got",
+        "score": 0.05233183692622195
+      },
+      {
+        "term": "ve",
+        "score": 0.04822783224038535
+      },
+      {
+        "term": "way",
+        "score": 0.04753621629005204
+      },
+      {
+        "term": "happy",
+        "score": 0.04690860257415193
+      },
+      {
+        "term": "cause",
+        "score": 0.04519648779036841
+      },
+      {
+        "term": "good",
+        "score": 0.045157052512333394
+      },
+      {
+        "term": "buy",
+        "score": 0.043919573121105386
+      },
+      {
+        "term": "just",
+        "score": 0.0432588131282918
+      },
+      {
+        "term": "want",
+        "score": 0.041995626999807016
+      },
+      {
+        "term": "ll",
+        "score": 0.04112784224804898
+      },
+      {
+        "term": "life",
+        "score": 0.0395782731079137
+      },
+      {
+        "term": "eat",
+        "score": 0.03946827003608934
+      },
+      {
+        "term": "time",
+        "score": 0.03833182165750089
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Arrogant Worms": 18,
+      "ABBA": 4,
+      "Alice Cooper": 4,
+      "Alabama": 2,
+      "Adam Sandler": 1
+    },
+    "sample_titles": [
+      "Free As A Bumble Bee",
+      "On And On And On",
+      "The Day Before You Came",
+      "What About Livingstone",
+      "The Psychotic Legend Of Uncle Donnie"
+    ],
+    "structural": {
+      "avg_word_count": 262.53125,
+      "avg_unique_ratio": 0.5013389131086791,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.10089923675815421
+    }
+  },
+  "10": {
+    "size": 121,
+    "distinctive_terms": [
+      {
+        "term": "ll",
+        "score": 0.06741391215329705
+      },
+      {
+        "term": "love",
+        "score": 0.05916317522046265
+      },
+      {
+        "term": "come",
+        "score": 0.05774561306005956
+      },
+      {
+        "term": "away",
+        "score": 0.05511165234122438
+      },
+      {
+        "term": "time",
+        "score": 0.049436973816491626
+      },
+      {
+        "term": "just",
+        "score": 0.04756283708790958
+      },
+      {
+        "term": "like",
+        "score": 0.04454469974286212
+      },
+      {
+        "term": "night",
+        "score": 0.041433816862483416
+      },
+      {
+        "term": "oh",
+        "score": 0.03930124043821805
+      },
+      {
+        "term": "ve",
+        "score": 0.035141866294221454
+      },
+      {
+        "term": "feel",
+        "score": 0.03490482874335219
+      },
+      {
+        "term": "know",
+        "score": 0.03446041819168295
+      },
+      {
+        "term": "hear",
+        "score": 0.032953875321005445
+      },
+      {
+        "term": "day",
+        "score": 0.03284628859480872
+      },
+      {
+        "term": "let",
+        "score": 0.03173631213492184
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Air Supply": 18,
+      "Arlo Guthrie": 15,
+      "America": 14,
+      "ABBA": 13,
+      "Alphaville": 9
+    },
+    "sample_titles": [
+      "From A Twinkling Star To A Passing Angel",
+      "Gimme Gimme Gimme",
+      "Hamlet III",
+      "I Am The City",
+      "I Have A Dream"
+    ],
+    "structural": {
+      "avg_word_count": 171.63636363636363,
+      "avg_unique_ratio": 0.5001481358779645,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.1859170839319002
+    }
+  },
+  "1": {
+    "size": 63,
+    "distinctive_terms": [
+      {
+        "term": "love",
+        "score": 0.11116648204592962
+      },
+      {
+        "term": "let",
+        "score": 0.06199916706436931
+      },
+      {
+        "term": "heart",
+        "score": 0.05910592591083358
+      },
+      {
+        "term": "god",
+        "score": 0.05034224401148841
+      },
+      {
+        "term": "time",
+        "score": 0.04820100179715267
+      },
+      {
+        "term": "make",
+        "score": 0.04693561871375883
+      },
+      {
+        "term": "ll",
+        "score": 0.04479789332137545
+      },
+      {
+        "term": "life",
+        "score": 0.04448842310778413
+      },
+      {
+        "term": "don",
+        "score": 0.04424236829762847
+      },
+      {
+        "term": "know",
+        "score": 0.04395791635303257
+      },
+      {
+        "term": "faith",
+        "score": 0.042777927272626894
+      },
+      {
+        "term": "like",
+        "score": 0.04030647382619254
+      },
+      {
+        "term": "day",
+        "score": 0.03880717463438183
+      },
+      {
+        "term": "need",
+        "score": 0.03869344634640631
+      },
+      {
+        "term": "just",
+        "score": 0.038672649714814565
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Air Supply": 12,
+      "Amy Grant": 12,
+      "Alison Krauss": 8,
+      "ABBA": 4,
+      "Alphaville": 4
+    },
+    "sample_titles": [
+      "He Is Your Brother",
+      "I Let The Music Speak",
+      "People Need Love",
+      "The Way Old Friends Do",
+      "Perfect World"
+    ],
+    "structural": {
+      "avg_word_count": 210.20634920634922,
+      "avg_unique_ratio": 0.44950592372602893,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.21326537086469674
+    }
+  },
+  "6": {
+    "size": 83,
+    "distinctive_terms": [
+      {
+        "term": "got",
+        "score": 0.06374379590801038
+      },
+      {
+        "term": "man",
+        "score": 0.054010027391022196
+      },
+      {
+        "term": "like",
+        "score": 0.0481705411319834
+      },
+      {
+        "term": "don",
+        "score": 0.044980745486466
+      },
+      {
+        "term": "ll",
+        "score": 0.04367580408749318
+      },
+      {
+        "term": "just",
+        "score": 0.042499205299838666
+      },
+      {
+        "term": "said",
+        "score": 0.03803883587234452
+      },
+      {
+        "term": "gonna",
+        "score": 0.03750280630874437
+      },
+      {
+        "term": "yeah",
+        "score": 0.036052552485907455
+      },
+      {
+        "term": "want",
+        "score": 0.03459811486240755
+      },
+      {
+        "term": "love",
+        "score": 0.034549839894110264
+      },
+      {
+        "term": "goes",
+        "score": 0.03426426169299451
+      },
+      {
+        "term": "day",
+        "score": 0.0318943079349918
+      },
+      {
+        "term": "ve",
+        "score": 0.030994944145377124
+      },
+      {
+        "term": "time",
+        "score": 0.0303822614614899
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Arrogant Worms": 15,
+      "Aerosmith": 12,
+      "Alice Cooper": 11,
+      "Arlo Guthrie": 10,
+      "ABBA": 7
+    },
+    "sample_titles": [
+      "King Kong Song",
+      "Man In The Middle",
+      "My Mama Said",
+      "Pick A Bale Of Cotton",
+      "Should I Laugh Or Cry"
+    ],
+    "structural": {
+      "avg_word_count": 232.3734939759036,
+      "avg_unique_ratio": 0.48736636944495454,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.15429595527635
+    }
+  },
+  "8": {
+    "size": 39,
+    "distinctive_terms": [
+      {
+        "term": "christmas",
+        "score": 0.1454223441139602
+      },
+      {
+        "term": "love",
+        "score": 0.06080333820052433
+      },
+      {
+        "term": "time",
+        "score": 0.049287959131977574
+      },
+      {
+        "term": "like",
+        "score": 0.04888300040149098
+      },
+      {
+        "term": "just",
+        "score": 0.04790143598242138
+      },
+      {
+        "term": "happy",
+        "score": 0.0456975902120546
+      },
+      {
+        "term": "won",
+        "score": 0.04350146544854087
+      },
+      {
+        "term": "ll",
+        "score": 0.04240298187308847
+      },
+      {
+        "term": "got",
+        "score": 0.04210842972065528
+      },
+      {
+        "term": "day",
+        "score": 0.0408514040310423
+      },
+      {
+        "term": "ve",
+        "score": 0.04001690916648347
+      },
+      {
+        "term": "year",
+        "score": 0.038218670852343324
+      },
+      {
+        "term": "come",
+        "score": 0.037607919077616625
+      },
+      {
+        "term": "say",
+        "score": 0.035828260376144914
+      },
+      {
+        "term": "toys",
+        "score": 0.03416200515304954
+      }
+    ],
+    "genre_distribution": {},
+    "top_artists": {
+      "Alabama": 6,
+      "Andy Williams": 5,
+      "Air Supply": 4,
+      "America": 4,
+      "Amy Grant": 4
+    },
+    "sample_titles": [
+      "Thank You For The Music",
+      "We Wish You A Merry Christmas",
+      "Toys In The Attic",
+      "O Come All Ye Faithful",
+      "Sleigh Ride"
+    ],
+    "structural": {
+      "avg_word_count": 174.53846153846155,
+      "avg_unique_ratio": 0.5059510029982575,
+      "avg_line_count": 1.0,
+      "avg_repetition_score": 0.21262425667672138
+    }
+  }
+}
