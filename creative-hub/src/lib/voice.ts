@@ -288,18 +288,277 @@ export async function generateLyricsSpeech(
   });
 }
 
+// ============================================
+// MUSIC COMPOSITION (ElevenLabs Music API)
+// ============================================
+
+// Music generation styles
+export const MUSIC_STYLES = {
+  // Hip-hop/Trap styles
+  trap: ["trap", "808 bass", "hi-hats", "dark atmosphere"],
+  boombap: ["boom bap", "90s hip hop", "vinyl samples", "jazzy"],
+  gfunk: ["g-funk", "west coast", "synth pads", "funky bass"],
+  drill: ["drill", "sliding 808s", "dark piano", "aggressive"],
+
+  // Electronic styles
+  edm: ["EDM", "electronic", "synth drops", "energetic"],
+  lofi: ["lo-fi", "chill", "dusty samples", "relaxing"],
+  synthwave: ["synthwave", "80s retro", "analog synths", "neon"],
+
+  // Other genres
+  rnb: ["R&B", "smooth", "soulful", "romantic"],
+  pop: ["pop", "catchy", "radio-friendly", "upbeat"],
+  rock: ["rock", "guitar driven", "drums", "energetic"],
+  cinematic: ["cinematic", "orchestral", "epic", "dramatic"],
+} as const;
+
+export type MusicStyle = keyof typeof MUSIC_STYLES;
+
+// Song section types
+export interface SongSection {
+  section_name: string;
+  positive_local_styles: string[];
+  negative_local_styles: string[];
+  duration_ms: number;
+  lines: string[];  // lyrics
+}
+
+export interface CompositionPlan {
+  positive_global_styles: string[];
+  negative_global_styles: string[];
+  sections: SongSection[];
+}
+
+/**
+ * Compose music from a simple text prompt
+ * Best for quick instrumental generation
+ */
+export async function composeMusic(
+  prompt: string,
+  options: {
+    durationMs?: number;        // 3000 - 600000 (3s to 10min)
+    instrumental?: boolean;      // Force no vocals
+    outputFormat?: string;       // mp3_44100_128, mp3_44100_192, etc
+  } = {}
+): Promise<{ audio: Buffer; songId?: string }> {
+  const apiKey = getApiKey();
+
+  const response = await fetch(`${ELEVENLABS_API_BASE}/music`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "xi-api-key": apiKey,
+    },
+    body: JSON.stringify({
+      prompt,
+      music_length_ms: options.durationMs ?? 60000, // Default 1 minute
+      model_id: "music_v1",
+      force_instrumental: options.instrumental ?? false,
+      respect_sections_durations: true,
+      store_for_inpainting: false,
+      sign_with_c2pa: false,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Music composition error: ${response.status} - ${error}`);
+  }
+
+  // Get song ID from response headers for potential remixing
+  const songId = response.headers.get("x-song-id") || undefined;
+
+  const arrayBuffer = await response.arrayBuffer();
+  return {
+    audio: Buffer.from(arrayBuffer),
+    songId,
+  };
+}
+
+/**
+ * Compose music with a detailed composition plan
+ * For full control over sections, styles, and lyrics
+ */
+export async function composeMusicWithPlan(
+  plan: CompositionPlan,
+  options: {
+    respectDurations?: boolean;  // Strict timing vs flexible
+    outputFormat?: string;
+  } = {}
+): Promise<{ audio: Buffer; songId?: string }> {
+  const apiKey = getApiKey();
+
+  const response = await fetch(`${ELEVENLABS_API_BASE}/music`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "xi-api-key": apiKey,
+    },
+    body: JSON.stringify({
+      composition_plan: plan,
+      model_id: "music_v1",
+      respect_sections_durations: options.respectDurations ?? true,
+      store_for_inpainting: false,
+      sign_with_c2pa: false,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Music composition error: ${response.status} - ${error}`);
+  }
+
+  const songId = response.headers.get("x-song-id") || undefined;
+  const arrayBuffer = await response.arrayBuffer();
+
+  return {
+    audio: Buffer.from(arrayBuffer),
+    songId,
+  };
+}
+
+/**
+ * Generate a full song with lyrics in a specific style
+ * Combines our skills system with ElevenLabs Music
+ */
+export async function generateFullSong(
+  lyrics: string,
+  style: MusicStyle = "trap",
+  options: {
+    durationMs?: number;
+    bpm?: number;
+  } = {}
+): Promise<{ audio: Buffer; songId?: string }> {
+
+  // Parse lyrics into sections
+  const sections = parseLyricsToSections(lyrics, style);
+
+  // Build composition plan
+  const plan: CompositionPlan = {
+    positive_global_styles: [
+      ...MUSIC_STYLES[style],
+      options.bpm ? `${options.bpm} BPM` : "120 BPM",
+      "professional mix",
+      "high quality",
+    ],
+    negative_global_styles: [
+      "amateur",
+      "low quality",
+      "distorted",
+      "off-key",
+    ],
+    sections,
+  };
+
+  return composeMusicWithPlan(plan, { respectDurations: false });
+}
+
+/**
+ * Parse lyrics text into song sections for composition plan
+ */
+function parseLyricsToSections(lyrics: string, style: MusicStyle): SongSection[] {
+  const sections: SongSection[] = [];
+  const styleTraits = MUSIC_STYLES[style];
+
+  // Split by section markers like [Verse 1], [Hook], etc.
+  const sectionRegex = /\[(.*?)\]([\s\S]*?)(?=\[|$)/g;
+  let match;
+
+  while ((match = sectionRegex.exec(lyrics)) !== null) {
+    const sectionName = match[1].trim();
+    const sectionLyrics = match[2].trim();
+    const lines = sectionLyrics.split('\n').filter(line => line.trim());
+
+    // Determine section-specific style
+    let localStyles = [...styleTraits];
+    const lowerName = sectionName.toLowerCase();
+
+    if (lowerName.includes('hook') || lowerName.includes('chorus')) {
+      localStyles.push("catchy", "melodic", "memorable");
+    } else if (lowerName.includes('verse')) {
+      localStyles.push("rhythmic", "driving");
+    } else if (lowerName.includes('bridge')) {
+      localStyles.push("building", "transition", "emotional");
+    } else if (lowerName.includes('intro')) {
+      localStyles.push("building", "ambient intro");
+    } else if (lowerName.includes('outro')) {
+      localStyles.push("fading", "resolution");
+    }
+
+    // Estimate duration based on line count (roughly 3-4 seconds per line)
+    const estimatedDuration = Math.max(10000, lines.length * 3500);
+
+    sections.push({
+      section_name: sectionName,
+      positive_local_styles: localStyles,
+      negative_local_styles: ["off-beat", "clashing"],
+      duration_ms: Math.min(estimatedDuration, 60000), // Cap at 60s per section
+      lines: lines.slice(0, 10), // ElevenLabs has limits
+    });
+  }
+
+  // If no sections found, treat entire lyrics as one section
+  if (sections.length === 0) {
+    const lines = lyrics.split('\n').filter(line => line.trim() && !line.startsWith('['));
+    sections.push({
+      section_name: "Main",
+      positive_local_styles: styleTraits,
+      negative_local_styles: ["off-beat"],
+      duration_ms: Math.min(lines.length * 3500, 180000),
+      lines: lines.slice(0, 20),
+    });
+  }
+
+  return sections;
+}
+
+/**
+ * Quick instrumental beat generation
+ * Uses producer skill prompts for style-specific beats
+ */
+export async function generateBeat(
+  style: MusicStyle,
+  options: {
+    durationMs?: number;
+    mood?: string;
+    tempo?: string;
+  } = {}
+): Promise<{ audio: Buffer; songId?: string }> {
+  const styleTraits = MUSIC_STYLES[style];
+
+  const prompt = [
+    `${styleTraits.join(", ")} instrumental beat`,
+    options.mood ? `${options.mood} mood` : "",
+    options.tempo ? `${options.tempo} tempo` : "120 BPM",
+    "professional quality",
+    "clean mix",
+    "no vocals",
+  ].filter(Boolean).join(", ");
+
+  return composeMusic(prompt, {
+    durationMs: options.durationMs ?? 90000, // 1.5 min default for beats
+    instrumental: true,
+  });
+}
+
+// ============================================
+// THREAD-TO-HIT PIPELINE (ElevenLabs Music API)
+// ============================================
+
 /**
  * Complete Thread-to-Hit pipeline
- * Generates spoken word audio from any text content
+ * Generates REAL SONGS with vocals + music using ElevenLabs Music API
  */
 export async function threadToHitAudio(
   content: string,
   options: {
-    voice?: VoiceId;
-    style?: VoicePreset;
-    language?: LanguageCode;
+    voice?: VoiceId;           // Not used in music mode, kept for backwards compat
+    style?: VoicePreset;       // Maps to music style
+    language?: LanguageCode;   // Not used in music mode
     includeIntro?: boolean;
     includeOutro?: boolean;
+    musicStyle?: MusicStyle;   // Trap, boom bap, drill, etc.
+    durationMs?: number;       // Song length
   } = {}
 ): Promise<{
   mainAudio: Buffer;
@@ -307,47 +566,114 @@ export async function threadToHitAudio(
   outroAudio?: Buffer;
   title: string;
   lyrics: string;
+  songId?: string;
 }> {
   // Import AI module for content generation
   const { extractStory, generateLyrics } = await import("./ai");
 
   // Step 1: Extract story and generate lyrics with Claude
+  console.log("[ThreadToHit] Extracting story from content...");
   const story = await extractStory(content);
+  console.log("[ThreadToHit] Story extracted:", story.title);
+
+  console.log("[ThreadToHit] Generating lyrics...");
   const lyrics = await generateLyrics(story);
+  console.log("[ThreadToHit] Lyrics generated:", lyrics.substring(0, 100) + "...");
 
-  // Step 2: Generate main spoken word audio
-  const mainAudio = await generateLyricsSpeech(
-    lyrics,
-    options.voice ?? "adam",
-    {
-      preset: options.style ?? "hype",
-      language: options.language,
-    }
-  );
+  // Step 2: Determine music style from options or voice preset
+  const musicStyle = options.musicStyle ?? getMusicStyleFromPreset(options.style);
+  const styleTraits = MUSIC_STYLES[musicStyle];
 
-  // Step 3: Generate intro sound effect if requested
-  let introAudio: Buffer | undefined;
-  if (options.includeIntro) {
-    introAudio = await generateSoundEffect(
-      "Epic cinematic intro whoosh with deep bass hit",
-      { duration: 3 }
-    );
-  }
+  // Step 3: Build the song prompt with lyrics + style
+  const songPrompt = buildSongPrompt(story, lyrics, styleTraits, options);
 
-  // Step 4: Generate outro sound effect if requested
-  let outroAudio: Buffer | undefined;
-  if (options.includeOutro) {
-    outroAudio = await generateSoundEffect(
-      "Powerful outro with reverb fade and bass drop",
-      { duration: 4 }
-    );
-  }
+  console.log("[ThreadToHit] Generating song with ElevenLabs Music API...");
+  console.log("[ThreadToHit] Style:", musicStyle, "Duration:", options.durationMs ?? 120000, "ms");
+
+  // Step 4: Generate the actual song with vocals + music
+  const result = await composeMusic(songPrompt, {
+    durationMs: options.durationMs ?? 120000, // 2 minutes default
+    instrumental: false,
+  });
+
+  console.log("[ThreadToHit] Song generated successfully!");
 
   return {
-    mainAudio,
-    introAudio,
-    outroAudio,
+    mainAudio: result.audio,
+    introAudio: undefined,  // ElevenLabs handles intros
+    outroAudio: undefined,  // ElevenLabs handles outros
     title: story.title,
     lyrics,
+    songId: result.songId,
   };
+}
+
+/**
+ * Map voice presets to music styles
+ */
+function getMusicStyleFromPreset(preset?: VoicePreset): MusicStyle {
+  switch (preset) {
+    case "hype":
+    case "intense":
+      return "trap";
+    case "emotional":
+      return "rnb";
+    case "narration":
+      return "cinematic";
+    default:
+      return "trap";
+  }
+}
+
+/**
+ * Build a rich prompt for the music API
+ */
+function buildSongPrompt(
+  story: { title: string; hook: string; theme: string },
+  lyrics: string,
+  styleTraits: readonly string[],
+  options: { durationMs?: number }
+): string {
+  // Clean lyrics for prompt
+  const cleanedLyrics = lyrics
+    .replace(/\*\*/g, "")
+    .replace(/#{1,3}\s*/g, "")
+    .substring(0, 2000); // API has limits
+
+  return [
+    `${styleTraits.join(", ")} song.`,
+    `Theme: ${story.theme || story.title}`,
+    `Hook: "${story.hook}"`,
+    "",
+    "Lyrics:",
+    cleanedLyrics,
+    "",
+    "Style: Professional mix, powerful vocals, radio-quality production.",
+    "Make it a hit song with catchy hooks and hard-hitting beats.",
+  ].join("\n");
+}
+
+/**
+ * Quick song generation from a simple prompt
+ * For when you just want a song without the full pipeline
+ */
+export async function quickSong(
+  description: string,
+  options: {
+    style?: MusicStyle;
+    durationMs?: number;
+    lyrics?: string;
+  } = {}
+): Promise<{ audio: Buffer; songId?: string }> {
+  const style = options.style ?? "trap";
+  const styleTraits = MUSIC_STYLES[style];
+
+  const prompt = options.lyrics
+    ? `${styleTraits.join(", ")} song. ${description}\n\nLyrics:\n${options.lyrics}`
+    : `${styleTraits.join(", ")} song. ${description}. Make it catchy with memorable hooks.`;
+
+  return composeMusic(prompt, {
+    durationMs: options.durationMs ?? 90000,
+    instrumental: false,
+  });
 }

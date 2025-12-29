@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   threadToHitAudio,
-  VOICES,
-  VOICE_PRESETS,
-  LANGUAGES,
-  type VoiceId,
-  type VoicePreset,
-  type LanguageCode,
+  MUSIC_STYLES,
+  type MusicStyle,
 } from "@/lib/voice";
-import { generateBeatBase64, downloadAudioAsBase64 } from "@/lib/beats";
-import { mixTrack } from "@/lib/mixer";
 import { uploadTrack, generateTrackFilename } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
@@ -17,13 +11,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       content,
-      voice = "adam",
-      style = "hype",
-      language,
-      includeIntro = false,
-      includeOutro = false,
-      includeBeat = false,
-      beatStyle = "hiphop",
+      style = "trap",       // Music style: trap, drill, boombap, etc.
+      durationMs = 120000,  // 2 minutes default
     } = body;
 
     if (!content || content.length < 50) {
@@ -48,111 +37,55 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate voice selection
-    if (voice && !VOICES[voice as VoiceId]) {
+    // Validate music style
+    if (style && !MUSIC_STYLES[style as MusicStyle]) {
       return NextResponse.json(
-        { error: `Invalid voice. Available: ${Object.keys(VOICES).join(", ")}` },
+        { error: `Invalid style. Available: ${Object.keys(MUSIC_STYLES).join(", ")}` },
         { status: 400 }
       );
     }
 
-    // Validate style preset
-    if (style && !VOICE_PRESETS[style as VoicePreset]) {
-      return NextResponse.json(
-        { error: `Invalid style. Available: ${Object.keys(VOICE_PRESETS).join(", ")}` },
-        { status: 400 }
-      );
-    }
+    console.log(`[ThreadToHit] Starting generation...`);
+    console.log(`[ThreadToHit] Style: ${style}, Duration: ${durationMs}ms`);
 
-    // Validate language if provided
-    if (language && !LANGUAGES[language as LanguageCode]) {
-      return NextResponse.json(
-        { error: `Invalid language. Available: ${Object.keys(LANGUAGES).join(", ")}` },
-        { status: 400 }
-      );
-    }
-
-    // Generate the spoken word audio
+    // Generate REAL SONG with vocals + music using ElevenLabs Music API
     const result = await threadToHitAudio(content, {
-      voice: voice as VoiceId,
-      style: style as VoicePreset,
-      language: language as LanguageCode | undefined,
-      includeIntro,
-      includeOutro,
+      musicStyle: style as MusicStyle,
+      durationMs,
     });
 
-    // Generate beat if requested (uses Replicate/MusicGen)
-    let beatBuffer: Buffer | undefined;
-    if (includeBeat && process.env.REPLICATE_API_TOKEN) {
-      try {
-        const beatBase64 = await generateBeatBase64({
-          prompt: `${result.title} - motivational anthem`,
-          duration: 30,
-          bpm: 120,
-          style: beatStyle as "trap" | "lofi" | "edm" | "cinematic" | "hiphop",
-        });
-        beatBuffer = Buffer.from(beatBase64, "base64");
-      } catch (beatError) {
-        console.error("Beat generation failed:", beatError);
-        // Continue without beat - don't fail the whole request
-      }
-    }
-
-    // Mix voice + beat into final production track
-    let finalBuffer: Buffer = result.mainAudio;
-    if (beatBuffer) {
-      try {
-        finalBuffer = await mixTrack(result.mainAudio, beatBuffer, {
-          voiceVolume: 1.0,
-          beatVolume: 0.4,
-          normalize: true,
-          fadeIn: 0.3,
-          fadeOut: 2.0,
-        });
-        console.log("Mixed track created:", finalBuffer.length, "bytes");
-      } catch (mixError) {
-        console.error("Mixing failed, using voice only:", mixError);
-        finalBuffer = result.mainAudio;
-      }
-    }
+    console.log(`[ThreadToHit] Song generated: "${result.title}"`);
 
     // Upload to storage if BLOB token is configured
     let downloadUrl: string | undefined;
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
-        const filename = generateTrackFilename(result.title, "final");
-        const stored = await uploadTrack(finalBuffer, filename);
+        const filename = generateTrackFilename(result.title, "song");
+        const stored = await uploadTrack(result.mainAudio, filename);
         downloadUrl = stored.downloadUrl;
-        console.log("Track uploaded:", downloadUrl);
+        console.log("[ThreadToHit] Uploaded:", downloadUrl);
       } catch (uploadError) {
-        console.error("Upload failed:", uploadError);
-        // Fall back to base64 response
+        console.error("[ThreadToHit] Upload failed:", uploadError);
       }
     }
 
     // Return with download URL if available, otherwise base64
     return NextResponse.json({
+      success: true,
       title: result.title,
       lyrics: result.lyrics,
-      downloadUrl, // Direct download link for customer!
-      audio: downloadUrl ? undefined : {
-        main: result.mainAudio.toString("base64"),
-        intro: result.introAudio?.toString("base64"),
-        outro: result.outroAudio?.toString("base64"),
-        beat: beatBuffer?.toString("base64"),
-        final: finalBuffer.toString("base64"),
-      },
+      downloadUrl,
+      audio: downloadUrl ? undefined : result.mainAudio.toString("base64"),
+      songId: result.songId,
       format: "mp3",
-      voice,
       style,
-      language: language || "en",
-      hasBeat: !!beatBuffer,
-      isMixed: !!beatBuffer,
+      durationMs,
     });
+
   } catch (error) {
-    console.error("Thread to hit error:", error);
+    console.error("[ThreadToHit] Error:", error);
     const message =
-      error instanceof Error ? error.message : "Failed to generate";
+      error instanceof Error ? error.message : "Failed to generate song";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -160,14 +93,17 @@ export async function POST(request: NextRequest) {
 // Get available options
 export async function GET() {
   return NextResponse.json({
-    voices: Object.entries(VOICES).map(([key]) => ({
-      id: key,
-      name: key.charAt(0).toUpperCase() + key.slice(1),
+    description: "Transform any text content into a REAL song with vocals + music",
+    styles: Object.entries(MUSIC_STYLES).map(([id, traits]) => ({
+      id,
+      name: id.charAt(0).toUpperCase() + id.slice(1),
+      traits,
     })),
-    styles: Object.keys(VOICE_PRESETS),
-    languages: Object.entries(LANGUAGES).map(([code, name]) => ({
-      code,
-      name,
-    })),
+    limits: {
+      minDurationMs: 30000,
+      maxDurationMs: 300000,
+      defaultDurationMs: 120000,
+    },
+    poweredBy: "ElevenLabs Music API",
   });
 }
