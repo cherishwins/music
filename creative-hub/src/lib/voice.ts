@@ -469,8 +469,8 @@ function parseLyricsToSections(lyrics: string, style: MusicStyle): SongSection[]
     const sectionLyrics = match[2].trim();
     const lines = sectionLyrics.split('\n').filter(line => line.trim());
 
-    // Determine section-specific style
-    let localStyles = [...styleTraits];
+    // Determine section-specific style (copy to mutable array)
+    const localStyles: string[] = [...styleTraits];
     const lowerName = sectionName.toLowerCase();
 
     if (lowerName.includes('hook') || lowerName.includes('chorus')) {
@@ -502,7 +502,7 @@ function parseLyricsToSections(lyrics: string, style: MusicStyle): SongSection[]
     const lines = lyrics.split('\n').filter(line => line.trim() && !line.startsWith('['));
     sections.push({
       section_name: "Main",
-      positive_local_styles: styleTraits,
+      positive_local_styles: [...styleTraits],
       negative_local_styles: ["off-beat"],
       duration_ms: Math.min(lines.length * 3500, 180000),
       lines: lines.slice(0, 20),

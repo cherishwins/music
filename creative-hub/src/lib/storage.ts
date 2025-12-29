@@ -37,7 +37,7 @@ export async function uploadTrack(
 /**
  * Generate a unique filename for a track
  */
-export function generateTrackFilename(title: string, type: "voice" | "beat" | "final"): string {
+export function generateTrackFilename(title: string, type: "voice" | "beat" | "final" | "song"): string {
   const sanitized = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
