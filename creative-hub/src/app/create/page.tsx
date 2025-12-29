@@ -170,15 +170,19 @@ const VOICE_STYLES = [
   { id: "intense", name: "Intense", description: "Aggressive, powerful" },
 ];
 
-// Music styles (for Thread-to-Hit)
+// Music styles (for Thread-to-Hit) - Grammy-level production
 const MUSIC_STYLES = [
-  { id: "trap", name: "Trap", description: "808s, hi-hats, dark atmosphere" },
-  { id: "drill", name: "Drill", description: "Sliding 808s, dark piano, aggressive" },
-  { id: "boombap", name: "Boom Bap", description: "90s hip hop, vinyl samples" },
-  { id: "rnb", name: "R&B", description: "Smooth, soulful, romantic" },
-  { id: "pop", name: "Pop", description: "Catchy, radio-friendly, upbeat" },
-  { id: "cinematic", name: "Cinematic", description: "Epic, orchestral, dramatic" },
-  { id: "lofi", name: "Lo-Fi", description: "Chill, dusty samples, relaxing" },
+  { id: "trap", name: "Trap", description: "Metro Boomin style, 808s, hi-hats" },
+  { id: "drill", name: "Drill", description: "UK drill, sliding 808s, aggressive" },
+  { id: "boombap", name: "Boom Bap", description: "J Dilla style, 90s samples" },
+  { id: "piano", name: "Piano Ballad", description: "Adele style, grand piano, emotional" },
+  { id: "rnb", name: "R&B", description: "The Weeknd style, smooth, soulful" },
+  { id: "gospel", name: "Gospel", description: "Kirk Franklin style, choir, uplifting" },
+  { id: "cinematic", name: "Cinematic", description: "Hans Zimmer style, orchestral, epic" },
+  { id: "afrobeats", name: "Afrobeats", description: "Burna Boy style, danceable groove" },
+  { id: "pop", name: "Pop", description: "Max Martin style, radio-ready hits" },
+  { id: "soul", name: "Soul", description: "Motown inspired, live band feel" },
+  { id: "lofi", name: "Lo-Fi", description: "Chill beats, vinyl texture, relaxing" },
 ];
 
 const LANGUAGES = [

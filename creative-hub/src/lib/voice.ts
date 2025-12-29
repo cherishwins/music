@@ -292,24 +292,175 @@ export async function generateLyricsSpeech(
 // MUSIC COMPOSITION (ElevenLabs Music API)
 // ============================================
 
-// Music generation styles
+// Music generation styles - GRAMMY-LEVEL PRODUCTION TEMPLATES
 export const MUSIC_STYLES = {
-  // Hip-hop/Trap styles
-  trap: ["trap", "808 bass", "hi-hats", "dark atmosphere"],
-  boombap: ["boom bap", "90s hip hop", "vinyl samples", "jazzy"],
-  gfunk: ["g-funk", "west coast", "synth pads", "funky bass"],
-  drill: ["drill", "sliding 808s", "dark piano", "aggressive"],
+  // Hip-hop/Trap styles - Pro production
+  trap: [
+    "trap",
+    "808 sub bass with distortion",
+    "crisp hi-hats with rolls",
+    "dark ambient pads",
+    "professional mixing",
+    "Metro Boomin style production",
+    "punchy kick drums",
+    "modern trap melodies",
+  ],
+  boombap: [
+    "boom bap",
+    "90s hip hop",
+    "vinyl sample chops with warmth",
+    "jazzy piano loops",
+    "dusty drum breaks",
+    "J Dilla inspired",
+    "soulful samples",
+    "classic hip hop production",
+  ],
+  gfunk: [
+    "g-funk",
+    "west coast",
+    "talk box synths",
+    "funky bass lines",
+    "Dr. Dre style",
+    "smooth synth pads",
+    "bouncy drums",
+    "California vibes",
+  ],
+  drill: [
+    "UK drill",
+    "sliding 808 bass",
+    "dark minor key piano",
+    "aggressive delivery",
+    "808 Melo style",
+    "eerie melodies",
+    "hard hitting drums",
+    "London sound",
+  ],
 
-  // Electronic styles
-  edm: ["EDM", "electronic", "synth drops", "energetic"],
-  lofi: ["lo-fi", "chill", "dusty samples", "relaxing"],
-  synthwave: ["synthwave", "80s retro", "analog synths", "neon"],
+  // Soul/R&B - Premium quality
+  rnb: [
+    "R&B",
+    "smooth neo-soul",
+    "lush Rhodes piano",
+    "warm bass",
+    "live drums feel",
+    "romantic",
+    "The Weeknd production style",
+    "silky vocals",
+    "professional mix",
+  ],
+  soul: [
+    "soul music",
+    "gospel piano chords",
+    "organ",
+    "live band feel",
+    "emotional vocals",
+    "Motown inspired",
+    "strings section",
+    "warm analog sound",
+  ],
 
-  // Other genres
-  rnb: ["R&B", "smooth", "soulful", "romantic"],
-  pop: ["pop", "catchy", "radio-friendly", "upbeat"],
-  rock: ["rock", "guitar driven", "drums", "energetic"],
-  cinematic: ["cinematic", "orchestral", "epic", "dramatic"],
+  // Electronic styles - Festival ready
+  edm: [
+    "EDM",
+    "electronic",
+    "massive synth drops",
+    "energetic build-ups",
+    "festival ready",
+    "punchy sidechain compression",
+    "euphoric melodies",
+    "professional mastering",
+  ],
+  lofi: [
+    "lo-fi hip hop",
+    "chill beats",
+    "vinyl crackle texture",
+    "jazz samples",
+    "mellow piano",
+    "relaxing atmosphere",
+    "study music",
+    "warm analog filters",
+  ],
+  synthwave: [
+    "synthwave",
+    "80s retro",
+    "analog synthesizers",
+    "neon aesthetic",
+    "driving arpeggios",
+    "The Midnight style",
+    "nostalgic melodies",
+    "polished production",
+  ],
+
+  // Pop - Radio ready
+  pop: [
+    "pop",
+    "catchy hooks",
+    "radio-friendly production",
+    "upbeat energy",
+    "Max Martin style",
+    "polished vocals",
+    "memorable melodies",
+    "chart-ready mix",
+  ],
+
+  // Rock/Alternative
+  rock: [
+    "rock",
+    "electric guitars",
+    "powerful drums",
+    "energetic performance",
+    "stadium rock feel",
+    "guitar solos",
+    "anthemic chorus",
+    "live band sound",
+  ],
+
+  // Cinematic - Epic production
+  cinematic: [
+    "cinematic",
+    "orchestral arrangement",
+    "epic strings",
+    "dramatic brass",
+    "Hans Zimmer inspired",
+    "powerful percussion",
+    "emotional crescendos",
+    "film score quality",
+    "grand piano",
+  ],
+
+  // NEW: Premium production styles
+  piano: [
+    "piano ballad",
+    "grand piano",
+    "emotional",
+    "intimate performance",
+    "classical influence",
+    "Adele style production",
+    "strings accompaniment",
+    "powerful vocals",
+    "Grammy-quality mixing",
+  ],
+  gospel: [
+    "gospel",
+    "church organ",
+    "choir harmonies",
+    "powerful vocals",
+    "uplifting",
+    "spiritual",
+    "Kirk Franklin style",
+    "live band feel",
+    "emotional delivery",
+  ],
+  afrobeats: [
+    "afrobeats",
+    "Nigerian pop",
+    "danceable rhythms",
+    "afro-fusion",
+    "Burna Boy style",
+    "tropical percussion",
+    "guitar licks",
+    "infectious groove",
+  ],
 } as const;
 
 export type MusicStyle = keyof typeof MUSIC_STYLES;
@@ -548,6 +699,7 @@ export async function generateBeat(
 /**
  * Complete Thread-to-Hit pipeline
  * Generates REAL SONGS with vocals + music using ElevenLabs Music API
+ * Uses composition plans for Grammy-level control
  */
 export async function threadToHitAudio(
   content: string,
@@ -584,27 +736,194 @@ export async function threadToHitAudio(
   const musicStyle = options.musicStyle ?? getMusicStyleFromPreset(options.style);
   const styleTraits = MUSIC_STYLES[musicStyle];
 
-  // Step 3: Build the song prompt with lyrics + style
-  const songPrompt = buildSongPrompt(story, lyrics, styleTraits, options);
+  // Step 3: Build a composition plan for Grammy-level control
+  const compositionPlan = buildCompositionPlan(story, lyrics, musicStyle, options.durationMs);
 
   console.log("[ThreadToHit] Generating song with ElevenLabs Music API...");
   console.log("[ThreadToHit] Style:", musicStyle, "Duration:", options.durationMs ?? 120000, "ms");
+  console.log("[ThreadToHit] Using composition plan with", compositionPlan.sections.length, "sections");
 
-  // Step 4: Generate the actual song with vocals + music
-  const result = await composeMusic(songPrompt, {
-    durationMs: options.durationMs ?? 120000, // 2 minutes default
-    instrumental: false,
+  // Step 4: Generate with composition plan for pro-level output
+  const result = await composeMusicWithPlan(compositionPlan, {
+    respectDurations: true,
   });
 
   console.log("[ThreadToHit] Song generated successfully!");
 
   return {
     mainAudio: result.audio,
-    introAudio: undefined,  // ElevenLabs handles intros
-    outroAudio: undefined,  // ElevenLabs handles outros
+    introAudio: undefined,
+    outroAudio: undefined,
     title: story.title,
     lyrics,
     songId: result.songId,
+  };
+}
+
+/**
+ * Build a professional composition plan from story and lyrics
+ */
+function buildCompositionPlan(
+  story: { title: string; hook: string; theme: string },
+  lyrics: string,
+  style: MusicStyle,
+  durationMs?: number
+): CompositionPlan {
+  const styleTraits = MUSIC_STYLES[style];
+  const totalDuration = durationMs ?? 120000;
+
+  // Get negative styles (what to avoid)
+  const negativeStyles = getNegativeStyles(style);
+
+  // Parse lyrics into sections
+  const sections = parseLyricsIntoSections(lyrics, style, totalDuration);
+
+  return {
+    positive_global_styles: [
+      ...styleTraits.slice(0, 6),
+      "professional mixing",
+      "Grammy-quality production",
+      "clear powerful vocals",
+    ],
+    negative_global_styles: negativeStyles,
+    sections,
+  };
+}
+
+/**
+ * Get negative styles to avoid based on the chosen style
+ */
+function getNegativeStyles(style: MusicStyle): string[] {
+  const negativeMap: Record<string, string[]> = {
+    trap: ["acoustic", "soft", "classical", "country", "jazz", "minimal"],
+    drill: ["happy", "upbeat", "acoustic", "soft", "country"],
+    boombap: ["EDM", "dubstep", "country", "classical", "modern trap"],
+    piano: ["aggressive", "trap", "EDM", "heavy drums", "electronic"],
+    rnb: ["aggressive", "trap heavy", "rock", "country", "EDM"],
+    gospel: ["dark", "aggressive", "trap", "EDM", "metal"],
+    cinematic: ["lo-fi", "trap", "punk", "minimal"],
+    afrobeats: ["dark", "aggressive", "slow", "classical"],
+    pop: ["dark", "aggressive", "underground", "experimental"],
+    soul: ["electronic", "EDM", "trap", "aggressive"],
+    lofi: ["aggressive", "EDM", "intense", "fast tempo"],
+  };
+
+  return negativeMap[style] || ["low quality", "amateur", "distorted"];
+}
+
+/**
+ * Parse lyrics into proper song sections for the composition plan
+ */
+function parseLyricsIntoSections(
+  lyrics: string,
+  style: MusicStyle,
+  totalDurationMs: number
+): SongSection[] {
+  const sections: SongSection[] = [];
+  const styleTraits = MUSIC_STYLES[style];
+
+  // Try to extract sections from markdown-formatted lyrics
+  const sectionRegex = /\*\*\[(.*?)\]\*\*\s*([\s\S]*?)(?=\*\*\[|$)/g;
+  let match;
+  const parsedSections: { name: string; lines: string[] }[] = [];
+
+  while ((match = sectionRegex.exec(lyrics)) !== null) {
+    const sectionName = match[1].trim();
+    const sectionContent = match[2].trim();
+    const lines = sectionContent.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+
+    if (lines.length > 0) {
+      parsedSections.push({ name: sectionName, lines: lines.slice(0, 8) }); // Max 8 lines per section
+    }
+  }
+
+  // If no sections found, create default structure
+  if (parsedSections.length === 0) {
+    const allLines = lyrics.split('\n').filter(line =>
+      line.trim() &&
+      !line.startsWith('#') &&
+      !line.startsWith('**') &&
+      !line.startsWith('[')
+    );
+
+    // Create a simple structure
+    parsedSections.push(
+      { name: "Intro", lines: ["[Instrumental intro building atmosphere]"] },
+      { name: "Verse 1", lines: allLines.slice(0, 6) },
+      { name: "Hook", lines: allLines.slice(6, 10) },
+      { name: "Verse 2", lines: allLines.slice(10, 16) },
+      { name: "Hook", lines: allLines.slice(6, 10) }, // Repeat hook
+      { name: "Outro", lines: ["[Song fades with final hook]"] }
+    );
+  }
+
+  // Calculate duration per section
+  const durationPerSection = Math.floor(totalDurationMs / parsedSections.length);
+
+  // Build sections with proper styles
+  for (const parsed of parsedSections) {
+    const localStyles = getSectionStyles(parsed.name, styleTraits);
+
+    sections.push({
+      section_name: parsed.name,
+      positive_local_styles: localStyles.positive,
+      negative_local_styles: localStyles.negative,
+      duration_ms: Math.min(durationPerSection, 45000), // Max 45s per section
+      lines: parsed.lines,
+    });
+  }
+
+  return sections;
+}
+
+/**
+ * Get appropriate styles for each section type
+ */
+function getSectionStyles(
+  sectionName: string,
+  globalStyles: readonly string[]
+): { positive: string[]; negative: string[] } {
+  const name = sectionName.toLowerCase();
+
+  if (name.includes('intro')) {
+    return {
+      positive: ["building tension", "atmospheric", "filtered", ...globalStyles.slice(0, 3)],
+      negative: ["full drums", "maximum energy"],
+    };
+  }
+
+  if (name.includes('hook') || name.includes('chorus')) {
+    return {
+      positive: ["catchy melody", "memorable", "full production", "anthemic", ...globalStyles.slice(0, 4)],
+      negative: ["sparse", "spoken word only", "quiet"],
+    };
+  }
+
+  if (name.includes('verse')) {
+    return {
+      positive: ["rhythmic", "clear vocals", "driving beat", ...globalStyles.slice(0, 4)],
+      negative: ["too busy", "overshadowing vocals"],
+    };
+  }
+
+  if (name.includes('bridge')) {
+    return {
+      positive: ["emotional shift", "stripped back", "building to climax"],
+      negative: ["same as verse", "full production"],
+    };
+  }
+
+  if (name.includes('outro')) {
+    return {
+      positive: ["triumphant finale", "resolution", "fading elements"],
+      negative: ["abrupt ending", "building tension"],
+    };
+  }
+
+  // Default
+  return {
+    positive: [...globalStyles.slice(0, 5)],
+    negative: ["off-beat", "low quality"],
   };
 }
 
@@ -626,7 +945,7 @@ function getMusicStyleFromPreset(preset?: VoicePreset): MusicStyle {
 }
 
 /**
- * Build a rich prompt for the music API
+ * Build a Grammy-level prompt for the music API
  */
 function buildSongPrompt(
   story: { title: string; hook: string; theme: string },
@@ -638,18 +957,35 @@ function buildSongPrompt(
   const cleanedLyrics = lyrics
     .replace(/\*\*/g, "")
     .replace(/#{1,3}\s*/g, "")
-    .substring(0, 2000); // API has limits
+    .replace(/\[.*?\]/g, "") // Remove section markers for cleaner prompt
+    .substring(0, 1800); // API has limits
 
+  // Build a detailed, professional prompt
   return [
-    `${styleTraits.join(", ")} song.`,
-    `Theme: ${story.theme || story.title}`,
-    `Hook: "${story.hook}"`,
+    // Production style
+    `Create a ${styleTraits.slice(0, 5).join(", ")} song.`,
     "",
-    "Lyrics:",
+    // Professional production requirements
+    "PRODUCTION REQUIREMENTS:",
+    "- Grammy-quality mixing and mastering",
+    "- Clear, powerful vocals in the mix",
+    "- Professional arrangement with intro, verses, hooks, and outro",
+    "- Punchy drums and clean bass",
+    "- Emotional dynamics throughout",
+    "",
+    // Style details
+    `STYLE: ${styleTraits.join(", ")}`,
+    "",
+    // Theme and hook
+    `SONG THEME: ${story.theme || story.title}`,
+    `MAIN HOOK: "${story.hook}"`,
+    "",
+    // Lyrics
+    "LYRICS TO SING:",
     cleanedLyrics,
     "",
-    "Style: Professional mix, powerful vocals, radio-quality production.",
-    "Make it a hit song with catchy hooks and hard-hitting beats.",
+    // Final instructions
+    "Make this a radio-ready hit with memorable melodies, powerful delivery, and professional production quality.",
   ].join("\n");
 }
 
