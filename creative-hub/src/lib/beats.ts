@@ -3,15 +3,9 @@
  * Generates instrumentals from text prompts
  */
 
-import Replicate from "replicate";
-
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
-
 export interface BeatOptions {
   prompt: string;
-  duration?: number; // seconds (default 30)
+  duration?: number; // seconds (default 15)
   bpm?: number;
   style?: "trap" | "lofi" | "edm" | "cinematic" | "hiphop";
 }
@@ -25,13 +19,16 @@ const STYLE_PROMPTS = {
   hiphop: "boom bap hip hop beat, soulful samples, punchy drums",
 };
 
+const MUSICGEN_VERSION = "671ac645ce5e552cc63a54a2bbff63fcf798043055d2dac5fc9e36a837eedcfb";
+
 /**
- * Generate a beat using MusicGen via Replicate
+ * Generate a beat using MusicGen via Replicate direct API
  */
 export async function generateBeat(options: BeatOptions): Promise<string> {
-  const { prompt, duration = 30, bpm = 120, style = "hiphop" } = options;
+  const { prompt, duration = 15, bpm = 120, style = "hiphop" } = options;
 
-  if (!process.env.REPLICATE_API_TOKEN) {
+  const apiToken = process.env.REPLICATE_API_TOKEN;
+  if (!apiToken) {
     throw new Error("REPLICATE_API_TOKEN not configured");
   }
 
@@ -41,26 +38,59 @@ export async function generateBeat(options: BeatOptions): Promise<string> {
 
   console.log("Generating beat:", fullPrompt);
 
-  // Use MusicGen via Replicate
-  const output = await replicate.run(
-    "meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3f8ace440ca3834a",
-    {
+  // Create prediction
+  const createResponse = await fetch("https://api.replicate.com/v1/predictions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      version: MUSICGEN_VERSION,
       input: {
         prompt: fullPrompt,
-        duration: Math.min(duration, 30), // Max 30 seconds
-        model_version: "stereo-melody-large",
+        model_version: "stereo-large",
+        duration: Math.min(duration, 30),
         output_format: "mp3",
         normalization_strategy: "loudness",
       },
-    }
-  );
+    }),
+  });
 
-  // Replicate returns a URL to the generated audio
-  if (typeof output === "string") {
-    return output;
+  if (!createResponse.ok) {
+    const error = await createResponse.text();
+    throw new Error(`Replicate API error: ${error}`);
   }
 
-  throw new Error("Unexpected response from Replicate");
+  const prediction = await createResponse.json();
+  const predictionId = prediction.id;
+
+  // Poll for completion (max 2 minutes)
+  const maxAttempts = 24;
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds
+
+    const statusResponse = await fetch(
+      `https://api.replicate.com/v1/predictions/${predictionId}`,
+      {
+        headers: { "Authorization": `Bearer ${apiToken}` },
+      }
+    );
+
+    const status = await statusResponse.json();
+
+    if (status.status === "succeeded") {
+      return status.output;
+    }
+
+    if (status.status === "failed") {
+      throw new Error(`Beat generation failed: ${status.error}`);
+    }
+
+    console.log(`Beat generation progress: ${status.status}`);
+  }
+
+  throw new Error("Beat generation timed out");
 }
 
 /**
