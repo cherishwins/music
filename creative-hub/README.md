@@ -1,200 +1,169 @@
 # Creative Hub
 
-> Your Multiverse Creative Platform - Transform threads into hits, generate quantum slide decks, and monetize your creative content.
+> AI Music Production + Payment Empire + Music Intelligence
 
-## Overview
+**Live**: [creative-hub-virid.vercel.app](https://creative-hub-virid.vercel.app)
+**Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
 
-Creative Hub is a B2C SaaS platform for digital creators, built with Next.js 14, Three.js, and Telegram Mini App integration. It combines AI-powered content creation tools with blockchain payments via Telegram Stars and TON.
+## What Is This?
 
-## Features
+A Telegram Mini App that generates hit songs using AI, with built-in payments (Stars, TON, USDC) and a music intelligence system that learns what makes songs successful.
 
-### Creative Tools
+## Current Status (Dec 2025)
 
-- **Thread to Hit** - Transform community threads into polished songs using Claude, MusicGen, and RVC voice conversion
-- **Quantum Slide Decks** - Generate reality-bending presentations with AI
-- **Multiverse Videos** - Create videos with Runway ML integration
-- **Voice Studio** - Clone and transform voices with ElevenLabs
+| System | Status |
+|--------|--------|
+| **Turso DB** | ✅ 8 tables (users, tracks, payments) |
+| **Qdrant** | ✅ 1000 lyric patterns loaded |
+| **@MSUCOBot** | ✅ Menu button configured |
+| **Payments** | ✅ Stars, TON, x402 (USDC) ready |
 
-### Technical Highlights
+See `docs/STATUS_2025-12-28.md` for full details.
 
-- **Stunning UX** - Three.js cosmic scene with WebGL effects, video backgrounds via Mux, smooth transitions
-- **Telegram Integration** - Native Mini App support with Stars and TON payments (no KYC)
-- **Social Automation** - n8n workflow integration for multi-platform distribution (Instagram, Facebook, X, VK, WeChat, etc.)
-- **Performance Optimized** - Video preloading while Three.js loads, lazy loading, code splitting
+## The Stack
 
-## Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **UI**: React 18, Tailwind CSS, Framer Motion
-- **3D Graphics**: Three.js, React Three Fiber, React Three Drei
-- **Video**: Mux Player
-- **Payments**: Telegram Stars API, TON Connect
-- **State**: Zustand
-- **Automation**: n8n webhooks
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or pnpm
-
-### Installation
-
-```bash
-cd creative-hub
-npm install
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    MUSIC INTELLIGENCE                        │
+│  Qdrant vectors → 12 hit themes → Pattern extraction         │
+│  "What makes songs successful? Learn it. Use it."            │
+├─────────────────────────────────────────────────────────────┤
+│                    PAYMENT EMPIRE                            │
+│  Telegram Stars │ TON Connect │ x402 (USDC) │ Coinbase       │
+│  "Meet users wherever they want to pay"                      │
+├─────────────────────────────────────────────────────────────┤
+│                    GENERATION ENGINE                         │
+│  ElevenLabs Music API → /v1/music/plan (FREE iteration)     │
+│  Hit DNA enrichment → Better prompts → Better songs          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Environment Setup
-
-Copy the example environment file and configure your API keys:
+## Quick Start
 
 ```bash
-cp .env.example .env.local
+# Install
+pnpm install
+
+# Set up databases (see docs/SETUP_GUIDE.md)
+# Then run migrations
+pnpm drizzle-kit push
+
+# Dev
+pnpm dev
 ```
 
-Required environment variables:
+## Key Files
+
+| What | Where |
+|------|-------|
+| Database schema | `src/lib/db/schema.ts` |
+| Vector operations | `src/lib/vectors/index.ts` |
+| Payments (x402) | `src/lib/x402.ts` |
+| Lyric pipeline | `scripts/lyric-pipeline/` |
+| Skills/docs | `skills/INDEX.md` |
+| Status | `docs/STATUS_2025-12-28.md` |
+
+## Lyric Intelligence
+
+We analyze lyrics to find hit patterns:
+
+```bash
+cd scripts/lyric-pipeline
+
+# Embed 10K songs
+python embed_lyrics.py --hf-dataset vishnupriyavr/spotify-million-song-dataset --max-samples 10000
+
+# Find patterns
+python cluster_lyrics.py --input ./lyric_embeddings --clusters 20
+
+# Classify by 12 proven hit themes
+python theme_classifier.py --corpus ./lyric_embeddings
+
+# Upload to Qdrant
+python upload_to_qdrant.py --input ./lyric_embeddings
+
+# Generate optimized prompts
+python generation_optimizer.py --patterns ./lyric_embeddings --theme breakup --region KR
+```
+
+### The 12 Hit Themes (73.4% Billboard accuracy)
+
+| Primary | Secondary |
+|---------|-----------|
+| Breakup (always works) | Nostalgia |
+| Loss | Rebellion |
+| Desire | **Cynicism (50% of 2020s!)** |
+| Pain | Desperation |
+| Aspiration | Escapism |
+| Inspiration | Confusion |
+
+## Payments
+
+Three rails, no KYC:
+
+```typescript
+// Telegram Stars (1B+ users)
+window.Telegram.WebApp.openInvoice(invoiceUrl);
+
+// TON (87M wallets)
+await tonConnectUI.sendTransaction({ ... });
+
+// x402 USDC (agents + web)
+// Automatic via middleware
+```
+
+## Environment Variables
 
 ```env
-# Telegram Bot (for Stars payments)
-TELEGRAM_BOT_TOKEN=your_bot_token
+# Telegram
+TELEGRAM_BOT_TOKEN=xxx
 
-# TON Wallet (for crypto payments)
-NEXT_PUBLIC_TON_WALLET_ADDRESS=your_wallet
+# Databases
+TURSO_DATABASE_URL=libsql://xxx.turso.io
+TURSO_AUTH_TOKEN=xxx
+QDRANT_URL=https://xxx.qdrant.io:6333
+QDRANT_API_KEY=xxx
 
-# Mux Video
-MUX_TOKEN_ID=your_mux_token_id
-MUX_TOKEN_SECRET=your_mux_token_secret
+# AI
+ELEVENLABS_API_KEY=xxx
+ANTHROPIC_API_KEY=xxx
 
-# n8n Webhooks
-NEXT_PUBLIC_N8N_SOCIAL_DISTRIBUTE_WEBHOOK=https://your-n8n/webhook/...
+# Payments
+NEXT_PUBLIC_TON_WALLET_ADDRESS=xxx
+X402_PAYMENT_ADDRESS=xxx
 ```
 
-### Development
+## Documentation
 
-```bash
-npm run dev
-```
+| Doc | Purpose |
+|-----|---------|
+| `docs/STATUS_2025-12-28.md` | **Read this first** - what's live |
+| `docs/SETUP_GUIDE.md` | Database setup |
+| `docs/HIT_DNA_ARCHITECTURE.md` | Music intelligence deep dive |
+| `docs/MONETIZATION_ARCHITECTURE.md` | Business model |
+| `docs/UNIT_ECONOMICS.md` | Cost tracking |
+| `skills/INDEX.md` | Production techniques |
 
-Open [http://localhost:3000](http://localhost:3000)
+## The Moat
 
-### Production Build
+What we have that nobody else does:
 
-```bash
-npm run build
-npm start
-```
+1. **Pattern data** - 1000+ songs analyzed, scaling to 100K
+2. **12 proven themes** - Mapped from 50 years of Billboard #1s
+3. **Learning loop** - System gets smarter from usage
+4. **Multi-rail payments** - Stars + TON + USDC + fiat
+5. **Regional optimization** - US, KR, BR, UK, MX prompts
 
-## Project Structure
+## Related Bots
 
-```
-creative-hub/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── api/               # API routes (payments, etc.)
-│   │   ├── dashboard/         # User dashboard
-│   │   ├── create/            # Content creation interface
-│   │   └── page.tsx           # Landing page
-│   ├── components/
-│   │   ├── three/             # Three.js scenes
-│   │   ├── video/             # Video components (Mux)
-│   │   ├── payments/          # Telegram Stars & TON
-│   │   └── sections/          # Page sections
-│   └── lib/
-│       ├── store.ts           # Zustand state management
-│       └── n8n.ts             # n8n webhook integration
-├── public/
-│   └── tonconnect-manifest.json
-└── package.json
-```
-
-## Payment Integration
-
-### Telegram Stars
-
-Stars are Telegram's in-app currency for digital goods. Integration:
-
-```typescript
-// In Telegram Mini App context
-window.Telegram.WebApp.openInvoice(invoiceUrl, (status) => {
-  if (status === "paid") {
-    // Grant access/credits
-  }
-});
-```
-
-### TON Connect
-
-For crypto payments:
-
-```typescript
-import { useTonConnectUI } from "@tonconnect/ui-react";
-
-const [tonConnectUI] = useTonConnectUI();
-
-await tonConnectUI.sendTransaction({
-  validUntil: Math.floor(Date.now() / 1000) + 300,
-  messages: [{ address: walletAddress, amount: "1000000000" }], // 1 TON
-});
-```
-
-## Social Media Automation
-
-The platform uses n8n webhooks for content distribution:
-
-```typescript
-import { distributeToSocialMedia } from "@/lib/n8n";
-
-await distributeToSocialMedia({
-  content: "Check out my new creation!",
-  platforms: ["instagram", "twitter", "telegram"],
-  mediaUrls: ["https://..."],
-});
-```
-
-Supported platforms: Instagram, Facebook, X/Twitter, TikTok, LinkedIn, VK, Odnoklassniki, WeChat, Telegram
-
-## Architecture Decisions
-
-### Video + Three.js Loading Strategy
-
-1. Video background plays immediately (fast startup)
-2. Three.js scene loads in background
-3. Progress tracked via Zustand store
-4. Smooth opacity transition when scene ready
-
-### No-KYC Payments
-
-- Telegram Stars: Instant, no verification needed
-- TON: Blockchain-native, wallet-based
-- No traditional payment processors required
-
-## Deployment
-
-### Vercel (Recommended)
-
-```bash
-vercel
-```
-
-### Docker
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-## License
-
-MIT
+| Bot | Purpose |
+|-----|---------|
+| @MSUCOBot | Creative Hub (this app) |
+| @MemeScanTON_bot | Token scanner |
+| @MemeSealTON_bot | Meme coins |
+| @Alchemy_Studio_Bot | TBD |
+| @NotaryTON_bot | TBD |
 
 ---
 
-Built with quantum physics metaphors and multiverse love.
+*"Skills in, hits out, payments flowing."*

@@ -198,30 +198,52 @@ skills/
 
 ## WHAT'S NEXT
 
-### Completed
+### Completed (Dec 28, 2025)
 - [x] Database schema designed (Turso)
 - [x] Vector DB integration (Qdrant)
 - [x] Lyric embedding pipeline built
 - [x] 12 hit theme classifier implemented
 - [x] Generation optimizer with regional patterns
 - [x] Prompt library generator
-
-### Immediate (Today)
-- [ ] Get Turso + Qdrant credentials
-- [ ] Run database migrations
-- [ ] Test lyric pipeline: `python scripts/lyric-pipeline/embed_lyrics.py --hf-dataset vishnupriyavr/spotify-million-song-dataset --max-samples 1000`
+- [x] **Turso credentials configured**
+- [x] **Qdrant credentials configured**
+- [x] **1000 songs embedded and uploaded to Qdrant**
+- [x] **12 pattern clusters identified**
+- [x] **Theme distribution analyzed (breakup 17%, loss 17%, desire 16%)**
+- [x] **@MSUCOBot created and configured**
+- [x] **5 payment rails integrated (Stars, TON, x402, Onramp, Stripe)**
+- [x] **x402 payment protection on all /api/generate/* endpoints**
 
 ### This Week
-- [ ] Run full pipeline on 10K+ songs
-- [ ] Seed lyric patterns to Qdrant
+- [ ] Scale pipeline to 10K+ songs
 - [ ] Build CLAP audio embedding pipeline
-- [ ] Deploy facilitator
+- [ ] Deploy MCP server (`/mcp-server/`)
+- [ ] Deploy x402 facilitator (`/facilitator/`)
+- [ ] Set up Coinbase Onramp (`COINBASE_PROJECT_ID`)
 
 ### This Month
 - [ ] Launch feedback loop (performance → pattern refinement)
 - [ ] 50K+ lyrics in vector DB
 - [ ] Cross-cultural pattern analysis (US vs KR vs BR)
 - [ ] First paying MCP users
+- [ ] Wire lyric patterns into generation prompts
+
+---
+
+## CREDENTIALS QUICK REFERENCE
+
+All in `creative-hub/.env`:
+
+| Service | Env Var | Status |
+|---------|---------|--------|
+| Telegram | `TELEGRAM_BOT_TOKEN` | @MSUCOBot |
+| TON Wallet | `NEXT_PUBLIC_TON_WALLET_ADDRESS` | UQBZenh5... |
+| Base/USDC | `X402_PAYMENT_ADDRESS` | 0x14E607... |
+| Turso | `TURSO_DATABASE_URL` | msuco-lyrics-db |
+| Qdrant | `QDRANT_URL` | 1000 vectors |
+| ElevenLabs | `ELEVENLABS_API_KEY` | Active |
+| Anthropic | `ANTHROPIC_API_KEY` | Active |
+| Replicate | `REPLICATE_API_TOKEN` | Active |
 
 ---
 

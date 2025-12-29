@@ -1,15 +1,51 @@
-# Creative Hub - AI Agent Instructions
+# MSUCO - AI Agent Instructions
+
+> **Brand**: MSUCO (Purple Tiger Crown)
+> **Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
+> **App**: https://creative-hub-virid.vercel.app
+
+---
 
 ## Project Overview
 
-Creative Hub is a **Telegram Mini App** for monetized AI-powered content creation. Users pay with **Telegram Stars** or **TON cryptocurrency** to generate music, videos, slides, and voice content.
+MSUCO is a **Telegram Mini App** for AI-powered music creation. Users pay with **5 different payment rails** to generate music, album art, and brand packages.
 
-### Core Concept
-- Transform community threads/posts into songs ("Thread to Hit")
-- Generate AI presentations ("Quantum Slide Decks")
-- Create videos with Runway ML
-- Voice cloning with ElevenLabs
-- Social media distribution via n8n workflows
+### Core Features
+- AI music generation (ElevenLabs)
+- Album art generation (Gemini)
+- Brand package generation
+- Lyric intelligence with pattern analysis
+- Multi-rail payments (Stars, TON, USDC, Card, Onramp)
+
+---
+
+## Current Status (December 2025)
+
+### What's LIVE
+- **@MSUCOBot** - Telegram bot with Mini App menu button
+- **5 Payment Rails** - Stars, TON, x402 USDC, Coinbase Onramp, Stripe
+- **Qdrant** - 1000 lyric vectors in `lyric_patterns` collection
+- **Turso** - 8 tables (users, tracks, transactions, etc.)
+- **x402 Protected APIs** - Music ($0.50), Album Art ($0.10), Brand ($0.25)
+
+### Credentials (all in `.env`)
+```bash
+# Telegram
+TELEGRAM_BOT_TOKEN=7715188456:AAH...  # @MSUCOBot
+
+# Wallets
+NEXT_PUBLIC_TON_WALLET_ADDRESS=UQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf
+X402_PAYMENT_ADDRESS=0x14E6076eAC2420e56b4E2E18c815b2DD52264D54  # Base USDC
+
+# Databases
+TURSO_DATABASE_URL=libsql://msuco-lyrics-db-jpanda.aws-us-east-1.turso.io
+QDRANT_URL=https://fd0f714a-fc22-4577-a32a-19f0980f6f2d.us-east4-0.gcp.cloud.qdrant.io:6333
+
+# AI Services
+ELEVENLABS_API_KEY=sk_14e8...
+ANTHROPIC_API_KEY=sk-ant-api03-Kc2f...
+REPLICATE_API_TOKEN=r8_8UlA5...
+```
 
 ---
 
@@ -18,243 +54,142 @@ Creative Hub is a **Telegram Mini App** for monetized AI-powered content creatio
 ```
 creative-hub/
 ├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── page.tsx            # Landing page with Three.js scene
-│   │   ├── create/page.tsx     # Content creation wizard
-│   │   ├── dashboard/page.tsx  # User dashboard
-│   │   └── api/payments/       # Payment endpoints
-│   ├── components/
-│   │   ├── three/              # Three.js 3D scenes
-│   │   ├── payments/           # TON + Telegram Stars
-│   │   ├── sections/           # Landing page sections
-│   │   └── video/              # Mux video player
-│   └── lib/
-│       ├── store.ts            # Zustand state management
-│       └── n8n.ts              # n8n webhook integrations
+│   ├── app/
+│   │   └── api/generate/
+│   │       ├── music/route.ts      # x402 protected, $0.50
+│   │       ├── album-art/route.ts  # x402 protected, $0.10
+│   │       └── brand/route.ts      # x402 protected, $0.25
+│   ├── lib/
+│   │   ├── x402.ts                 # HTTP 402 payment middleware
+│   │   ├── ton.ts                  # TON Connect integration
+│   │   ├── coinbase.ts             # Onramp integration
+│   │   └── telegram.ts             # Stars payments
+│   └── components/payments/
+│       └── multi-rail-checkout.tsx # Universal checkout UI
+├── scripts/lyric-pipeline/         # Intelligence engine
+│   ├── embed_lyrics.py             # Vectorize lyrics
+│   ├── cluster_lyrics.py           # Find patterns
+│   ├── theme_classifier.py         # Hit theme analysis
+│   └── upload_to_qdrant.py         # Store vectors
+├── public/
+│   ├── tonconnect-manifest.json    # MSUCO branding
+│   └── assets/
+│       └── musiclogo2.jpg          # Main logo
+└── skills/                         # Documentation
+    ├── INDEX.md
+    ├── PAYMENT_EMPIRE.skill.md
+    └── ...
 ```
-
-### Tech Stack
-- **Framework**: Next.js 14 (App Router)
-- **3D Graphics**: Three.js + React Three Fiber + Drei
-- **Styling**: Tailwind CSS + Framer Motion
-- **State**: Zustand with persistence
-- **Payments**: TON Connect + Telegram Stars
-- **Video**: Mux Player
-- **Automation**: n8n webhooks
 
 ---
 
-## Current Status
+## Payment Rails
 
-### What Works
-- Landing page with animated Three.js cosmic scene
-- Glassmorphism UI with smooth animations
-- TON Connect wallet integration (frontend)
-- Telegram WebApp detection and theming
-- Payment modal UI (Stars + TON options)
-- Zustand store with local persistence
-- n8n webhook infrastructure (needs configuration)
-- Responsive design
+| Rail | Status | Config Needed |
+|------|--------|---------------|
+| **Telegram Stars** | Ready | `TELEGRAM_BOT_TOKEN` |
+| **TON Connect** | Ready | `NEXT_PUBLIC_TON_WALLET_ADDRESS` |
+| **x402 USDC** | Ready | `X402_PAYMENT_ADDRESS` (Base network) |
+| **Coinbase Onramp** | Needs setup | `COINBASE_PROJECT_ID` |
+| **Stripe** | Needs setup | `STRIPE_SECRET_KEY` |
 
-### What Needs Implementation
-
-#### Priority 1: Core Functionality
-1. **Telegram Bot Creation** - Required for Stars payments
-2. **API Route for Real Payments** - Currently returns mock data
-3. **AI Content Generation Endpoints** - All "Generate" buttons are non-functional
-4. **Database** - User data isn't persisted beyond localStorage
-
-#### Priority 2: AI Integrations
-1. **Thread-to-Hit Pipeline**:
-   - Text extraction from URLs
-   - Claude API for lyrics/story extraction
-   - MusicGen/Suno for beat generation
-   - RVC for voice conversion
-2. **Slide Generator**:
-   - Claude API for content generation
-   - Image generation (DALL-E/Midjourney)
-   - PDF export
-3. **Video Generator**:
-   - Runway ML API integration
-4. **Voice Studio**:
-   - ElevenLabs API integration
-
-#### Priority 3: Distribution
-1. **n8n Workflow Setup** - Social media posting automation
-2. **Analytics Dashboard** - Real metrics instead of mock data
+### x402 Pricing (in `src/lib/x402.ts`)
+```typescript
+export const ENDPOINT_PRICING = {
+  "/api/generate/music": { price: "$0.50" },
+  "/api/generate/album-art": { price: "$0.10" },
+  "/api/generate/brand": { price: "$0.25" },
+};
+```
 
 ---
 
-## Required Services & API Keys
+## Lyric Intelligence
 
-### 1. Telegram Bot (REQUIRED)
-```bash
-# Create via @BotFather on Telegram
-# Get your bot token
-TELEGRAM_BOT_TOKEN=your_bot_token_here
-```
-**Setup Steps:**
-1. Message @BotFather on Telegram
-2. Send `/newbot`
-3. Name it (e.g., "Creative Hub Bot")
-4. Username must end in `bot` (e.g., `CreativeHubBot`)
-5. Copy the token provided
+**Location**: `scripts/lyric-pipeline/`
 
-### 2. TON Wallet (REQUIRED for TON payments)
-```bash
-# Your TON wallet address for receiving payments
-NEXT_PUBLIC_TON_WALLET_ADDRESS=UQ...your_address
-```
-**Setup:**
-1. Install Tonkeeper or TON Wallet
-2. Create a wallet
-3. Copy the address
+### Current State
+- 1000 songs embedded (384-dim vectors)
+- 12 pattern clusters identified
+- Theme distribution: breakup (17%), loss (17%), desire (16%)
+- Stored in Qdrant `lyric_patterns` collection
 
-### 3. Mux Video (OPTIONAL - for background video)
+### Run Pipeline
 ```bash
-MUX_TOKEN_ID=your_mux_token_id
-MUX_TOKEN_SECRET=your_mux_token_secret
-NEXT_PUBLIC_MUX_PLAYBACK_ID=your_default_playback_id
-```
-**Get at:** https://dashboard.mux.com/
+cd scripts/lyric-pipeline
+pip install -r requirements.txt
 
-### 4. ElevenLabs (for Voice Studio)
-```bash
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-```
-**Get at:** https://elevenlabs.io/
-- Free tier: 10,000 characters/month
-- Paid: Starts at $5/month
+# Embed lyrics
+python embed_lyrics.py --hf-dataset vishnupriyavr/spotify-million-song-dataset --max-samples 1000
 
-### 5. Runway ML (for Video Generation)
-```bash
-RUNWAY_API_KEY=your_runway_api_key
-```
-**Get at:** https://runwayml.com/
-- Requires paid plan for API access
+# Cluster patterns
+python cluster_lyrics.py --input ./lyric_embeddings --clusters 12
 
-### 6. Anthropic Claude (for AI Content)
-```bash
-ANTHROPIC_API_KEY=your_anthropic_api_key
-```
-**Get at:** https://console.anthropic.com/
-- Used for lyrics extraction, slide content, story generation
+# Classify themes
+python theme_classifier.py --corpus ./lyric_embeddings
 
-### 7. n8n (for Social Distribution)
-```bash
-NEXT_PUBLIC_N8N_CONTENT_CREATED_WEBHOOK=https://your-n8n.com/webhook/content-created
-NEXT_PUBLIC_N8N_SOCIAL_DISTRIBUTE_WEBHOOK=https://your-n8n.com/webhook/social-distribute
-NEXT_PUBLIC_N8N_USER_SIGNUP_WEBHOOK=https://your-n8n.com/webhook/user-signup
-NEXT_PUBLIC_N8N_PAYMENT_COMPLETE_WEBHOOK=https://your-n8n.com/webhook/payment-complete
-NEXT_PUBLIC_N8N_ANALYTICS_WEBHOOK=https://your-n8n.com/webhook/analytics
+# Upload to Qdrant
+python upload_to_qdrant.py --input ./lyric_embeddings
 ```
-**Options:**
-- Self-hosted: https://n8n.io/
-- Cloud: https://n8n.cloud/ (free tier available)
-
-### 8. Database (OPTIONAL but recommended)
-```bash
-DATABASE_URL=postgresql://...or_mongodb://...
-```
-**Options:**
-- Supabase (free tier): https://supabase.com/
-- PlanetScale (free tier): https://planetscale.com/
-- Neon (free tier): https://neon.tech/
 
 ---
 
-## Development Commands
+## Development
 
 ```bash
-# Install dependencies
+# Install
 pnpm install
 
-# Start development server
+# Run locally
 pnpm dev
 
-# Build for production
-pnpm build
+# Test databases
+pnpm tsx scripts/test-db.ts
 
-# Start production server
-pnpm start
-
-# Lint code
-pnpm lint
+# Deploy (auto via Vercel)
+git push origin main
 ```
 
 ---
 
-## Deployment
-
-### Vercel (Recommended)
-1. Connect GitHub repo
-2. Set environment variables in Vercel dashboard
-3. Deploy
-
-### After Deployment - Update These Files
-
-**public/tonconnect-manifest.json:**
-```json
-{
-  "url": "https://YOUR-ACTUAL-DOMAIN.vercel.app",
-  "name": "Creative Hub",
-  "iconUrl": "https://YOUR-ACTUAL-DOMAIN.vercel.app/icon.png",
-  "termsOfUseUrl": "https://YOUR-ACTUAL-DOMAIN.vercel.app/terms",
-  "privacyPolicyUrl": "https://YOUR-ACTUAL-DOMAIN.vercel.app/privacy"
-}
-```
-
-**Configure Telegram Bot for Mini App:**
-1. Message @BotFather
-2. `/setmenubutton` - Set your app URL
-3. `/setdomain` - Add your domain for WebApp
-
----
-
-## Key Files Reference
+## Key Files
 
 | File | Purpose |
 |------|---------|
-| `src/app/page.tsx` | Main landing with Three.js + video |
-| `src/app/create/page.tsx` | Content creation wizard (needs backend) |
-| `src/app/api/payments/create-invoice/route.ts` | **MOCK** - needs Telegram Bot API |
-| `src/lib/store.ts` | Zustand store + pricing plans |
-| `src/lib/n8n.ts` | Social distribution webhooks |
-| `src/components/three/cosmic-scene.tsx` | 3D animated background |
-| `src/components/payments/telegram-payment.tsx` | Payment modal + TON integration |
+| `.env` | All credentials |
+| `src/lib/x402.ts` | Payment middleware |
+| `src/lib/ton.ts` | TON wallet integration |
+| `src/components/payments/multi-rail-checkout.tsx` | Checkout UI |
+| `public/tonconnect-manifest.json` | MSUCO branding for TON |
+| `scripts/lyric-pipeline/` | Intelligence engine |
+| `skills/PAYMENT_EMPIRE.skill.md` | Payment strategy docs |
 
 ---
 
-## Implementation Priorities
+## External Dashboards
 
-When continuing development:
+- **Vercel**: https://vercel.com/jessepimmel/creative-hub
+- **Qdrant**: https://cloud.qdrant.io
+- **Turso**: https://turso.tech/app
+- **BotFather**: @BotFather → /mybots → @MSUCOBot
 
-1. **First**: Create Telegram Bot + implement real Stars payment
-2. **Second**: Add database (Supabase recommended)
-3. **Third**: Implement one AI feature end-to-end (suggest: Voice Studio with ElevenLabs - simplest API)
-4. **Fourth**: Add Thread-to-Hit with Claude API
-5. **Fifth**: Set up n8n for social distribution
+---
+
+## Next Steps
+
+1. [ ] Scale lyric pipeline to 10K+ songs
+2. [ ] Set up Coinbase Onramp (`COINBASE_PROJECT_ID`)
+3. [ ] Deploy MCP server (`/mcp-server/`)
+4. [ ] Deploy x402 facilitator (`/facilitator/`)
+5. [ ] Build CLAP audio embeddings
+6. [ ] Wire generation to use lyric patterns
 
 ---
 
 ## Code Style
 
 - TypeScript strict mode
-- Tailwind for styling (use existing color tokens: `gold-*`, `cosmic-*`)
+- Tailwind with existing tokens (`gold-*`, `cosmic-*`)
 - Framer Motion for animations
-- Components in `src/components/` with clear naming
+- Use `glass` and `glass-gold` CSS classes
 - API routes in `src/app/api/`
-- Use existing glass/glass-gold CSS classes for UI consistency
-
----
-
-## Testing Payments Locally
-
-For Telegram Stars:
-- Use ngrok to expose localhost
-- Set webhook URL in BotFather to ngrok URL
-- Test in Telegram's WebApp inspector
-
-For TON:
-- TON Connect works in browser
-- Use testnet first: set network in TonConnectUIProvider
