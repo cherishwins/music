@@ -16,6 +16,7 @@
     "@react-three/postprocessing": "^2.16.0",
     "@tonconnect/ui-react": "^2.0.9",
     "@twa-dev/sdk": "^7.10.0",
+    "@vercel/blob": "^2.0.0",
     "ai": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

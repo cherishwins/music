@@ -45,3 +45,4 @@ coverage/
 *.pid
 *.seed
 *.pid.lock
+outputs/*
