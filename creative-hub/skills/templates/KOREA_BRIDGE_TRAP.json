@@ -1,0 +1,197 @@
+{
+  "_comment": "Emotional Trap template optimized for US + Korea crossover - based on 2024 hit analysis",
+  "_bpm": "92-98",
+  "_key": "C# Minor / A Minor",
+  "_style": "Emotional trap with Korean crossover appeal",
+
+  "prompt_template": "Emotional Korean hip-hop track, {bpm} BPM, {key} key. Piano-driven melody with atmospheric pads, crisp trap drums, deep 808 sub bass with slight distortion. Male Korean rapper with strained but determined delivery, building intensity throughout. Korean lyrics in verses with English phrases in hook. Theme: {theme}. Production quality: Grammy-level, professional mixing, clear powerful vocals.",
+
+  "positive_global_styles": [
+    "korean hip-hop",
+    "emotional trap",
+    "piano-driven melody",
+    "808 sub bass",
+    "atmospheric pads",
+    "building intensity",
+    "minor key",
+    "professional mixing",
+    "clear powerful vocals",
+    "authentic struggle narrative"
+  ],
+
+  "negative_global_styles": [
+    "generic trap cliches",
+    "autotuned singing",
+    "happy upbeat",
+    "party music",
+    "overproduced EDM",
+    "western country",
+    "acoustic soft"
+  ],
+
+  "sections": [
+    {
+      "section_name": "Intro",
+      "positive_local_styles": [
+        "atmospheric piano",
+        "building anticipation",
+        "urban ambience",
+        "distant city sounds",
+        "filtered 808 hints"
+      ],
+      "negative_local_styles": ["full drums", "aggressive", "loud"],
+      "duration_ms": 12000,
+      "lines": ["[Ambient intro - piano melody emerges from city sounds]"]
+    },
+    {
+      "section_name": "Verse 1",
+      "positive_local_styles": [
+        "restrained drums enter",
+        "piano melody continues",
+        "measured delivery",
+        "Korean rap vocals",
+        "tired but determined tone",
+        "808 bass subtle"
+      ],
+      "negative_local_styles": ["explosive", "shouting", "maximum energy"],
+      "duration_ms": 40000,
+      "lines": [
+        "[Korean: Opening about the struggle]",
+        "[Korean: Describing the situation]",
+        "[Korean: The weight of expectations]",
+        "[Korean: But refusing to give up]"
+      ]
+    },
+    {
+      "section_name": "Pre-Hook",
+      "positive_local_styles": [
+        "building intensity",
+        "drums fuller",
+        "emotional vocal strain",
+        "808 more prominent",
+        "anticipation"
+      ],
+      "negative_local_styles": ["same as verse", "flat"],
+      "duration_ms": 15000,
+      "lines": [
+        "[Mixed Korean/English: The turning point]",
+        "[Building to the release]"
+      ]
+    },
+    {
+      "section_name": "Hook",
+      "positive_local_styles": [
+        "full production",
+        "powerful vocals",
+        "anthemic melody",
+        "singable hook",
+        "808 full power",
+        "emotional release",
+        "crowd-ready"
+      ],
+      "negative_local_styles": ["sparse", "spoken word only", "quiet"],
+      "duration_ms": 25000,
+      "lines": [
+        "[English hook line - memorable, repeatable]",
+        "[Korean response line]",
+        "[English hook line repeat]",
+        "Watch me rise, watch me rise"
+      ]
+    },
+    {
+      "section_name": "Verse 2",
+      "positive_local_styles": [
+        "more aggressive flow",
+        "harder drums",
+        "faster delivery moments",
+        "confident Korean rap",
+        "technical skill showcase",
+        "intensity building"
+      ],
+      "negative_local_styles": ["same energy as verse 1", "monotonous"],
+      "duration_ms": 40000,
+      "lines": [
+        "[Korean: Defiance, fighting back]",
+        "[Korean: Skills and determination]",
+        "[Korean: What they don't understand]",
+        "[Korean: I will prove them wrong]"
+      ]
+    },
+    {
+      "section_name": "Hook 2",
+      "positive_local_styles": [
+        "even fuller production",
+        "harmonies added",
+        "more powerful",
+        "ad-libs",
+        "crowd energy"
+      ],
+      "negative_local_styles": ["quieter than hook 1"],
+      "duration_ms": 25000,
+      "lines": [
+        "[English hook line - memorable, repeatable]",
+        "[Korean response line]",
+        "[English hook line repeat]",
+        "Watch me rise, watch me rise"
+      ]
+    },
+    {
+      "section_name": "Bridge",
+      "positive_local_styles": [
+        "stripped to piano",
+        "vulnerable",
+        "raw emotion",
+        "breakdown",
+        "intimate moment"
+      ],
+      "negative_local_styles": ["full production", "aggressive"],
+      "duration_ms": 20000,
+      "lines": [
+        "[Korean: The personal cost, the pain]",
+        "[Korean: But this is why I keep going]"
+      ]
+    },
+    {
+      "section_name": "Final Hook",
+      "positive_local_styles": [
+        "EXPLOSIVE",
+        "maximum energy",
+        "triumphant release",
+        "all elements combined",
+        "victorious",
+        "crowd anthem"
+      ],
+      "negative_local_styles": ["fading", "weak", "quiet"],
+      "duration_ms": 28000,
+      "lines": [
+        "[English hook line - POWERFUL]",
+        "[Korean response - TRIUMPHANT]",
+        "[English hook line - CLIMAX]",
+        "WATCH ME RISE, WATCH ME RISE"
+      ]
+    },
+    {
+      "section_name": "Outro",
+      "positive_local_styles": [
+        "triumphant fade",
+        "piano returns",
+        "hopeful resolution",
+        "satisfied ending"
+      ],
+      "negative_local_styles": ["abrupt ending", "cutting off"],
+      "duration_ms": 15000,
+      "lines": ["[Instrumental fade - piano melody resolves, city sounds return]"]
+    }
+  ],
+
+  "_total_duration_ms": 220000,
+  "_total_duration_formatted": "3:40",
+
+  "_usage_notes": {
+    "bpm": "Use 92-98 for emotional weight, 140+ for harder trap",
+    "key": "C# Minor is Metro Boomin signature, A Minor is universal",
+    "lyrics": "Replace [Korean:] and [English:] placeholders with actual lyrics",
+    "hook": "Keep to 10 words max, make it singable and quotable",
+    "delivery": "Start restrained, build to explosive by final hook"
+  }
+}

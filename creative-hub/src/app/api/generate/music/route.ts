@@ -6,9 +6,18 @@ import {
   MUSIC_STYLES,
   type MusicStyle,
 } from "@/lib/voice";
+import { requirePayment } from "@/lib/x402";
 
 export async function POST(request: NextRequest) {
   try {
+    // Check for x402 payment if enabled
+    if (process.env.X402_ENABLED === "true") {
+      const paymentResponse = await requirePayment(request, "/api/generate/music");
+      if (paymentResponse) {
+        return paymentResponse; // Returns 402 if payment needed
+      }
+    }
+
     const body = await request.json();
     const {
       mode = "prompt",  // "prompt" | "beat" | "song"

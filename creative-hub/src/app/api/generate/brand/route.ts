@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText, gateway } from "ai";
+import { requirePayment } from "@/lib/x402";
 
 // Vercel AI Gateway - unified access to 20+ providers
 // Models: xai/grok-4.1-fast, google/gemini-2.0-flash, anthropic/claude-3-5-haiku
@@ -29,6 +30,14 @@ type BrandTier = keyof typeof BRAND_TIERS;
 
 export async function POST(request: NextRequest) {
   try {
+    // Check for x402 payment if enabled
+    if (process.env.X402_ENABLED === "true") {
+      const paymentResponse = await requirePayment(request, "/api/generate/brand");
+      if (paymentResponse) {
+        return paymentResponse;
+      }
+    }
+
     const body = await request.json();
     const {
       concept,

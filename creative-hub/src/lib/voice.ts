@@ -292,6 +292,115 @@ export async function generateLyricsSpeech(
 // MUSIC COMPOSITION (ElevenLabs Music API)
 // ============================================
 
+/**
+ * Create a composition plan from a text prompt
+ * THIS IS FREE - NO CREDITS USED
+ * Use this to iterate on song structure before generating
+ */
+export async function createCompositionPlan(
+  prompt: string,
+  options: {
+    durationMs?: number;  // 3000 - 300000 (3s to 5min)
+  } = {}
+): Promise<CompositionPlan> {
+  const apiKey = getApiKey();
+
+  const response = await fetch(`${ELEVENLABS_API_BASE}/music/plan`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "xi-api-key": apiKey,
+    },
+    body: JSON.stringify({
+      prompt,
+      music_length_ms: options.durationMs ?? 120000, // Default 2 min
+      model_id: "music_v1",
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Composition plan error: ${response.status} - ${error}`);
+  }
+
+  const plan = await response.json();
+
+  // Normalize the response to our interface (API uses camelCase)
+  return {
+    positive_global_styles: plan.positiveGlobalStyles || plan.positive_global_styles || [],
+    negative_global_styles: plan.negativeGlobalStyles || plan.negative_global_styles || [],
+    sections: (plan.sections || []).map((section: {
+      sectionName?: string;
+      section_name?: string;
+      positiveLocalStyles?: string[];
+      positive_local_styles?: string[];
+      negativeLocalStyles?: string[];
+      negative_local_styles?: string[];
+      durationMs?: number;
+      duration_ms?: number;
+      lines?: string[];
+    }) => ({
+      section_name: section.sectionName || section.section_name || "Section",
+      positive_local_styles: section.positiveLocalStyles || section.positive_local_styles || [],
+      negative_local_styles: section.negativeLocalStyles || section.negative_local_styles || [],
+      duration_ms: section.durationMs || section.duration_ms || 30000,
+      lines: section.lines || [],
+    })),
+  };
+}
+
+/**
+ * Validate a composition plan before generation
+ * Returns issues if any are found
+ */
+export function validateCompositionPlan(plan: CompositionPlan): {
+  valid: boolean;
+  issues: string[];
+  totalDurationMs: number;
+} {
+  const issues: string[] = [];
+
+  // Check global styles
+  if (!plan.positive_global_styles || plan.positive_global_styles.length === 0) {
+    issues.push("Missing positive global styles");
+  }
+
+  // Check sections
+  if (!plan.sections || plan.sections.length === 0) {
+    issues.push("No sections defined");
+  }
+
+  // Calculate total duration
+  const totalDurationMs = plan.sections.reduce((sum, s) => sum + s.duration_ms, 0);
+
+  // Check duration limits
+  if (totalDurationMs < 3000) {
+    issues.push("Total duration too short (minimum 3 seconds)");
+  }
+  if (totalDurationMs > 300000) {
+    issues.push("Total duration too long (maximum 5 minutes)");
+  }
+
+  // Check each section
+  plan.sections.forEach((section, i) => {
+    if (!section.section_name) {
+      issues.push(`Section ${i + 1}: Missing section name`);
+    }
+    if (section.duration_ms < 1000) {
+      issues.push(`Section ${i + 1} (${section.section_name}): Duration too short`);
+    }
+    if (section.duration_ms > 60000) {
+      issues.push(`Section ${i + 1} (${section.section_name}): Duration over 60s may have issues`);
+    }
+  });
+
+  return {
+    valid: issues.length === 0,
+    issues,
+    totalDurationMs,
+  };
+}
+
 // Music generation styles - GRAMMY-LEVEL PRODUCTION TEMPLATES
 export const MUSIC_STYLES = {
   // Hip-hop/Trap styles - Pro production

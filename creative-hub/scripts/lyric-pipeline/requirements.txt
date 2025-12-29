@@ -1,0 +1,28 @@
+# Lyric Intelligence Pipeline
+# Install: pip install -r requirements.txt
+
+# Core NLP
+sentence-transformers>=2.2.0
+transformers>=4.36.0
+
+# Data Processing
+datasets>=2.15.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# ML/Clustering
+scikit-learn>=1.3.0
+
+# Vector Database
+qdrant-client>=1.7.0
+
+# Lyric Analysis
+textblob>=0.17.1
+pronouncing>=0.2.0
+
+# API Clients
+lyricsgenius>=3.0.1
+
+# Utilities
+tqdm>=4.66.0
+python-dotenv>=1.0.0

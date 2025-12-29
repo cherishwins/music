@@ -1,0 +1,45 @@
+{
+  "name": "@jpanda/creative-hub-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for AI music generation with x402 payments",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "creative-hub-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "music",
+    "ai",
+    "x402",
+    "payments"
+  ],
+  "author": "jpanda",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@x402/core": "^2.1.0",
+    "@x402/evm": "^2.1.0",
+    "axios": "^1.7.0",
+    "viem": "^2.43.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpandadev/creative-hub-mcp"
+  }
+}
