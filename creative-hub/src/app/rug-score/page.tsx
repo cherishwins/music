@@ -125,6 +125,13 @@ const creditTiers = [
   { score: "0-299", grade: "F", label: "RUG ALERT", color: "red-500", desc: "Do not ape. Likely scam." },
 ];
 
+// Example tokens for quick analysis
+const exampleTokens = [
+  { address: "EQBynBO23ywHy_CgarY9NK9FTz0yDsG82PtcbSTQgGoXwiuA", name: "STON.fi", verified: true },
+  { address: "EQBlqsm144Dq6SjbPI4jjZvA1hqTIP3CvHovbIfW_t-SCALE", name: "SCALE", verified: true },
+  { address: "EQAvlWFDxGF2lXm67y4yzC17wYKD9A0guwPkMs1gOsM__NOT", name: "NOT", verified: true },
+];
+
 function getGradeColor(grade: string): string {
   switch (grade) {
     case "A+": return "text-green-400";
@@ -178,6 +185,28 @@ export default function RugScorePage() {
 
   const copyAddress = () => {
     navigator.clipboard.writeText(tokenAddress);
+  };
+
+  const quickCheck = async (address: string) => {
+    setTokenAddress(address);
+    setIsScanning(true);
+    setError(null);
+    setScanResult(null);
+
+    try {
+      const response = await fetch(`/api/minter-score/${encodeURIComponent(address)}`);
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Scan failed");
+      }
+
+      setScanResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to scan token");
+    } finally {
+      setIsScanning(false);
+    }
   };
 
   return (
@@ -275,6 +304,22 @@ export default function RugScorePage() {
             <p className="text-white/40 text-sm mt-3">
               Example: EQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf
             </p>
+
+            {/* Quick Check Popular Tokens */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              <span className="text-white/40 text-sm">Quick check:</span>
+              {exampleTokens.map((token) => (
+                <button
+                  key={token.address}
+                  onClick={() => quickCheck(token.address)}
+                  disabled={isScanning}
+                  className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-white/70 hover:bg-white/10 hover:border-neon-green/30 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                >
+                  {token.verified && <CheckCircle className="w-3 h-3 text-neon-green" />}
+                  {token.name}
+                </button>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
