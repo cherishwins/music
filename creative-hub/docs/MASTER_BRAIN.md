@@ -334,6 +334,20 @@ GET  /api/health           - Health check
 POST /api/telegram/webhook - Telegram payments
 ```
 
+### Command Center Dashboard
+**URL:** `/command`
+
+Real-time ecosystem monitoring dashboard with:
+- Live market data ticker (TON, SOL from CoinGecko)
+- System health monitoring with latency visualization
+- All 5 ecosystem pillar status indicators
+- Persona cards with TAM metrics (Degen Dave, Producer Pete, Dev Dana)
+- MemeSeal prediction statistics
+- User acquisition funnel visualization
+- Three tabs: System, Intel, Growth
+
+**Key File:** `/src/app/command/page.tsx`
+
 ---
 
 ## CREDENTIALS LOCATION
