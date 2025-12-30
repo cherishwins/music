@@ -68,10 +68,15 @@ interface TonAPIResponse<T> {
 
 class TonApiClient {
   private baseUrl = "https://tonapi.io/v2";
-  private apiKey: string;
+  private _apiKey?: string;
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || process.env.TONAPI_KEY || "";
+    this._apiKey = apiKey;
+  }
+
+  // Get API key at request time, not module load time (important for Edge runtime)
+  private get apiKey(): string {
+    return this._apiKey || process.env.TONAPI_KEY || "";
   }
 
   private async fetch<T>(endpoint: string): Promise<TonAPIResponse<T>> {
@@ -83,11 +88,13 @@ class TonApiClient {
       headers["Authorization"] = `Bearer ${this.apiKey}`;
     }
 
+    const url = `${this.baseUrl}${endpoint}`;
     try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, { headers });
+      const response = await fetch(url, { headers });
 
       if (!response.ok) {
-        // TonAPI has free tier, so we try without key first
+        const errorBody = await response.text().catch(() => "");
+        console.error(`[TonAPI] ${response.status} at ${endpoint}: ${errorBody.slice(0, 200)}`);
         if (response.status === 401 && !this.apiKey) {
           console.warn("[TonAPI] Consider adding TONAPI_KEY for higher rate limits");
         }
@@ -97,7 +104,7 @@ class TonApiClient {
       const data = await response.json();
       return { success: true, data };
     } catch (error) {
-      console.error("[TonAPI] API Error:", error);
+      console.error("[TonAPI] API Error at", endpoint, ":", error);
       // Return mock data for development
       return this.getMockData<T>(endpoint);
     }
@@ -129,12 +136,14 @@ class TonApiClient {
 
   /**
    * Get jetton transfer history for a wallet
+   * Uses the events endpoint with jetton filter
    */
   async getJettonTransfers(
     address: string,
     limit: number = 100
   ): Promise<TonAPIResponse<{ events: TonJettonTransfer[] }>> {
-    return this.fetch(`/accounts/${address}/jettons/history?limit=${limit}`);
+    // TonAPI v2 uses events endpoint with subject_only filter for jetton transfers
+    return this.fetch(`/accounts/${address}/events?limit=${limit}&subject_only=true`);
   }
 
   /**
@@ -143,14 +152,14 @@ class TonApiClient {
    */
   async getMinterHistory(walletAddress: string): Promise<TonAPIResponse<MinterHistory>> {
     try {
-      // Get all transactions to find token creation events
-      const txResponse = await this.getTransactions(walletAddress, 500);
+      // Get transactions to find token creation events (TonAPI max is 100)
+      const txResponse = await this.getTransactions(walletAddress, 100);
       if (!txResponse.success || !txResponse.data) {
         return { success: false, error: "Failed to fetch transactions" };
       }
 
       // Get jetton transfers to identify token deployments
-      const jettonResponse = await this.getJettonTransfers(walletAddress, 500);
+      const jettonResponse = await this.getJettonTransfers(walletAddress, 100);
 
       // Analyze transactions for token creation patterns
       // Token creation on TON typically involves:
