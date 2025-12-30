@@ -10,6 +10,7 @@
 
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
+import { eq } from "drizzle-orm";
 import * as schema from "./schema";
 
 // Create LibSQL client
@@ -130,7 +131,7 @@ export async function upgradeTier(
       tierExpiresAt: expiresAt,
       updatedAt: new Date(),
     })
-    .where((users, { eq }) => eq(users.id, userId));
+    .where(eq(schema.users.id, userId));
 }
 
 /**
@@ -156,7 +157,7 @@ export async function canGenerate(userId: string): Promise<{
       await db
         .update(schema.users)
         .set({ tier: "free", updatedAt: new Date() })
-        .where((users, { eq }) => eq(users.id, userId));
+        .where(eq(schema.users.id, userId));
 
       return { allowed: false, reason: "Subscription expired", tier: "free" };
     }
@@ -205,5 +206,5 @@ export async function incrementGenerations(userId: string) {
       trackCount: user.trackCount + 1,
       updatedAt: now,
     })
-    .where((users, { eq }) => eq(users.id, userId));
+    .where(eq(schema.users.id, userId));
 }

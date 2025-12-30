@@ -90,6 +90,25 @@ export interface HitSongVector {
   successScore: number; // Based on chart performance
 }
 
+// Payload stored in Qdrant (excludes embeddings)
+export interface HitSongPayload {
+  title: string;
+  artist: string;
+  genre: string;
+  bpm: number;
+  key: string;
+  hookTiming: number;
+  sectionStructure: { type: string; start: number; end: number }[];
+  energyCurve: number[];
+  successScore: number;
+}
+
+// Search result with score
+export interface HitSongResult extends HitSongPayload {
+  id: string | number;
+  score: number;
+}
+
 /**
  * Add a hit song to the reference library
  */
@@ -134,7 +153,7 @@ export async function findSimilarHits(
     genre?: string;
     minSuccessScore?: number;
   } = {}
-) {
+): Promise<HitSongResult[]> {
   const { limit = 5, genre, minSuccessScore } = options;
 
   const filter: Record<string, unknown> = {};
@@ -160,7 +179,7 @@ export async function findSimilarHits(
   return results.map((r) => ({
     id: r.id,
     score: r.score,
-    ...r.payload,
+    ...(r.payload as HitSongPayload),
   }));
 }
 

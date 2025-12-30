@@ -3,7 +3,8 @@
  * Uses Vercel AI Gateway with Gemini for image generation
  */
 
-import { experimental_generateImage as generateImage, gateway } from "ai";
+import { generateImage } from "ai";
+import { google } from "@ai-sdk/google";
 import { put } from "@vercel/blob";
 
 export interface GeneratedImage {
@@ -16,19 +17,15 @@ export interface GeneratedImage {
  * Generate album artwork using AI
  */
 export async function generateAlbumArt(prompt: string): Promise<GeneratedImage> {
-  // Generate image using Vercel AI Gateway
+  // Generate image using Google Imagen
   const result = await generateImage({
-    model: gateway("google/gemini-3-pro-image"),
+    model: google.image("imagen-4.0-generate-001"),
     prompt: `Album cover artwork: ${prompt}. High quality, professional music album art style.`,
+    aspectRatio: "1:1",
   });
 
-  // Get the image data
-  const imageData = result.image;
-
-  // Convert base64 to buffer if needed
-  const buffer = typeof imageData === "string"
-    ? Buffer.from(imageData, "base64")
-    : Buffer.from(await imageData.arrayBuffer());
+  // Get the image data as buffer
+  const buffer = Buffer.from(result.image.uint8Array);
 
   // Generate unique filename
   const filename = generateImageFilename("album-art");
