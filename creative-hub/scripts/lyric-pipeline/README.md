@@ -1,8 +1,20 @@
-# Lyric Intelligence Pipeline
+# Hip Hop Viral Intelligence Pipeline
 
-Vectorization → Clustering → Pattern Discovery → Generation Optimization
+Vectorization → Viral Feature Extraction → Pattern Discovery → Generation Optimization
 
-*"The patterns exist. We're using them to generate."*
+*"The patterns exist. We're using them to generate VIRAL tracks."*
+
+**Last Updated**: December 30, 2025
+
+---
+
+## Current State: HIP HOP ONLY
+
+**OLD DATA DELETED**: ABBA, Alabama, Air Supply garbage is GONE.
+
+**NEW DATA**: 4,832 pure hip hop tracks from `Cropinky/rap_lyrics_english`.
+
+**Collection**: `hiphop_viral` in Qdrant (NOT `lyric_patterns`)
 
 ---
 
@@ -12,29 +24,24 @@ Vectorization → Clustering → Pattern Discovery → Generation Optimization
 # Install dependencies
 pip install -r requirements.txt
 
-# Option 1: Use HuggingFace dataset
+# HIP HOP VIRAL PIPELINE (RECOMMENDED)
+python embed_hiphop_viral.py --max-samples 5000 --output ./hiphop_embeddings
+
+# Upload to Qdrant (needs QDRANT_URL and QDRANT_API_KEY in .env)
+python upload_hiphop_qdrant.py --input ./hiphop_embeddings --replace
+
+# To also delete old lyric_patterns collection:
+python upload_hiphop_qdrant.py --input ./hiphop_embeddings --replace --delete-old
+```
+
+### Legacy Commands (Generic - Not Recommended)
+
+```bash
+# These use the OLD generic pipeline - kept for reference only
 python embed_lyrics.py --hf-dataset vishnupriyavr/spotify-million-song-dataset --max-samples 10000
-
-# Option 2: Use your own JSONL
-python embed_lyrics.py --input lyrics.jsonl
-
-# Cluster and analyze
 python cluster_lyrics.py --input ./lyric_embeddings --clusters 20
-
-# Classify by 12 proven themes
 python theme_classifier.py --corpus ./lyric_embeddings
-
-# If you have performance data (Billboard, streams, etc.)
-python analyze_performance.py --input ./lyric_embeddings --performance billboard.csv
-
-# Upload to Qdrant (needs QDRANT_URL and QDRANT_API_KEY)
 python upload_to_qdrant.py --input ./lyric_embeddings
-
-# Generate optimized prompts
-python generation_optimizer.py --patterns ./lyric_embeddings --theme aspiration --region KR
-
-# Generate full prompt library
-python generation_optimizer.py --patterns ./lyric_embeddings --library
 ```
 
 ---
@@ -43,168 +50,185 @@ python generation_optimizer.py --patterns ./lyric_embeddings --library
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  1. EMBED                                                        │
+│  1. EMBED + VIRAL FEATURES (embed_hiphop_viral.py)              │
 │     Lyrics → Sentence Transformer → 384-dim vectors             │
-│     embed_lyrics.py                                             │
+│     + viral_score, hook_score, repetition_ratio, etc.           │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  2. CLUSTER                                                      │
-│     K-means → Find thematic groups                              │
-│     Extract distinctive terms per cluster                        │
-│     cluster_lyrics.py                                           │
+│  2. UPLOAD (upload_hiphop_qdrant.py)                            │
+│     Store in hiphop_viral collection                            │
+│     Each vector has viral features as payload                   │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  3. CLASSIFY                                                     │
-│     Map to 12 proven hit themes (73.4% prediction accuracy)      │
-│     theme_classifier.py                                         │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  4. CORRELATE (optional)                                         │
-│     Match with Billboard/streaming performance                   │
-│     Find which clusters = hits                                   │
-│     analyze_performance.py                                      │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  5. GENERATE                                                     │
-│     Build prompts from winning patterns                          │
-│     Theme × Region = Optimized prompt                           │
-│     generation_optimizer.py                                     │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  6. STORE                                                        │
-│     Upload to Qdrant for semantic search                        │
-│     "Find lyrics similar to X"                                  │
-│     upload_to_qdrant.py                                         │
+│  3. SEARCH & LEARN                                              │
+│     Find high-viral patterns                                    │
+│     Extract what makes them work                                │
+│     Feed into generation prompts                                │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## The 12 Proven Hit Themes
+## Viral Features Extracted
 
-From NC State research (50 years of Billboard #1s, 73.4% prediction accuracy):
+Each track gets scored on:
 
-### Primary (Strong Predictors)
-| Theme | Peak Era | Description |
-|-------|----------|-------------|
-| **Loss** | 1980s | Gone, empty, alone |
-| **Desire** | All decades | Want, need, crave |
-| **Aspiration** | Economic downturns | Rise, grind, throne |
-| **Breakup** | Always works | Left me, tears, hurt |
-| **Pain** | 2000s+ | Broken, numb, dying |
-| **Inspiration** | Social movements | Believe, fight, overcome |
-
-### Secondary (Contextual)
-| Theme | Peak Era | Description |
-|-------|----------|-------------|
-| **Nostalgia** | Uncertainty | Remember, back then |
-| **Rebellion** | Youth markets | Fuck the system |
-| **Cynicism** | 2020s (50%!) | Fake, cap, don't care |
-| **Desperation** | Post-9/11 | Need you, last chance |
-| **Escapism** | Pre-crisis | Fly away, paradise |
-| **Confusion** | Economic uncertainty | Don't know, lost |
-
-**2020s Zeitgeist**: Cynicism dominates (50% of hits). Pain and escapism strong.
+| Feature | Description | Viral Correlation |
+|---------|-------------|-------------------|
+| `viral_score` | Overall 0-100 score | The target metric |
+| `hook_score` | Repeated phrase count (2-5 word phrases appearing 3+ times) | **150x higher** in viral tracks |
+| `repetition_ratio` | % of words that repeat | **3.1x higher** in viral tracks |
+| `adlib_density` | "yeah", "skrt", "sheesh" per word | Energy indicator |
+| `short_line_ratio` | Lines ≤6 words | Clip-able moments |
+| `phonk_score` | Dark vocabulary match | Genre vibe |
+| `first_line_punch` | Does opening line hit? (≤8 words) | TikTok scroll survival |
+| `top_hooks` | Most repeated phrases | The actual hooks |
 
 ---
 
-## Regional Optimization
+## Results: Viral Score Distribution
 
-| Region | Dominant Themes | Style |
-|--------|-----------------|-------|
-| **US** | Pain, aspiration, cynicism | Direct, slang-heavy |
-| **UK** | Melancholy, cynicism, irony | Understated, witty |
-| **KR** | Aspiration, love, pain | Poetic, metaphorical, Han (한) |
-| **BR** | Desire, party, social | Rhythmic, celebratory |
-| **MX** | Love, betrayal, party | Passionate, dramatic |
+From our 4,832 hip hop tracks:
+
+```
+0-20:    4,132 (85.5%)  ← Most rap is NOT viral
+20-40:     328 (6.8%)
+40-60:     104 (2.2%)
+60-80:      70 (1.4%)
+80-100:    198 (4.1%)   ← THESE are the patterns we want
+```
+
+**Key Finding**: Only ~4% of tracks score 80+ viral. These are the patterns to extract and replicate.
+
+---
+
+## The Viral Hypothesis: "Loop-First Lyric Design"
+
+Based on our analysis + TikTok research:
+
+### Rule 1: First 8 Words Must SLAP
+TikTok scroll = instant hook or death. No setup, no context, just impact.
+
+### Rule 2: Contiguous Repetition
+Stack repeats immediately, don't spread them out.
+```
+GOOD: "We up, we up, we up right now"
+BAD:  "We up in the club... [4 lines later]... we up and ready"
+```
+
+### Rule 3: Short Punchy Lines (≤6 Words)
+Target 70%+ short lines. Each line = potential clip moment.
+
+### Rule 4: Ad-lib Density (3-5%)
+Energy markers: "yeah", "sheesh", "let's go", "skrt"
+
+### Rule 5: ONE Memorable Hook
+Single phrase repeated 4+ times that loops in your head.
 
 ---
 
 ## Output Files
 
-After running the pipeline:
+After running `embed_hiphop_viral.py`:
 
 ```
-lyric_embeddings/
-├── embeddings.npy           # (N, 384) numpy array
-├── metadata.jsonl           # Song metadata
-├── stats.json               # Dataset statistics
-├── cluster_labels.npy       # Cluster assignments
-├── cluster_analysis.json    # Distinctive terms per cluster
-├── pca_visualization.json   # 2D coords for plotting
-├── theme_classification.json # Theme scores per song
-├── hit_patterns.json        # Patterns from top performers
-├── hit_prompt_templates.txt # Ready-to-use prompts
-└── prompt_library.json      # All theme × region combos
+hiphop_embeddings/
+├── embeddings.npy           # (4832, 384) numpy array
+├── metadata.jsonl           # Track metadata + viral features
+└── stats.json               # Viral score distribution analysis
 ```
 
 ---
 
 ## Integration with Creative Hub
 
-The Qdrant collection `lyric_patterns` enables:
+The Qdrant collection `hiphop_viral` enables:
 
 ```typescript
 // In your Next.js app
-import { qdrant } from "@/lib/vectors";
+import { QdrantClient } from "@qdrant/js-client-rest";
 
-// Find lyrics similar to a description
-const similar = await qdrant.search("lyric_patterns", {
-  vector: textEmbedding,  // From sentence-transformers
-  limit: 10,
-  filter: {
-    must: [{ key: "cluster", match: { value: 5 } }]  // Only cluster 5
-  }
+const client = new QdrantClient({
+  url: process.env.QDRANT_URL,
+  apiKey: process.env.QDRANT_API_KEY,
 });
 
-// Use patterns in generation
-const patterns = similar.map(s => s.payload.cluster_terms).flat();
-const prompt = `Write lyrics with these winning elements: ${patterns.join(", ")}`;
+// Find high-viral patterns
+const viralPatterns = await client.scroll("hiphop_viral", {
+  filter: {
+    must: [
+      { key: "viral_score", range: { gte: 50 } }
+    ]
+  },
+  limit: 100,
+  with_payload: true,
+});
+
+// Extract hooks from top tracks
+const topHooks = viralPatterns.points
+  .flatMap(p => p.payload.top_hooks)
+  .slice(0, 20);
+
+// Use in generation prompt
+const prompt = `Write viral hip hop lyrics with hooks like: ${topHooks.join(", ")}`;
 ```
 
 ---
 
 ## Data Sources
 
-| Dataset | Songs | Best For |
-|---------|-------|----------|
-| [Spotify Million Song](https://huggingface.co/datasets/vishnupriyavr/spotify-million-song-dataset) | 1M | General training |
-| [HSP Lyrics](https://github.com/Orfium/hsp-lyrics-dataset) | 95K | Hit prediction (labeled) |
-| [Genius Hip-Hop](https://kaggle.com/datasets/ceebloop/rap-lyrics-for-nlp) | 50K+ | Hip-hop specific |
-| Your own lyrics | ? | Competitive moat |
+| Dataset | Tracks | Status |
+|---------|--------|--------|
+| [Cropinky/rap_lyrics_english](https://huggingface.co/datasets/Cropinky/rap_lyrics_english) | 1.18M | **CURRENT** (4,832 sampled) |
+| [Spotify Million Song](https://huggingface.co/datasets/vishnupriyavr/spotify-million-song-dataset) | 1M | OLD - had ABBA garbage |
+| [Genius Hip-Hop](https://kaggle.com/datasets/ceebloop/rap-lyrics-for-nlp) | 50K+ | Alternative option |
 
 ---
 
-## The Moat
+## Research Backing
 
-Everyone can:
-- Access the same datasets
-- Use the same embedding models
-- Generate with the same APIs
+### Our Data Analysis
+- High viral (50+) vs low viral (<20):
+  - Repetition ratio: 49.5% vs 15.9% (**3.1x**)
+  - Hook score: 8.0 vs 0.05 (**150x**)
 
-**We have:**
-1. **Our performance data** - What we generate, how it performs
-2. **Our regional insights** - Cross-cultural patterns we discover
-3. **Our feedback loop** - Continuous learning from deployment
-4. **Our timing intelligence** - Themes correlated with current events
+### TikTok Virality Research (2024-2025)
+- 84% of Billboard Global 200 went viral on TikTok first
+- Phonk: 31 BILLION TikTok views
+- "Built for looping, built for visual editing, built for short-form content"
 
-The value compounds:
-```
-Generate 1,000 songs → Learn 100 patterns →
-Generate 10,000 songs → Learn 1,000 patterns →
-Generate 100,000 songs → KNOW WHAT WORKS EVERYWHERE
-```
+### Earworm Psychology
+- Contiguous repetition creates strongest earworms
+- Brain craves "predictive completion" - loops trigger dopamine
 
 ---
 
-*"The patterns are the map. The feedback loop is the territory."*
+## Files in This Directory
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `embed_hiphop_viral.py` | Hip hop + viral feature extraction | **CURRENT** |
+| `upload_hiphop_qdrant.py` | Upload to hiphop_viral collection | **CURRENT** |
+| `embed_lyrics.py` | Generic lyrics embedding | Legacy |
+| `cluster_lyrics.py` | K-means clustering | Legacy |
+| `theme_classifier.py` | 12 hit theme classification | Legacy |
+| `analyze_performance.py` | Billboard correlation | Legacy |
+| `generation_optimizer.py` | Prompt building from patterns | Legacy |
+| `upload_to_qdrant.py` | Upload to lyric_patterns | Legacy |
+
+---
+
+## Next Steps
+
+1. **Wire hypothesis into generation prompts** - Use viral patterns in `/api/generate/music`
+2. **Scale to 10K+ tracks** - More data = better patterns
+3. **Add viral score validation** - Reject generated lyrics below threshold
+4. **A/B test** - Compare viral-optimized vs generic generation
+
+---
+
+*"Hits are loops. The hook IS the song. Everything else is just waiting for the hook to come back."*

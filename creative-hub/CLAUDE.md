@@ -3,19 +3,26 @@
 > **Brand**: White Tiger (Cyberpunk Purple)
 > **Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
 > **App**: https://creative-hub-virid.vercel.app
+> **Last Updated**: December 30, 2025
 
 ---
 
 ## Project Overview
 
-White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators**. Users pay with **5 different payment rails** to generate music, album art, and brand packages.
+White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators** and **hip hop artists**. Users pay with **5 different payment rails** to generate viral-optimized music, album art, and brand packages.
 
 ### Core Features
-- AI music generation (ElevenLabs)
-- Album art generation (Gemini)
-- Brand package generation
-- Lyric intelligence with pattern analysis
-- Multi-rail payments (Stars, TON, USDC, Card, Onramp)
+- **AI Music Generation** (ElevenLabs) - x402 protected, $0.50/track
+- **Album Art Generation** (Gemini) - x402 protected, $0.10/image
+- **Brand Package Generation** - x402 protected, $0.25/package
+- **Hip Hop Viral Intelligence** - 4,832 tracks analyzed for viral patterns
+- **Multi-Rail Payments** (Stars, TON, USDC, Card, Onramp)
+
+### Viral Intelligence (NEW - Dec 30)
+- **Collection**: `hiphop_viral` in Qdrant (4,832 vectors)
+- **Hypothesis**: "Loop-First Lyric Design" - optimized for TikTok virality
+- **Key Finding**: Viral tracks have 3x repetition, 150x more hooks
+- **Status**: Research complete, ready to wire into generation
 
 ---
 
@@ -77,15 +84,22 @@ White Tiger is a **Telegram Mini App** for AI-powered music creation targeting *
 
 ---
 
-## Current Status (December 2025)
+## Current Status (December 30, 2025)
 
 ### What's LIVE
 - **@MSUCOBot** - Telegram bot with Mini App menu button
 - **5 Payment Rails** - Stars, TON, x402 USDC, Coinbase Onramp, Stripe
-- **Qdrant** - 1000 lyric vectors in `lyric_patterns` collection
+- **Qdrant** - 4,832 hip hop vectors in `hiphop_viral` collection
 - **Turso** - 8 tables (users, tracks, transactions, etc.)
 - **x402 Protected APIs** - Music ($0.50), Album Art ($0.10), Brand ($0.25)
-- **Canva MCP** - Connected for brand asset generation
+- **Daily Keep-Alive Cron** - Prevents Qdrant free tier auto-delete
+- **Health Check** - `/api/health` monitors all services
+
+### Viral Intelligence Status
+- **Data**: 4,832 pure hip hop tracks (ABBA garbage deleted)
+- **Collection**: `hiphop_viral` (NOT `lyric_patterns`)
+- **Features tracked**: viral_score, hook_score, repetition_ratio, adlib_density, phonk_score
+- **Hypothesis**: "Loop-First Lyric Design" ready to implement
 
 ### Credentials (all in `.env`)
 ```bash
@@ -112,12 +126,21 @@ REPLICATE_API_TOKEN=r8_8UlA5...
 
 ```
 creative-hub/
+├── vercel.json                     # Cron config (daily keep-alive)
 ├── src/
 │   ├── app/
-│   │   └── api/generate/
-│   │       ├── music/route.ts      # x402 protected, $0.50
-│   │       ├── album-art/route.ts  # x402 protected, $0.10
-│   │       └── brand/route.ts      # x402 protected, $0.25
+│   │   └── api/
+│   │       ├── cron/
+│   │       │   └── keep-alive/route.ts  # Daily ping to keep Qdrant alive
+│   │       ├── health/route.ts          # Full health check
+│   │       ├── generate/
+│   │       │   ├── music/route.ts       # x402 protected, $0.50
+│   │       │   ├── album-art/route.ts   # x402 protected, $0.10
+│   │       │   └── brand/route.ts       # x402 protected, $0.25
+│   │       ├── payments/
+│   │       │   └── verify-ton/route.ts  # TON payment verification
+│   │       └── telegram/
+│   │           └── webhook/route.ts     # Stars payment webhook
 │   ├── lib/
 │   │   ├── x402.ts                 # HTTP 402 payment middleware
 │   │   ├── ton.ts                  # TON Connect integration
@@ -128,6 +151,9 @@ creative-hub/
 │   └── components/payments/
 │       └── multi-rail-checkout.tsx # Universal checkout UI
 ├── scripts/lyric-pipeline/         # Intelligence engine
+│   ├── embed_hiphop_viral.py       # Hip hop + viral features
+│   ├── upload_hiphop_qdrant.py     # Upload to hiphop_viral
+│   └── hiphop_embeddings/          # 4,832 vectors + metadata
 ├── public/
 │   ├── manifest.json               # White Tiger PWA manifest
 │   ├── tonconnect-manifest.json    # White Tiger TON branding
@@ -135,9 +161,11 @@ creative-hub/
 │       ├── icons/                  # PWA icons
 │       └── social/                 # Social media assets
 └── skills/                         # Documentation
-    ├── INDEX.md
+    ├── INDEX.md                    # Master skill index
     ├── BRAND_KIT_MASTER.skill.md
-    └── PAYMENT_EMPIRE.skill.md
+    ├── PAYMENT_EMPIRE.skill.md
+    └── research/
+        └── VIRAL_HYPOTHESIS.md     # Loop-First Lyric Design
 ```
 
 ---

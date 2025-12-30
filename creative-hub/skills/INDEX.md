@@ -152,21 +152,28 @@ skills/
 | MCP Server | Per-tool-call | 100% |
 
 ### The Moat
-1. **Music Intelligence** - System learns what works
-2. **Lyric Intelligence** - 12 hit themes, regional patterns, feedback loop
-3. **First MCP Music Server** - No competition
-4. **Own Facilitator** - Not dependent on anyone
-5. **Multi-Rail Payments** - Meet users anywhere
+1. **Viral Intelligence** - 4,832 hip hop tracks with viral scoring
+2. **Loop-First Design** - Lyrics optimized for TikTok virality
+3. **Research-Backed** - Data shows 3x repetition, 150x hooks in viral tracks
+4. **First MCP Music Server** - No competition
+5. **Own Facilitator** - Not dependent on anyone
+6. **Multi-Rail Payments** - Meet users anywhere
 
-### The 12 Proven Hit Themes (73.4% Billboard Accuracy)
-| Primary | Secondary |
-|---------|-----------|
-| Loss (1980s) | Nostalgia |
-| Desire (all) | Rebellion |
-| Aspiration (downturns) | **Cynicism (50% of 2020s!)** |
-| Breakup (ALWAYS WORKS) | Desperation |
-| Pain (2000s+) | Escapism |
-| Inspiration | Confusion |
+### Viral Pattern Research (December 2025)
+
+**The Data (Our 4,832 Hip Hop Tracks)**:
+| Metric | High Viral (50+) | Low Viral (<20) | Multiplier |
+|--------|------------------|-----------------|------------|
+| Repetition Ratio | 49.5% | 15.9% | **3.1x** |
+| Hook Score | 8.0 | 0.05 | **150x** |
+| Short Line Ratio | Higher | Lower | Key factor |
+| First Line Punch | 1.0 | 0.3 | **3x** |
+
+**TikTok/Phonk Science**:
+- 84% of Billboard Global 200 went viral on TikTok first
+- Phonk: 31 BILLION TikTok views
+- "Built for looping, built for visual editing, built for short-form content"
+- Contiguous repetition (stacking repeats) creates strongest earworms
 
 ---
 
@@ -203,35 +210,35 @@ skills/
 
 ## WHAT'S NEXT
 
-### Completed (Dec 28, 2025)
+### Completed (Dec 28-30, 2025)
 - [x] Database schema designed (Turso)
 - [x] Vector DB integration (Qdrant)
-- [x] Lyric embedding pipeline built
-- [x] 12 hit theme classifier implemented
-- [x] Generation optimizer with regional patterns
-- [x] Prompt library generator
-- [x] **Turso credentials configured**
-- [x] **Qdrant credentials configured**
-- [x] **1000 songs embedded and uploaded to Qdrant**
-- [x] **12 pattern clusters identified**
-- [x] **Theme distribution analyzed (breakup 17%, loss 17%, desire 16%)**
 - [x] **@MSUCOBot created and configured**
 - [x] **5 payment rails integrated (Stars, TON, x402, Onramp, Stripe)**
 - [x] **x402 payment protection on all /api/generate/* endpoints**
+- [x] **Health check endpoint** (`/api/health`)
+- [x] **Daily keep-alive cron** (`/api/cron/keep-alive` - prevents Qdrant auto-delete)
+
+### Completed (Dec 30, 2025) - HIP HOP PIVOT
+- [x] **DELETED old garbage data** (ABBA, Alabama, Air Supply)
+- [x] **Built hip hop viral pipeline** (`embed_hiphop_viral.py`)
+- [x] **Uploaded 4,832 hip hop tracks** to `hiphop_viral` collection
+- [x] **Analyzed viral patterns** (3x repetition, 150x hooks)
+- [x] **Researched TikTok/phonk virality** (84% of Billboard went viral on TikTok first)
+- [x] **Defined "Loop-First Lyric Design" hypothesis**
 
 ### This Week
-- [ ] Scale pipeline to 10K+ songs
-- [ ] Build CLAP audio embedding pipeline
+- [ ] **Wire viral hypothesis into generation prompts**
+- [ ] Add pre-generation viral score validation
+- [ ] Scale to 10K+ hip hop lyrics
 - [ ] Deploy MCP server (`/mcp-server/`)
 - [ ] Deploy x402 facilitator (`/facilitator/`)
-- [ ] Set up Coinbase Onramp (`COINBASE_PROJECT_ID`)
 
 ### This Month
+- [ ] A/B test generated lyrics against viral score thresholds
 - [ ] Launch feedback loop (performance → pattern refinement)
-- [ ] 50K+ lyrics in vector DB
 - [ ] Cross-cultural pattern analysis (US vs KR vs BR)
 - [ ] First paying MCP users
-- [ ] Wire lyric patterns into generation prompts
 
 ---
 
