@@ -39,17 +39,34 @@
 
 **Goal:** Build proprietary credit scoring for TON meme coins - whale watch, liquidity pools, rug history
 
-### Research Collected (See `docs/RUG_SCORE_RESEARCH.md`)
-- [ ] TON influencer list (multi-language) - 25+ handles organized by region
-- [ ] Scoring factors identified: whale behavior, liquidity locks, team history
-- [ ] Case study framework for known rugs
+### ✅ LIVE API
+**Endpoint:** `https://creative-hub-virid.vercel.app/api/minter-score/{TON_ADDRESS}`
 
-### Data Sources to Integrate
-- [ ] TON blockchain explorer APIs
-- [ ] Whale wallet tracking
-- [ ] Liquidity pool snapshots
+```bash
+# Test it:
+curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf
+```
+
+**Returns:** Score (0-1000), Grade (A+ to F), Risk Level, Warnings, Recommendation
+
+### Research Collected (See `docs/RUG_SCORE_RESEARCH.md`)
+- [x] TON influencer list (multi-language) - 25+ handles organized by region
+- [x] Scoring factors identified: whale behavior, liquidity locks, team history
+- [x] Case study framework for known rugs
+- [x] TonAPI integration working (TONAPI_KEY in Vercel)
+- [x] DYOR.io integration (free tier, no key needed)
+
+### Data Sources Integrated
+- [x] TonAPI - Wallet history, transactions, jetton balances
+- [x] DYOR.io - Token trust scores, holder analysis
+- [ ] Whale wallet tracking (enhanced)
 - [ ] Historical rug pull database
 - [ ] Social sentiment (X/Telegram)
+
+### Next Steps
+- [ ] Build React component for score display
+- [ ] Add to Telegram Mini App UI
+- [ ] Wire into MemeSeal/brand generation flow
 
 ### Monetization Path
 1. Free basic score → Paid deep analysis
@@ -168,6 +185,10 @@
 - [x] Built MCP server package
 - [x] Generated watermark audio files
 - [x] Created all submission content
+- [x] **Minter Credit Score API LIVE** - `/api/minter-score/{address}`
+- [x] TonAPI key added to Vercel (TONAPI_KEY)
+- [x] DYOR.io integration (free tier)
+- [x] Fixed TonAPI bugs (limit, endpoint, edge runtime)
 
 ---
 
