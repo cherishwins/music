@@ -9,7 +9,7 @@
 // TON Connect manifest URL (update with your deployed URL)
 export const TON_MANIFEST_URL =
   process.env.NEXT_PUBLIC_TON_MANIFEST_URL ||
-  "https://creative-hub.vercel.app/tonconnect-manifest.json";
+  "https://creative-hub-virid.vercel.app/tonconnect-manifest.json";
 
 // Payment receiving address
 export const TON_PAYMENT_ADDRESS =

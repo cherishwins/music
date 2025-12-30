@@ -20,6 +20,7 @@ interface CheckoutProps {
   productId: string;
   productName: string;
   priceUsd: number;
+  userId?: string; // Telegram user ID or internal ID
   onSuccess?: (method: string, txId?: string) => void;
   onCancel?: () => void;
 }
@@ -58,8 +59,8 @@ const PAYMENT_METHODS: Array<{
     id: "card",
     name: "Card",
     icon: "💳",
-    description: "Pay with credit/debit card",
-    available: true,
+    description: "Coming soon",
+    available: false, // Stripe not configured
   },
   {
     id: "onramp",
@@ -74,6 +75,7 @@ export function MultiRailCheckout({
   productId,
   productName,
   priceUsd,
+  userId,
   onSuccess,
   onCancel,
 }: CheckoutProps) {
@@ -126,7 +128,7 @@ export function MultiRailCheckout({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         planId: productId,
-        userId: "user-id", // Get from auth
+        userId: userId || "anonymous",
       }),
     });
 
@@ -136,9 +138,16 @@ export function MultiRailCheckout({
       throw new Error(data.error);
     }
 
-    // Open Telegram payment
+    // Open Telegram payment - use Telegram WebApp if available
     if (data.invoiceUrl) {
-      window.open(data.invoiceUrl, "_blank");
+      const tg = (window as Window & { Telegram?: { WebApp?: { openInvoice?: (url: string) => void } } }).Telegram?.WebApp;
+      if (tg?.openInvoice) {
+        // Native Telegram invoice (stays in app)
+        tg.openInvoice(data.invoiceUrl);
+      } else {
+        // Fallback to opening in browser
+        window.open(data.invoiceUrl, "_blank");
+      }
       onSuccess?.("stars");
     }
   };
@@ -149,7 +158,7 @@ export function MultiRailCheckout({
       return;
     }
 
-    const payment = createTonPayment(productId as TonPlanId, "user-id");
+    const payment = createTonPayment(productId as TonPlanId, userId || "anonymous");
     const result = await tonConnectUI.sendTransaction(payment);
 
     if (result) {
