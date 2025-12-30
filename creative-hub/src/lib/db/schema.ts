@@ -44,6 +44,27 @@ export const users = sqliteTable("users", {
     mode: "timestamp",
   }),
 
+  // First generation free (zero-friction onboarding)
+  hasUsedFreeGeneration: integer("has_used_free_generation", { mode: "boolean" }).default(false),
+
+  // Attribution
+  discoverySource: text("discovery_source", {
+    enum: [
+      "telegram_search",
+      "telegram_channel",
+      "findmini",
+      "tapps_center",
+      "mcp_directory",
+      "product_hunt",
+      "tiktok",
+      "twitter",
+      "referral",
+      "direct",
+      "unknown",
+    ],
+  }),
+  referredBy: text("referred_by"), // referral code that brought them
+
   // Metadata
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(unixepoch())`)
@@ -304,6 +325,132 @@ export const dailyMetrics = sqliteTable("daily_metrics", {
 });
 
 // ============================================
+// FUNNEL EVENTS (Customer Journey Tracking)
+// ============================================
+
+export const funnelEvents = sqliteTable("funnel_events", {
+  id: text("id").primaryKey(), // UUID
+
+  // User identification (can be null for anonymous first visit)
+  userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+  anonymousId: text("anonymous_id"), // fingerprint/session for pre-signup tracking
+  sessionId: text("session_id").notNull(), // ties events in same session
+
+  // Event details
+  event: text("event", {
+    enum: [
+      "page_view",
+      "generate_start",
+      "generate_complete",
+      "preview_play",
+      "download_watermarked",
+      "download_attempt_clean", // tried to download clean (paywall shown)
+      "payment_started",
+      "payment_completed",
+      "signup",
+      "share",
+    ],
+  }).notNull(),
+
+  // Discovery attribution
+  discoverySource: text("discovery_source", {
+    enum: [
+      "telegram_search",
+      "telegram_channel",
+      "findmini",
+      "tapps_center",
+      "mcp_directory",
+      "product_hunt",
+      "tiktok",
+      "twitter",
+      "referral",
+      "direct",
+      "unknown",
+    ],
+  }),
+  referralCode: text("referral_code"), // if referred by another user
+  utmSource: text("utm_source"),
+  utmMedium: text("utm_medium"),
+  utmCampaign: text("utm_campaign"),
+
+  // Context
+  trackId: text("track_id").references(() => tracks.id, { onDelete: "set null" }),
+  pageUrl: text("page_url"),
+
+  // A/B Testing
+  experimentId: text("experiment_id"), // e.g., "watermark_severity_test"
+  variant: text("variant"), // e.g., "audio_watermark" vs "fade_watermark"
+
+  // Device info
+  platform: text("platform", {
+    enum: ["telegram_miniapp", "web", "mcp", "api"],
+  }),
+  userAgent: text("user_agent"),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
+// A/B EXPERIMENTS
+// ============================================
+
+export const experiments = sqliteTable("experiments", {
+  id: text("id").primaryKey(), // e.g., "first_gen_free_v1"
+  name: text("name").notNull(),
+  description: text("description"),
+
+  // Variants as JSON: [{"id": "control", "weight": 50}, {"id": "treatment", "weight": 50}]
+  variants: text("variants").notNull(),
+
+  // Targeting
+  targetPercentage: integer("target_percentage").default(100), // % of users in experiment
+
+  // Status
+  status: text("status", {
+    enum: ["draft", "running", "paused", "completed"],
+  }).default("draft").notNull(),
+
+  // Results tracking
+  primaryMetric: text("primary_metric"), // e.g., "payment_completed"
+  secondaryMetrics: text("secondary_metrics"), // JSON array
+
+  startedAt: integer("started_at", { mode: "timestamp" }),
+  endedAt: integer("ended_at", { mode: "timestamp" }),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
+// REFERRALS
+// ============================================
+
+export const referrals = sqliteTable("referrals", {
+  id: text("id").primaryKey(),
+
+  // Referrer
+  referrerId: text("referrer_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  referralCode: text("referral_code").unique().notNull(), // e.g., "TIGER_ABC123"
+
+  // Stats
+  clickCount: integer("click_count").default(0),
+  signupCount: integer("signup_count").default(0),
+  conversionCount: integer("conversion_count").default(0), // signups who paid
+
+  // Rewards
+  creditsEarned: integer("credits_earned").default(0),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
 // TYPE EXPORTS
 // ============================================
 
@@ -317,3 +464,9 @@ export type CostEvent = typeof costEvents.$inferSelect;
 export type NewCostEvent = typeof costEvents.$inferInsert;
 export type HitSong = typeof hitSongs.$inferSelect;
 export type NewHitSong = typeof hitSongs.$inferInsert;
+export type FunnelEvent = typeof funnelEvents.$inferSelect;
+export type NewFunnelEvent = typeof funnelEvents.$inferInsert;
+export type Experiment = typeof experiments.$inferSelect;
+export type NewExperiment = typeof experiments.$inferInsert;
+export type Referral = typeof referrals.$inferSelect;
+export type NewReferral = typeof referrals.$inferInsert;
