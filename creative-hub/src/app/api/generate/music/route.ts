@@ -7,19 +7,63 @@ import {
   type MusicStyle,
 } from "@/lib/voice";
 import { requirePayment } from "@/lib/x402";
-import { getMasterDJ, analyzeViralScore } from "@/lib/master-dj";
+import { getMasterDJ } from "@/lib/master-dj";
+import { trackFunnelEvent, canGenerateFree, markFreeGenerationUsed, generateId } from "@/lib/db";
+import { applyWatermark, quickWatermark } from "@/lib/watermark";
 
 export async function POST(request: NextRequest) {
+  // Parse session info from headers/cookies for tracking
+  const sessionId = request.headers.get("x-session-id") || generateId();
+  const userId = request.headers.get("x-user-id") || null;
+  const anonymousId = request.headers.get("x-anonymous-id") || undefined;
+
   try {
-    // Check for x402 payment if enabled
+    const body = await request.json();
+
+    // Track generation start
+    await trackFunnelEvent({
+      event: "generate_start",
+      sessionId,
+      userId,
+      anonymousId,
+      platform: detectPlatform(request),
+      userAgent: request.headers.get("user-agent") || undefined,
+    }).catch(() => {}); // Don't fail on tracking errors
+
+    // Check if user qualifies for free generation
+    const freeCheck = await canGenerateFree(userId);
+
+    // Determine if payment is required
+    let requiresPayment = false;
+    let isWatermarked = true;
+
     if (process.env.X402_ENABLED === "true") {
-      const paymentResponse = await requirePayment(request, "/api/generate/music");
-      if (paymentResponse) {
-        return paymentResponse; // Returns 402 if payment needed
+      if (freeCheck.allowed && freeCheck.reason === "first_free") {
+        // First generation is free! Zero-friction onboarding
+        requiresPayment = false;
+        isWatermarked = true; // But still watermarked
+      } else if (freeCheck.allowed && freeCheck.reason === "tier_limit") {
+        // Within tier limits, still watermarked for free tier
+        requiresPayment = false;
+        isWatermarked = true;
+      } else {
+        // Must pay for clean version
+        const paymentResponse = await requirePayment(request, "/api/generate/music");
+        if (paymentResponse) {
+          // Track payment attempt
+          await trackFunnelEvent({
+            event: "download_attempt_clean",
+            sessionId,
+            userId,
+            anonymousId,
+          }).catch(() => {});
+          return paymentResponse; // Returns 402 if payment needed
+        }
+        // Payment successful
+        requiresPayment = false;
+        isWatermarked = false; // Clean version after payment
       }
     }
-
-    const body = await request.json();
     const {
       mode = "prompt",  // "prompt" | "beat" | "song" | "viral"
       prompt,
@@ -119,6 +163,27 @@ export async function POST(request: NextRequest) {
           bpm: bpm ? parseInt(bpm) : undefined,
         });
 
+        // Apply watermark to viral audio if present
+        let viralAudio = viralResult.music?.audio;
+        if (viralAudio && isWatermarked) {
+          const watermarkResult = await quickWatermark(viralAudio, "mp3");
+          viralAudio = watermarkResult.buffer;
+        }
+
+        // Mark first free generation as used
+        if (userId && freeCheck.reason === "first_free") {
+          await markFreeGenerationUsed(userId).catch(() => {});
+        }
+
+        // Track generation complete
+        await trackFunnelEvent({
+          event: "generate_complete",
+          sessionId,
+          userId,
+          anonymousId,
+          trackId: viralResult.music?.songId,
+        }).catch(() => {});
+
         // Return viral-specific response
         return NextResponse.json({
           success: true,
@@ -127,12 +192,14 @@ export async function POST(request: NextRequest) {
           lyrics: viralResult.lyrics,
           viralScore: viralResult.viralScore,
           metrics: viralResult.metrics,
-          audio: viralResult.music?.audio.toString("base64"),
+          audio: viralAudio?.toString("base64"),
           songId: viralResult.music?.songId,
           format: "mp3",
           durationMs,
           attempts: viralResult.attempts,
           inspirationPatterns: viralResult.inspirationPatterns.slice(0, 5),
+          isWatermarked,
+          freeGenerationsRemaining: freeCheck.remainingFree,
         });
 
       default:
@@ -142,15 +209,38 @@ export async function POST(request: NextRequest) {
         );
     }
 
+    // Apply watermark if needed
+    let finalAudio = result.audio;
+    if (isWatermarked) {
+      const watermarkResult = await quickWatermark(result.audio, "mp3");
+      finalAudio = watermarkResult.buffer;
+    }
+
+    // Mark first free generation as used
+    if (userId && freeCheck.reason === "first_free") {
+      await markFreeGenerationUsed(userId).catch(() => {});
+    }
+
+    // Track generation complete
+    await trackFunnelEvent({
+      event: "generate_complete",
+      sessionId,
+      userId,
+      anonymousId,
+      trackId: result.songId,
+    }).catch(() => {});
+
     // Return audio as base64
     return NextResponse.json({
       success: true,
       mode,
       style,
-      audio: result.audio.toString("base64"),
+      audio: finalAudio.toString("base64"),
       songId: result.songId,
       format: "mp3",
       durationMs,
+      isWatermarked,
+      freeGenerationsRemaining: freeCheck.remainingFree,
     });
 
   } catch (error) {
@@ -159,6 +249,31 @@ export async function POST(request: NextRequest) {
       error instanceof Error ? error.message : "Failed to generate music";
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+/**
+ * Detect platform from request
+ */
+function detectPlatform(
+  request: NextRequest
+): "telegram_miniapp" | "web" | "mcp" | "api" {
+  const userAgent = request.headers.get("user-agent") || "";
+  const referer = request.headers.get("referer") || "";
+
+  if (referer.includes("telegram") || userAgent.includes("Telegram")) {
+    return "telegram_miniapp";
+  }
+  if (userAgent.includes("MCP") || userAgent.includes("claude")) {
+    return "mcp";
+  }
+  if (
+    userAgent.includes("curl") ||
+    userAgent.includes("axios") ||
+    !referer
+  ) {
+    return "api";
+  }
+  return "web";
 }
 
 // Get available styles and options

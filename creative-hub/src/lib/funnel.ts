@@ -15,7 +15,18 @@
  *   });
  */
 
-import { v4 as uuidv4 } from "uuid";
+// Use crypto.randomUUID which is built into modern Node.js and browsers
+function generateUUID(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for older environments
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 // Types matching the schema
 export type FunnelEventType =
@@ -69,15 +80,16 @@ export interface TrackEventParams {
  * On server: generate new UUID
  */
 export function getSessionId(): string {
-  if (typeof window !== "undefined") {
-    let sessionId = sessionStorage.getItem("wt_session_id");
-    if (!sessionId) {
-      sessionId = uuidv4();
-      sessionStorage.setItem("wt_session_id", sessionId);
+  if (typeof window !== "undefined" && typeof sessionStorage !== "undefined") {
+    const stored = sessionStorage.getItem("wt_session_id");
+    if (stored) {
+      return stored;
     }
-    return sessionId;
+    const newId = generateUUID();
+    sessionStorage.setItem("wt_session_id", newId);
+    return newId;
   }
-  return uuidv4();
+  return generateUUID();
 }
 
 /**
@@ -85,15 +97,16 @@ export function getSessionId(): string {
  * In browser: stored in localStorage (persists across sessions)
  */
 export function getAnonymousId(): string {
-  if (typeof window !== "undefined") {
-    let anonId = localStorage.getItem("wt_anon_id");
-    if (!anonId) {
-      anonId = uuidv4();
-      localStorage.setItem("wt_anon_id", anonId);
+  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    const stored = localStorage.getItem("wt_anon_id");
+    if (stored) {
+      return stored;
     }
-    return anonId;
+    const newId = generateUUID();
+    localStorage.setItem("wt_anon_id", newId);
+    return newId;
   }
-  return uuidv4();
+  return generateUUID();
 }
 
 /**

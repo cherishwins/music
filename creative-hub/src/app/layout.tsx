@@ -20,20 +20,23 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "White Tiger | AI Music for Meme Coins",
+  title: "JPanda Ecosystem | Degen Music Studio & Rug Score",
   description:
-    "Create bangers for your meme coin launch. AI-powered music, album art, and brand packages. Built for degens.",
+    "The complete degen toolkit. Create AI music, check token safety, build brands, and launch to the moon. White Tiger Studio, Rug Pull Insurance, Brand Forge, and more.",
   keywords: [
+    "jpanda",
     "white tiger",
     "AI music",
     "meme coin",
     "crypto music",
-    "music generation",
+    "rug pull",
+    "token safety",
     "brand package",
     "TON",
     "Telegram",
+    "degen",
   ],
-  authors: [{ name: "White Tiger" }],
+  authors: [{ name: "JPanda" }],
   manifest: "/manifest.json",
   icons: {
     icon: [
@@ -43,15 +46,15 @@ export const metadata: Metadata = {
     apple: "/assets/brand/icons/apple-touch-icon.png",
   },
   openGraph: {
-    title: "White Tiger",
-    description: "AI Music for Meme Coins. Create bangers for your launch.",
+    title: "JPanda Ecosystem",
+    description: "The complete degen toolkit. AI Music Studio, Rug Score, Brand Forge, and more.",
     type: "website",
     images: ["/assets/brand/social/og-image-1200x630.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "White Tiger",
-    description: "AI Music for Meme Coins",
+    title: "JPanda Ecosystem",
+    description: "The complete degen toolkit. AI Music, Rug Score, Brand Forge.",
     images: ["/assets/brand/social/og-image-1200x630.jpg"],
   },
 };

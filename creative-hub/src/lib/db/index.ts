@@ -208,3 +208,86 @@ export async function incrementGenerations(userId: string) {
     })
     .where(eq(schema.users.id, userId));
 }
+
+/**
+ * Track funnel event
+ */
+export async function trackFunnelEvent(event: {
+  event: schema.FunnelEvent["event"];
+  sessionId: string;
+  userId?: string | null;
+  anonymousId?: string;
+  discoverySource?: schema.FunnelEvent["discoverySource"];
+  referralCode?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  trackId?: string;
+  pageUrl?: string;
+  experimentId?: string;
+  variant?: string;
+  platform?: schema.FunnelEvent["platform"];
+  userAgent?: string;
+}) {
+  await db.insert(schema.funnelEvents).values({
+    id: generateId(),
+    ...event,
+    userId: event.userId || undefined,
+  });
+}
+
+/**
+ * Check if user can generate for free (first generation or tier limits)
+ */
+export async function canGenerateFree(userId?: string | null): Promise<{
+  allowed: boolean;
+  reason: "first_free" | "tier_limit" | "limit_reached" | "must_pay";
+  remainingFree?: number;
+}> {
+  // No user = first generation is always free
+  if (!userId) {
+    return { allowed: true, reason: "first_free" };
+  }
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, userId),
+  });
+
+  if (!user) {
+    return { allowed: true, reason: "first_free" };
+  }
+
+  // Check if they've used their free first generation
+  if (!user.hasUsedFreeGeneration) {
+    return { allowed: true, reason: "first_free" };
+  }
+
+  // Check tier limits
+  const limits = {
+    free: 3,
+    creator: 50,
+    studio: Infinity,
+  };
+
+  const limit = limits[user.tier as keyof typeof limits];
+  const remaining = limit - user.monthlyGenerations;
+
+  if (remaining > 0) {
+    return { allowed: true, reason: "tier_limit", remainingFree: remaining };
+  }
+
+  return { allowed: false, reason: "limit_reached" };
+}
+
+/**
+ * Mark first free generation as used
+ */
+export async function markFreeGenerationUsed(userId: string) {
+  await db
+    .update(schema.users)
+    .set({
+      hasUsedFreeGeneration: true,
+      updatedAt: new Date(),
+    })
+    .where(eq(schema.users.id, userId));
+}
