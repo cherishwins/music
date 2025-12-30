@@ -15,7 +15,7 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Suspense } from "react";
 
-// Synthwave particle system - pink and cyan energy
+// Premium cyber particle system - magenta and cyan energy
 function NeonParticles({ count = 500 }) {
   const pinkPoints = useRef<THREE.Points>(null);
   const cyanPoints = useRef<THREE.Points>(null);
@@ -60,7 +60,7 @@ function NeonParticles({ count = 500 }) {
         </bufferGeometry>
         <pointsMaterial
           size={0.06}
-          color="#FF10F0"
+          color="#E040FB"
           transparent
           opacity={0.9}
           sizeAttenuation
@@ -79,7 +79,7 @@ function NeonParticles({ count = 500 }) {
         </bufferGeometry>
         <pointsMaterial
           size={0.04}
-          color="#00FFFF"
+          color="#00E5FF"
           transparent
           opacity={0.7}
           sizeAttenuation
@@ -90,7 +90,7 @@ function NeonParticles({ count = 500 }) {
   );
 }
 
-// Central cosmic orb - synthwave holographic sphere
+// Central cosmic orb - premium holographic sphere
 function CosmicOrb() {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
@@ -112,29 +112,29 @@ function CosmicOrb() {
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
       <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
         <MeshDistortMaterial
-          color="#AA00AA"
+          color="#9C27B0"
           attach="material"
           distort={0.4}
           speed={2}
           roughness={0.15}
           metalness={0.95}
-          emissive="#FF10F0"
+          emissive="#E040FB"
           emissiveIntensity={0.5}
         />
       </Sphere>
-      {/* Inner pink glow sphere */}
+      {/* Inner magenta glow sphere */}
       <Sphere args={[1.3, 32, 32]} position={[0, 0, 0]}>
-        <meshBasicMaterial color="#FF10F0" transparent opacity={0.15} />
+        <meshBasicMaterial color="#E040FB" transparent opacity={0.15} />
       </Sphere>
       {/* Outer cyan glow sphere */}
       <Sphere ref={glowRef} args={[1.8, 32, 32]} position={[0, 0, 0]}>
-        <meshBasicMaterial color="#00FFFF" transparent opacity={0.08} />
+        <meshBasicMaterial color="#00E5FF" transparent opacity={0.08} />
       </Sphere>
     </Float>
   );
 }
 
-// Orbiting rings - synthwave neon rings
+// Orbiting rings - premium neon rings
 function OrbitalRings() {
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
@@ -163,25 +163,25 @@ function OrbitalRings() {
 
   return (
     <group>
-      {/* Hot pink ring */}
+      {/* Primary magenta ring */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
         <torusGeometry args={[3, 0.025, 16, 100]} />
-        <meshBasicMaterial color="#FF10F0" transparent opacity={0.8} />
+        <meshBasicMaterial color="#E040FB" transparent opacity={0.8} />
       </mesh>
       {/* Cyan ring */}
       <mesh ref={ring2Ref} rotation={[Math.PI / 4, Math.PI / 4, 0]}>
         <torusGeometry args={[3.5, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#00FFFF" transparent opacity={0.6} />
+        <meshBasicMaterial color="#00E5FF" transparent opacity={0.6} />
       </mesh>
-      {/* Purple ring */}
+      {/* Electric purple ring */}
       <mesh ref={ring3Ref} rotation={[Math.PI / 6, -Math.PI / 3, 0]}>
         <torusGeometry args={[4, 0.015, 16, 100]} />
-        <meshBasicMaterial color="#8B5CF6" transparent opacity={0.5} />
+        <meshBasicMaterial color="#7C4DFF" transparent opacity={0.5} />
       </mesh>
-      {/* Outer pink glow ring */}
+      {/* Outer light magenta ring */}
       <mesh ref={ring4Ref} rotation={[Math.PI / 5, Math.PI / 6, 0]}>
         <torusGeometry args={[4.5, 0.01, 16, 100]} />
-        <meshBasicMaterial color="#FF6BF0" transparent opacity={0.3} />
+        <meshBasicMaterial color="#EA80FC" transparent opacity={0.3} />
       </mesh>
     </group>
   );
@@ -201,7 +201,7 @@ function CameraController() {
   return null;
 }
 
-// Loading indicator within Three.js - Synthwave style
+// Loading indicator within Three.js - Premium cyber style
 function Loader() {
   const { progress } = useProgress();
 
@@ -222,7 +222,7 @@ function Loader() {
   );
 }
 
-// Main scene composition - SYNTHWAVE HOLOGRAPHIC
+// Main scene composition - PREMIUM CYBER
 function Scene({ onLoaded }: { onLoaded?: () => void }) {
   const { progress } = useProgress();
 
@@ -234,11 +234,11 @@ function Scene({ onLoaded }: { onLoaded?: () => void }) {
 
   return (
     <>
-      {/* Synthwave lighting - pink and cyan */}
+      {/* Premium cyber lighting - magenta and cyan */}
       <ambientLight intensity={0.15} />
-      <directionalLight position={[5, 5, 5]} intensity={0.6} color="#FF10F0" />
-      <pointLight position={[-5, -5, -5]} intensity={0.4} color="#00FFFF" />
-      <pointLight position={[0, 5, 0]} intensity={0.2} color="#8B5CF6" />
+      <directionalLight position={[5, 5, 5]} intensity={0.6} color="#E040FB" />
+      <pointLight position={[-5, -5, -5]} intensity={0.4} color="#00E5FF" />
+      <pointLight position={[0, 5, 0]} intensity={0.2} color="#7C4DFF" />
 
       {/* Background stars - slightly tinted */}
       <Stars

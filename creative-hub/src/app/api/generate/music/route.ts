@@ -7,6 +7,7 @@ import {
   type MusicStyle,
 } from "@/lib/voice";
 import { requirePayment } from "@/lib/x402";
+import { getMasterDJ, analyzeViralScore } from "@/lib/master-dj";
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const {
-      mode = "prompt",  // "prompt" | "beat" | "song"
+      mode = "prompt",  // "prompt" | "beat" | "song" | "viral"
       prompt,
       style = "trap",
       lyrics,
@@ -29,6 +30,10 @@ export async function POST(request: NextRequest) {
       mood,
       tempo,
       bpm,
+      // Viral mode params
+      theme,
+      targetViralScore = 50,
+      includeMusic = false,
     } = body;
 
     // Validate API key
@@ -95,9 +100,44 @@ export async function POST(request: NextRequest) {
         });
         break;
 
+      case "viral":
+        // Master DJ viral generation
+        if (!theme || theme.length < 3) {
+          return NextResponse.json(
+            { error: "Theme must be at least 3 characters" },
+            { status: 400 }
+          );
+        }
+
+        const masterDJ = getMasterDJ();
+        const viralResult = await masterDJ.generate({
+          theme,
+          style: style as MusicStyle,
+          targetViralScore,
+          includeMusic,
+          durationMs,
+          bpm: bpm ? parseInt(bpm) : undefined,
+        });
+
+        // Return viral-specific response
+        return NextResponse.json({
+          success: true,
+          mode: "viral",
+          style,
+          lyrics: viralResult.lyrics,
+          viralScore: viralResult.viralScore,
+          metrics: viralResult.metrics,
+          audio: viralResult.music?.audio.toString("base64"),
+          songId: viralResult.music?.songId,
+          format: "mp3",
+          durationMs,
+          attempts: viralResult.attempts,
+          inspirationPatterns: viralResult.inspirationPatterns.slice(0, 5),
+        });
+
       default:
         return NextResponse.json(
-          { error: "Invalid mode. Use: prompt, beat, or song" },
+          { error: "Invalid mode. Use: prompt, beat, song, or viral" },
           { status: 400 }
         );
     }
@@ -128,15 +168,33 @@ export async function GET() {
       { id: "prompt", description: "Generate from text description" },
       { id: "beat", description: "Generate instrumental beat in a style" },
       { id: "song", description: "Generate full song with lyrics" },
+      {
+        id: "viral",
+        description: "Master DJ viral generation with Loop-First optimization",
+        params: {
+          theme: "Required - topic/mood for the track",
+          style: "Music style (phonk, trap, drill, kphonk recommended)",
+          targetViralScore: "Minimum viral score to achieve (default: 50)",
+          includeMusic: "Generate music along with lyrics (default: false)",
+        },
+      },
     ],
     styles: Object.entries(MUSIC_STYLES).map(([id, traits]) => ({
       id,
       traits,
+      viral: ["phonk", "kphonk", "trap", "drill"].includes(id),
     })),
+    viralStyles: ["phonk", "kphonk", "trap", "drill"],
     limits: {
       minDurationMs: 3000,
       maxDurationMs: 600000,
       defaultDurationMs: 60000,
+    },
+    viralMetrics: {
+      repetitionRatio: "Target: 40%+ (words that repeat)",
+      hookScore: "Target: 5+ (repeated 2-5 word phrases)",
+      shortLineRatio: "Target: 60%+ (lines ≤6 words)",
+      firstLinePunch: "First line ≤8 words, high impact",
     },
   });
 }

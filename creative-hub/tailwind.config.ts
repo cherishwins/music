@@ -9,41 +9,43 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // WHITE TIGER - Synthwave Holographic Palette
-        obsidian: "#050508",
-        crucible: "#0A0A10",
+        // WHITE TIGER - Modern Premium Cyber Palette
+        obsidian: "#06060A",
+        crucible: "#0C0C14",
         void: "#000000",
+        silver: "#E8E8F0",
+        chrome: "#C0C0D0",
         tiger: {
-          DEFAULT: "#FF10F0",      // Electric pink (PRIMARY)
-          muted: "#CC00CC",
-          light: "#FF6BF0",
-          dark: "#AA00AA",
-          glow: "#FF10F0",
+          DEFAULT: "#E040FB",      // Softer magenta (readable)
+          muted: "#9C27B0",
+          light: "#EA80FC",
+          dark: "#7B1FA2",
+          glow: "#E040FB",
         },
         neon: {
-          cyan: "#00FFFF",         // Pure cyan
-          pink: "#FF10F0",         // Hot pink
-          blue: "#00BFFF",         // Electric blue
-          purple: "#8B5CF6",       // Accent purple
-          green: "#39FF14",        // Toxic green accent
+          cyan: "#00E5FF",         // Softer cyan
+          pink: "#E040FB",         // Magenta
+          blue: "#2979FF",         // Deep blue
+          purple: "#7C4DFF",       // Electric purple
+          green: "#00E676",        // Emerald accent
         },
         holo: {
-          pink: "#FF6BD6",
-          cyan: "#00F5FF",
-          purple: "#BF5FFF",
-          shift: "#FF00FF",        // For animations
+          pink: "#EA80FC",
+          cyan: "#00E5FF",
+          purple: "#B388FF",
+          white: "#FFFFFF",
         },
         // Legacy support
         gold: {
-          DEFAULT: "#FF10F0",
-          muted: "#CC00CC",
-          light: "#FF6BF0",
-          dark: "#AA00AA",
+          DEFAULT: "#E040FB",
+          muted: "#9C27B0",
+          light: "#EA80FC",
+          dark: "#7B1FA2",
         },
         fire: {
-          500: "#FF10F0",
-          600: "#00FFFF",
-          700: "#8B5CF6",
+          500: "#E040FB",
+          600: "#00E5FF",
+          700: "#7C4DFF",
         },
       },
       fontFamily: {

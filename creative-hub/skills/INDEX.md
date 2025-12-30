@@ -16,6 +16,10 @@ skills/
 │   ├── ELEVENLABS_MUSIC.skill.md     # ElevenLabs Music API (FREE composition plans!)
 │   └── MCP_SERVER_CONFIG.md          # Claude Desktop integration
 │
+├── VIRAL ENGINE (NEW!)
+│   ├── VIRAL_GENERATION.skill.md     # Loop-First lyrics + viral optimization
+│   └── RUNWAY_PROMO.skill.md         # Runway Gen-4.5 video prompts
+│
 ├── JUCHEGANG SYSTEM
 │   ├── JUCHEGANG_PIPELINE.skill.md   # Artist skill → track pipeline
 │   └── JUCHEGANG_PROTOCOL.md         # Hell Joseon, NK symbols, Spaceship remix
@@ -41,12 +45,15 @@ skills/
 │   └── KOREA_BRIDGE_TRAP.json        # Ready-to-use composition plan
 │
 └── ../scripts/lyric-pipeline/        # Python lyric intelligence tools
-    ├── embed_lyrics.py               # Vectorize lyrics
-    ├── cluster_lyrics.py             # Find patterns
-    ├── theme_classifier.py           # 12 proven hit themes
-    ├── analyze_performance.py        # Correlate with success
-    ├── generation_optimizer.py       # Build prompts from patterns
-    └── upload_to_qdrant.py           # Store in vector DB
+    ├── embed_hiphop_viral.py         # Hip hop + viral features (CURRENT)
+    ├── upload_hiphop_qdrant.py       # Upload to hiphop_viral (CURRENT)
+    ├── embed_lyrics.py               # Vectorize lyrics (legacy)
+    ├── cluster_lyrics.py             # Find patterns (legacy)
+    └── theme_classifier.py           # 12 proven hit themes (legacy)
+
+../src/lib/
+├── master-dj.ts                      # Master DJ orchestrator (NEW!)
+└── viral-optimizer.ts                # Viral score analysis (NEW!)
 ```
 
 ---
@@ -57,14 +64,33 @@ skills/
 
 | Goal | Use This Skill |
 |------|----------------|
+| **Viral lyrics + music** | `VIRAL_GENERATION.skill.md` (NEW!) |
+| **Runway AI video prompts** | `RUNWAY_PROMO.skill.md` (NEW!) |
 | ElevenLabs Music API | `ELEVENLABS_MUSIC.skill.md` |
 | Generate track from artist | `JUCHEGANG_PIPELINE.skill.md` |
 | Phonk/K-Phonk production | `PHONK_PRODUCTION.skill.md` |
 | Beat generation code | `BEAT_PRODUCTION_ARSENAL.skill.md` |
 | Payment integration | `PAYMENT_EMPIRE.skill.md` |
 | Research hit patterns | `research/HIT_ANALYSIS_FRAMEWORK.md` |
-| **Lyric pattern discovery** | `scripts/lyric-pipeline/` |
-| **12 proven hit themes** | `research/LYRICS_INTELLIGENCE_ENGINE.md` |
+| Lyric pattern discovery | `scripts/lyric-pipeline/` |
+| Loop-First framework | `research/VIRAL_HYPOTHESIS.md` |
+
+### API Endpoints
+
+| Endpoint | Mode | Description |
+|----------|------|-------------|
+| POST `/api/generate/music` | `viral` | **Master DJ** - viral lyrics + optional music |
+| POST `/api/generate/music` | `prompt` | Simple text-to-music |
+| POST `/api/generate/music` | `beat` | Style-specific instrumental |
+| POST `/api/generate/music` | `song` | Full song with lyrics |
+
+### Code Libraries
+
+| Library | Purpose |
+|---------|---------|
+| `src/lib/master-dj.ts` | Viral hit orchestrator |
+| `src/lib/viral-optimizer.ts` | Viral score analysis |
+| `src/lib/voice.ts` | ElevenLabs integration + MUSIC_STYLES |
 
 ---
 

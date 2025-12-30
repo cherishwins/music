@@ -2,38 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* WHITE TIGER Brand Variables - SYNTHWAVE HOLOGRAPHIC */
+/* WHITE TIGER Brand Variables - MODERN PREMIUM CYBER */
 :root {
-  /* Brand Colors - Synthwave Holo */
-  --color-obsidian: #050508;
-  --color-crucible: #0A0A10;
+  /* Brand Colors - Premium Cyber (more readable, less 80s) */
+  --color-obsidian: #06060A;
+  --color-crucible: #0C0C14;
   --color-void: #000000;
-  --color-tiger: #FF10F0;           /* Electric pink */
-  --color-tiger-muted: #CC00CC;
-  --color-tiger-light: #FF6BF0;
-  --color-tiger-glow: #FF10F0;
-  --color-neon-cyan: #00FFFF;       /* Pure cyan */
-  --color-neon-pink: #FF10F0;       /* Hot pink */
-  --color-neon-purple: #8B5CF6;     /* Accent purple */
-  --color-holo-shift: #FF00FF;
-  --color-text-light: #F0F0F0;
+  --color-silver: #E8E8F0;          /* Premium silver/white */
+  --color-chrome: #C0C0D0;          /* Chrome accent */
+  --color-tiger: #E040FB;           /* Softer magenta (more readable) */
+  --color-tiger-muted: #9C27B0;
+  --color-tiger-light: #EA80FC;
+  --color-tiger-glow: #E040FB;
+  --color-neon-cyan: #00E5FF;       /* Slightly softer cyan */
+  --color-neon-pink: #E040FB;
+  --color-neon-purple: #7C4DFF;     /* Electric purple */
+  --color-neon-blue: #2979FF;       /* Deep blue accent */
+  --color-text-primary: #FFFFFF;    /* Pure white for headlines */
+  --color-text-light: #E8E8F0;      /* Silver for body */
+  --color-text-muted: #9090A0;      /* Muted for secondary */
 
   /* Legacy aliases */
-  --color-gold: #FF10F0;
-  --color-gold-muted: #CC00CC;
-  --color-gold-light: #FF6BF0;
+  --color-gold: #E040FB;
+  --color-gold-muted: #9C27B0;
+  --color-gold-light: #EA80FC;
 
   /* Typography */
   --font-headline: 'Cinzel Decorative', serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* UI Elements */
-  --border-radius-tiger: 8px;
-  --box-shadow-tiger: 0 4px 25px rgba(255, 16, 240, 0.25);
-  --box-shadow-neon: 0 4px 25px rgba(0, 255, 255, 0.25);
-  --box-shadow-holo: 0 0 40px rgba(255, 16, 240, 0.3), 0 0 80px rgba(0, 255, 255, 0.2);
-  --box-shadow-gold: 0 4px 25px rgba(255, 16, 240, 0.25);
+  /* UI Elements - Premium shadows */
+  --border-radius-tiger: 12px;
+  --box-shadow-tiger: 0 8px 32px rgba(224, 64, 251, 0.2);
+  --box-shadow-neon: 0 8px 32px rgba(0, 229, 255, 0.2);
+  --box-shadow-holo: 0 0 60px rgba(224, 64, 251, 0.15), 0 0 120px rgba(0, 229, 255, 0.1);
+  --box-shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --text-shadow-glow: 0 0 40px rgba(224, 64, 251, 0.5), 0 0 80px rgba(0, 229, 255, 0.3);
 }
 
 * {

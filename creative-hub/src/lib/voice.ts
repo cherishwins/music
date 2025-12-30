@@ -445,6 +445,30 @@ export const MUSIC_STYLES = {
     "London sound",
   ],
 
+  // Phonk - TikTok Viral (31 BILLION views)
+  phonk: [
+    "phonk",
+    "Memphis rap samples",
+    "dark cowbell patterns",
+    "aggressive 808 bass",
+    "drift culture aesthetic",
+    "Russian phonk influence",
+    "distorted kicks",
+    "lo-fi dark atmosphere",
+    "hard-hitting drops",
+    "TikTok viral energy",
+  ],
+  kphonk: [
+    "K-phonk",
+    "Korean phonk fusion",
+    "aggressive 808s",
+    "K-pop melodic hooks",
+    "Seoul street racing vibes",
+    "dark synth layers",
+    "Memphis meets Korea",
+    "viral TikTok sound",
+  ],
+
   // Soul/R&B - Premium quality
   rnb: [
     "R&B",
@@ -915,6 +939,8 @@ function getNegativeStyles(style: MusicStyle): string[] {
     pop: ["dark", "aggressive", "underground", "experimental"],
     soul: ["electronic", "EDM", "trap", "aggressive"],
     lofi: ["aggressive", "EDM", "intense", "fast tempo"],
+    phonk: ["happy", "upbeat", "acoustic", "soft", "jazz", "classical", "clean"],
+    kphonk: ["happy", "soft", "acoustic", "classical", "country", "jazz"],
   };
 
   return negativeMap[style] || ["low quality", "amateur", "distorted"];
