@@ -2,15 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ALCHEMY Brand Variables */
+/* WHITE TIGER Brand Variables */
 :root {
-  /* Brand Colors - Onyx & Oro */
+  /* Brand Colors - Cyberpunk Purple */
   --color-obsidian: #0A0A0A;
   --color-crucible: #1A1A1A;
-  --color-gold: #D4AF37;
-  --color-gold-muted: #8C7330;
-  --color-gold-light: #E5C76B;
+  --color-tiger: #8B5CF6;
+  --color-tiger-muted: #6D28D9;
+  --color-tiger-light: #A78BFA;
+  --color-tiger-glow: #C4B5FD;
+  --color-neon-cyan: #22D3EE;
+  --color-neon-pink: #F472B6;
   --color-text-light: #F0F0F0;
+
+  /* Legacy aliases */
+  --color-gold: #8B5CF6;
+  --color-gold-muted: #6D28D9;
+  --color-gold-light: #A78BFA;
 
   /* Typography */
   --font-headline: 'Cinzel Decorative', serif;
@@ -18,8 +26,9 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* UI Elements */
-  --border-radius-gold: 8px;
-  --box-shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
+  --border-radius-tiger: 8px;
+  --box-shadow-tiger: 0 4px 20px rgba(139, 92, 246, 0.15);
+  --box-shadow-gold: 0 4px 20px rgba(139, 92, 246, 0.15);
 }
 
 * {
@@ -79,41 +88,62 @@ body {
   z-index: 10;
 }
 
-/* Glass morphism - ALCHEMY style */
+/* Glass morphism - WHITE TIGER style */
 .glass {
   background: rgba(26, 26, 26, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.1);
 }
 
+.glass-tiger,
 .glass-gold {
   background: linear-gradient(
     135deg,
-    rgba(212, 175, 55, 0.1) 0%,
-    rgba(140, 115, 48, 0.05) 100%
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(109, 40, 217, 0.05) 100%
   );
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-/* Gradient text - ALCHEMY Gold */
+.glass-neon {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(244, 114, 182, 0.05) 50%,
+    rgba(34, 211, 238, 0.1) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* Gradient text - WHITE TIGER Purple */
 .gradient-text {
-  background: linear-gradient(135deg, #8C7330 0%, #D4AF37 50%, #E5C76B 100%);
+  background: linear-gradient(135deg, #6D28D9 0%, #8B5CF6 50%, #A78BFA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+.gradient-text-tiger,
 .gradient-text-gold {
-  background: linear-gradient(135deg, #D4AF37 0%, #E5C76B 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Scrollbar styling - ALCHEMY */
+.gradient-text-cyberpunk {
+  background: linear-gradient(135deg, #8B5CF6 0%, #F472B6 50%, #22D3EE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Scrollbar styling - WHITE TIGER */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -123,15 +153,15 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #8C7330, #D4AF37);
+  background: linear-gradient(180deg, #6D28D9, #8B5CF6);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #D4AF37, #E5C76B);
+  background: linear-gradient(180deg, #8B5CF6, #A78BFA);
 }
 
-/* Loading screen - ALCHEMY */
+/* Loading screen - WHITE TIGER */
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -149,7 +179,7 @@ body {
   visibility: hidden;
 }
 
-/* Particle effect - Gold */
+/* Particle effect - Purple */
 @keyframes particle-float {
   0%, 100% {
     transform: translateY(0) translateX(0) rotate(0deg);
@@ -171,30 +201,31 @@ body {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: var(--color-gold);
+  background: var(--color-tiger);
   border-radius: 50%;
   animation: particle-float 8s linear infinite;
 }
 
-/* Card hover effects - Gold glow */
+/* Card hover effects - Purple glow */
 .card-hover {
   transition: all 0.3s ease;
 }
 
 .card-hover:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
 }
 
-/* Button styles - ALCHEMY Transmute */
+/* Button styles - WHITE TIGER */
 .btn-primary,
-.btn-transmute {
+.btn-transmute,
+.btn-tiger {
   @apply px-8 py-4 font-semibold rounded-xl;
-  background: linear-gradient(135deg, var(--color-gold-muted), var(--color-gold));
-  color: var(--color-obsidian);
+  background: linear-gradient(135deg, var(--color-tiger-muted), var(--color-tiger));
+  color: white;
   font-family: var(--font-headline);
   border: none;
-  box-shadow: var(--box-shadow-gold);
+  box-shadow: var(--box-shadow-tiger);
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -202,13 +233,15 @@ body {
 }
 
 .btn-primary:hover,
-.btn-transmute:hover {
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+.btn-transmute:hover,
+.btn-tiger:hover {
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
   transform: translateY(-2px);
 }
 
 .btn-primary:active,
-.btn-transmute:active {
+.btn-transmute:active,
+.btn-tiger:active {
   transform: scale(0.98);
 }
 
@@ -219,8 +252,8 @@ body {
 }
 
 .btn-secondary {
-  @apply px-8 py-4 glass border border-gold/20 text-white font-semibold rounded-xl;
-  @apply hover:bg-gold/10 transition-all duration-300;
+  @apply px-8 py-4 glass border border-tiger/20 text-white font-semibold rounded-xl;
+  @apply hover:bg-tiger/10 transition-all duration-300;
   @apply active:scale-95;
   font-family: var(--font-body);
 }
@@ -231,13 +264,21 @@ body {
   height: var(--tg-viewport-stable-height, 100vh);
 }
 
-/* ALCHEMY specific utilities */
+/* WHITE TIGER specific utilities */
+.text-tiger {
+  color: var(--color-tiger);
+}
+
 .text-gold {
-  color: var(--color-gold);
+  color: var(--color-tiger);
+}
+
+.border-tiger {
+  border-color: var(--color-tiger);
 }
 
 .border-gold {
-  border-color: var(--color-gold);
+  border-color: var(--color-tiger);
 }
 
 .bg-crucible {
@@ -253,25 +294,41 @@ h1, h2, h3 {
 
 /* Waveform glow effect */
 .waveform-glow {
-  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+}
+
+/* Neon glow effect */
+.neon-glow {
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5));
 }
 
 /* Transmutation animation */
 @keyframes transmute {
   0% {
     filter: brightness(1) saturate(1);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
   }
   50% {
     filter: brightness(1.2) saturate(1.3);
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
   }
   100% {
     filter: brightness(1) saturate(1);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
   }
 }
 
 .animate-transmute {
   animation: transmute 3s ease-in-out infinite;
+}
+
+/* Neon flicker animation */
+@keyframes neon-flicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--color-tiger), 0 0 20px var(--color-tiger); }
+  50% { opacity: 0.9; text-shadow: 0 0 5px var(--color-tiger), 0 0 10px var(--color-tiger); }
+  75% { opacity: 1; text-shadow: 0 0 15px var(--color-tiger), 0 0 25px var(--color-tiger); }
+}
+
+.animate-neon {
+  animation: neon-flicker 3s ease-in-out infinite;
 }

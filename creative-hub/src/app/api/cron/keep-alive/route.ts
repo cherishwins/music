@@ -55,9 +55,14 @@ export async function GET(request: NextRequest) {
 
       // Get collection info to verify connection
       const collections = await client.getCollections();
+      // Check for new hip hop collection first, fallback to old
+      const hiphopCollection = collections.collections.find(
+        (c) => c.name === "hiphop_viral"
+      );
       const lyricCollection = collections.collections.find(
         (c) => c.name === "lyric_patterns"
       );
+      const targetCollection = hiphopCollection || lyricCollection;
 
       results.qdrant = {
         status: "ok",
@@ -65,8 +70,8 @@ export async function GET(request: NextRequest) {
       };
 
       // Add collection stats if available
-      if (lyricCollection) {
-        const info = await client.getCollection("lyric_patterns");
+      if (targetCollection) {
+        const info = await client.getCollection(targetCollection.name);
         // @ts-expect-error - points_count exists on collection info
         const vectorCount = info.points_count || info.vectors_count || 0;
         results.qdrant = {

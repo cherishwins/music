@@ -59,17 +59,22 @@ export async function GET() {
       });
 
       const collections = await client.getCollections();
+      // Check for new hip hop collection first, fallback to old
+      const hiphopCollection = collections.collections.find(
+        (c) => c.name === "hiphop_viral"
+      );
       const lyricCollection = collections.collections.find(
         (c) => c.name === "lyric_patterns"
       );
+      const targetCollection = hiphopCollection || lyricCollection;
 
-      if (lyricCollection) {
-        const info = await client.getCollection("lyric_patterns");
+      if (targetCollection) {
+        const info = await client.getCollection(targetCollection.name);
         services.qdrant = {
           status: "ok",
           latency: Date.now() - start,
           details: {
-            collection: "lyric_patterns",
+            collection: targetCollection.name,
             // @ts-expect-error - points_count exists
             vectorCount: info.points_count || info.vectors_count || 0,
             status: info.status,

@@ -1,6 +1,6 @@
-# MSUCO - AI Agent Instructions
+# White Tiger - AI Agent Instructions
 
-> **Brand**: MSUCO (Purple Tiger Crown)
+> **Brand**: White Tiger (Cyberpunk Purple)
 > **Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
 > **App**: https://creative-hub-virid.vercel.app
 
@@ -8,7 +8,7 @@
 
 ## Project Overview
 
-MSUCO is a **Telegram Mini App** for AI-powered music creation. Users pay with **5 different payment rails** to generate music, album art, and brand packages.
+White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators**. Users pay with **5 different payment rails** to generate music, album art, and brand packages.
 
 ### Core Features
 - AI music generation (ElevenLabs)
@@ -16,6 +16,64 @@ MSUCO is a **Telegram Mini App** for AI-powered music creation. Users pay with *
 - Brand package generation
 - Lyric intelligence with pattern analysis
 - Multi-rail payments (Stars, TON, USDC, Card, Onramp)
+
+---
+
+## Brand Assets
+
+**Location**: `creative-hub/public/assets/brand/`
+
+### Logos
+- `logo-primary.jpg` - Main logo (White Tiger with soundwave)
+- `logo-friendly.jpg` - Friendly/cub variant
+- `logo-aggressive.jpg` - Roaring/aggressive variant
+- `logo-city.jpg` - City background variant
+- `logo-dj-vinyl.jpg` - DJ/vinyl variant
+
+### PWA Icons
+`/assets/brand/icons/`
+- icon-72x72.png through icon-512x512.png
+- apple-touch-icon.png
+- favicon-16x16.png, favicon-32x32.png, favicon-48x48.png
+
+### Social Media
+`/assets/brand/social/`
+- profile-400x400.jpg, profile-200x200.jpg
+- twitter-header-1500x500.jpg
+- facebook-cover-820x312.jpg
+- og-image-1200x630.jpg
+- telegram-channel-640x640.jpg
+
+### Marketing
+- hero-cosmic-disco.jpg
+- hero-mech-wings.jpg
+- hero-dj-party.jpg
+- hero-laser-eyes.jpg
+
+### Videos
+- lfg.mp4
+- peppanda.mp4
+- video-grok-tiger.mp4
+
+---
+
+## Color Palette
+
+```css
+/* Primary - Cyberpunk Purple */
+--color-tiger: #8B5CF6;
+--color-tiger-muted: #6D28D9;
+--color-tiger-light: #A78BFA;
+--color-tiger-glow: #C4B5FD;
+
+/* Accent - Neon */
+--color-neon-cyan: #22D3EE;
+--color-neon-pink: #F472B6;
+
+/* Background */
+--color-obsidian: #0A0A0A;
+--color-crucible: #1A1A1A;
+```
 
 ---
 
@@ -27,6 +85,7 @@ MSUCO is a **Telegram Mini App** for AI-powered music creation. Users pay with *
 - **Qdrant** - 1000 lyric vectors in `lyric_patterns` collection
 - **Turso** - 8 tables (users, tracks, transactions, etc.)
 - **x402 Protected APIs** - Music ($0.50), Album Art ($0.10), Brand ($0.25)
+- **Canva MCP** - Connected for brand asset generation
 
 ### Credentials (all in `.env`)
 ```bash
@@ -62,23 +121,23 @@ creative-hub/
 │   ├── lib/
 │   │   ├── x402.ts                 # HTTP 402 payment middleware
 │   │   ├── ton.ts                  # TON Connect integration
-│   │   ├── coinbase.ts             # Onramp integration
+│   │   ├── telegram-native.ts      # Telegram Mini App SDK
 │   │   └── telegram.ts             # Stars payments
+│   ├── hooks/
+│   │   └── useTelegram.ts          # Telegram React hooks
 │   └── components/payments/
 │       └── multi-rail-checkout.tsx # Universal checkout UI
 ├── scripts/lyric-pipeline/         # Intelligence engine
-│   ├── embed_lyrics.py             # Vectorize lyrics
-│   ├── cluster_lyrics.py           # Find patterns
-│   ├── theme_classifier.py         # Hit theme analysis
-│   └── upload_to_qdrant.py         # Store vectors
 ├── public/
-│   ├── tonconnect-manifest.json    # MSUCO branding
-│   └── assets/
-│       └── musiclogo2.jpg          # Main logo
+│   ├── manifest.json               # White Tiger PWA manifest
+│   ├── tonconnect-manifest.json    # White Tiger TON branding
+│   └── assets/brand/               # All brand assets
+│       ├── icons/                  # PWA icons
+│       └── social/                 # Social media assets
 └── skills/                         # Documentation
     ├── INDEX.md
-    ├── PAYMENT_EMPIRE.skill.md
-    └── ...
+    ├── BRAND_KIT_MASTER.skill.md
+    └── PAYMENT_EMPIRE.skill.md
 ```
 
 ---
@@ -93,45 +152,6 @@ creative-hub/
 | **Coinbase Onramp** | Needs setup | `COINBASE_PROJECT_ID` |
 | **Stripe** | Needs setup | `STRIPE_SECRET_KEY` |
 
-### x402 Pricing (in `src/lib/x402.ts`)
-```typescript
-export const ENDPOINT_PRICING = {
-  "/api/generate/music": { price: "$0.50" },
-  "/api/generate/album-art": { price: "$0.10" },
-  "/api/generate/brand": { price: "$0.25" },
-};
-```
-
----
-
-## Lyric Intelligence
-
-**Location**: `scripts/lyric-pipeline/`
-
-### Current State
-- 1000 songs embedded (384-dim vectors)
-- 12 pattern clusters identified
-- Theme distribution: breakup (17%), loss (17%), desire (16%)
-- Stored in Qdrant `lyric_patterns` collection
-
-### Run Pipeline
-```bash
-cd scripts/lyric-pipeline
-pip install -r requirements.txt
-
-# Embed lyrics
-python embed_lyrics.py --hf-dataset vishnupriyavr/spotify-million-song-dataset --max-samples 1000
-
-# Cluster patterns
-python cluster_lyrics.py --input ./lyric_embeddings --clusters 12
-
-# Classify themes
-python theme_classifier.py --corpus ./lyric_embeddings
-
-# Upload to Qdrant
-python upload_to_qdrant.py --input ./lyric_embeddings
-```
-
 ---
 
 ## Development
@@ -143,8 +163,8 @@ pnpm install
 # Run locally
 pnpm dev
 
-# Test databases
-pnpm tsx scripts/test-db.ts
+# Build
+pnpm build
 
 # Deploy (auto via Vercel)
 git push origin main
@@ -152,44 +172,10 @@ git push origin main
 
 ---
 
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| `.env` | All credentials |
-| `src/lib/x402.ts` | Payment middleware |
-| `src/lib/ton.ts` | TON wallet integration |
-| `src/components/payments/multi-rail-checkout.tsx` | Checkout UI |
-| `public/tonconnect-manifest.json` | MSUCO branding for TON |
-| `scripts/lyric-pipeline/` | Intelligence engine |
-| `skills/PAYMENT_EMPIRE.skill.md` | Payment strategy docs |
-
----
-
-## External Dashboards
-
-- **Vercel**: https://vercel.com/jessepimmel/creative-hub
-- **Qdrant**: https://cloud.qdrant.io
-- **Turso**: https://turso.tech/app
-- **BotFather**: @BotFather → /mybots → @MSUCOBot
-
----
-
-## Next Steps
-
-1. [ ] Scale lyric pipeline to 10K+ songs
-2. [ ] Set up Coinbase Onramp (`COINBASE_PROJECT_ID`)
-3. [ ] Deploy MCP server (`/mcp-server/`)
-4. [ ] Deploy x402 facilitator (`/facilitator/`)
-5. [ ] Build CLAP audio embeddings
-6. [ ] Wire generation to use lyric patterns
-
----
-
 ## Code Style
 
 - TypeScript strict mode
-- Tailwind with existing tokens (`gold-*`, `cosmic-*`)
+- Tailwind with tokens (`tiger-*`, `neon-*`, `obsidian`, `crucible`)
 - Framer Motion for animations
-- Use `glass` and `glass-gold` CSS classes
+- Use `glass`, `glass-tiger`, `glass-neon` CSS classes
 - API routes in `src/app/api/`

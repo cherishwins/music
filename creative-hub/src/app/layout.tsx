@@ -20,25 +20,39 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ALCHEMY | Transmute Noise into Gold",
+  title: "White Tiger | AI Music for Meme Coins",
   description:
-    "The ancient science of transformation applied to modern audio production. Turn community chaos into polished hits with AI-powered music creation.",
+    "Create bangers for your meme coin launch. AI-powered music, album art, and brand packages. Built for degens.",
   keywords: [
-    "alchemy",
+    "white tiger",
     "AI music",
-    "audio production",
-    "thread to hit",
+    "meme coin",
+    "crypto music",
     "music generation",
-    "vocal synthesis",
+    "brand package",
     "TON",
     "Telegram",
   ],
-  authors: [{ name: "ALCHEMY" }],
+  authors: [{ name: "White Tiger" }],
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/assets/brand/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/assets/brand/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/assets/brand/icons/apple-touch-icon.png",
+  },
   openGraph: {
-    title: "ALCHEMY",
-    description: "Transmute Noise into Gold.",
+    title: "White Tiger",
+    description: "AI Music for Meme Coins. Create bangers for your launch.",
     type: "website",
+    images: ["/assets/brand/social/og-image-1200x630.jpg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "White Tiger",
+    description: "AI Music for Meme Coins",
+    images: ["/assets/brand/social/og-image-1200x630.jpg"],
   },
 };
 

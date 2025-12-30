@@ -1,0 +1,20 @@
+{
+  "total_tracks": 4832,
+  "embedding_dim": 384,
+  "model": "all-MiniLM-L6-v2",
+  "genre_focus": "hip_hop_viral",
+  "viral_analysis": {
+    "total_tracks": 4832,
+    "avg_viral_score": 12.49,
+    "max_viral_score": 100,
+    "min_viral_score": 0,
+    "high_viral_count": 296,
+    "score_distribution": {
+      "0-20": 4132,
+      "20-40": 328,
+      "40-60": 104,
+      "60-80": 70,
+      "80-100": 198
+    }
+  }
+}
