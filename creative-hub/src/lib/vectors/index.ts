@@ -179,7 +179,7 @@ export async function findSimilarHits(
   return results.map((r) => ({
     id: r.id,
     score: r.score,
-    ...(r.payload as HitSongPayload),
+    ...(r.payload as unknown as HitSongPayload),
   }));
 }
 
