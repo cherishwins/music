@@ -425,6 +425,38 @@ export const experiments = sqliteTable("experiments", {
 });
 
 // ============================================
+// CLONED VOICES (User Voice Clones)
+// ============================================
+
+export const clonedVoices = sqliteTable("cloned_voices", {
+  id: text("id").primaryKey(), // UUID
+  userId: text("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+
+  // ElevenLabs voice clone
+  elevenlabsVoiceId: text("elevenlabs_voice_id").notNull(), // The actual ElevenLabs ID
+  name: text("name").notNull(), // User-friendly name
+  description: text("description"),
+
+  // Source audio info
+  sampleDurationSeconds: integer("sample_duration_seconds"),
+  sampleSizeBytes: integer("sample_size_bytes"),
+
+  // Usage stats
+  usageCount: integer("usage_count").default(0),
+
+  // Status
+  status: text("status", {
+    enum: ["processing", "ready", "failed"],
+  }).default("processing").notNull(),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
 // REFERRALS
 // ============================================
 
@@ -470,3 +502,5 @@ export type Experiment = typeof experiments.$inferSelect;
 export type NewExperiment = typeof experiments.$inferInsert;
 export type Referral = typeof referrals.$inferSelect;
 export type NewReferral = typeof referrals.$inferInsert;
+export type ClonedVoice = typeof clonedVoices.$inferSelect;
+export type NewClonedVoice = typeof clonedVoices.$inferInsert;
