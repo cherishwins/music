@@ -1,31 +1,60 @@
-# Creative Hub Unit Economics
+# White Tiger - Unit Economics & Cost Monitoring
+
 ## Know Your Numbers or Die
 
-**Updated**: 2025-12-28
+**Updated**: 2025-12-30
+
+---
+
+## SERVICE PROVIDERS QUICK REFERENCE
+
+| Service | Purpose | Plan | Monthly Cost | Status |
+|---------|---------|------|--------------|--------|
+| [ElevenLabs](https://elevenlabs.io/pricing) | Music + Voice | Creator | $22 | Active |
+| [Anthropic Claude](https://platform.claude.com/docs/en/about-claude/pricing) | AI Text | Pay-as-you-go | ~$5-20 | Active |
+| [Turso](https://turso.tech/pricing) | Database | Free | $0 | Active |
+| [Qdrant](https://qdrant.tech/pricing/) | Vectors | Free (1GB) | $0 | Active |
+| [Vercel](https://vercel.com/pricing) | Hosting | Hobby | $0 | Active |
+| [Replicate](https://replicate.com/pricing) | Images | Pay-as-you-go | ~$0-10 | Active |
+
+**Total Fixed Costs**: ~$27-52/month
 
 ---
 
 ## COST PER TRACK GENERATED
 
-### AI Model Costs
+### AI Model Costs (2025 Pricing)
 
 | Service | Model | Cost | Usage |
 |---------|-------|------|-------|
-| **ElevenLabs Music** | music_v1 | ~$0.10-0.30/track | Full song generation |
-| **ElevenLabs Voice** | eleven_multilingual_v2 | $0.30/1K chars | Voice cloning (future) |
+| **ElevenLabs Music** | music_v1 | ~$0.08/min (Creator plan) | Full song generation |
+| **ElevenLabs Voice** | eleven_multilingual_v2 | ~$0.002/100 chars | TTS, watermarks |
+| **ElevenLabs IVC** | Instant Voice Clone | Included | User voice clones |
 | **Anthropic Claude** | claude-3-haiku | $0.25/1M input, $1.25/1M output | Lyrics, prompts |
-| **Anthropic Claude** | claude-3.5-sonnet | $3/1M input, $15/1M output | Complex generation |
-| **xAI Grok** (via Vercel) | grok-2 | $2/1M input, $10/1M output | Brand generation |
-| **Google Gemini** | gemini-2.0-flash | $0.075/1M input | Image analysis |
-| **Replicate MusicGen** | musicgen-large | ~$0.05/30s | Beat generation |
+| **Anthropic Claude** | claude-3.5-haiku | $0.80/1M input, $4/1M output | Better quality |
+| **Anthropic Claude** | claude-4-sonnet | $3/1M input, $15/1M output | Complex generation |
+| **xAI Grok** | grok-3 | $2/1M input, $6/1M output | Text only (no voice) |
+| **Replicate Flux** | FLUX.1-schnell | $0.003/image | Album art |
+| **Replicate Flux** | FLUX [dev] | $0.025/image | Better quality |
 
-### Storage Costs
+### Storage & Infrastructure Costs
 
-| Service | Cost | Notes |
-|---------|------|-------|
-| **Vercel Blob** | $0.15/GB/month stored | Audio files |
-| **Vercel Blob** | $0.10/GB transferred | Downloads |
-| **Supabase** | FREE (500MB) | Metadata, users |
+| Service | Tier | Limits | Cost |
+|---------|------|--------|------|
+| **Vercel Blob** | Hobby | 1GB | $0 |
+| **Vercel Blob** | Pro | $0.15/GB stored, $0.10/GB transfer | Pay-as-you-go |
+| **Turso** | Free | 1B reads, 25M writes, 9GB | $0 |
+| **Qdrant** | Free | 1GB RAM, ~1M vectors | $0 |
+| **Vercel** | Hobby | 100GB bandwidth, 100K invocations | $0 |
+
+### Free Tier Limits & Thresholds
+
+| Service | Free Limit | Warning At | Upgrade Trigger |
+|---------|------------|------------|-----------------|
+| ElevenLabs Music | 62 min/mo (Creator) | 50 min | 80% usage |
+| Turso Reads | 1 billion/mo | 500M | 800M |
+| Qdrant Vectors | ~1M (768d) | 500K | 800K |
+| Vercel Invocations | 100K/mo | 80K | 95K |
 
 ### Per-Track Cost Breakdown
 
