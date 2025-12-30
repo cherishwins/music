@@ -19,7 +19,7 @@ export interface GeneratedImage {
 export async function generateAlbumArt(prompt: string): Promise<GeneratedImage> {
   // Generate image using xAI Grok-2 Image model
   const { image } = await generateImage({
-    model: xai.image("grok-2-image"),
+    model: xai.image("grok-2-image-1212"),
     prompt: `Album cover artwork: ${prompt}. High quality, professional music album art style, square format, visually striking.`,
   });
 
@@ -48,7 +48,7 @@ export async function generateAlbumArt(prompt: string): Promise<GeneratedImage> 
  */
 export async function generateLogo(prompt: string): Promise<GeneratedImage> {
   const { image } = await generateImage({
-    model: xai.image("grok-2-image"),
+    model: xai.image("grok-2-image-1212"),
     prompt: `Logo design: ${prompt}. Clean, modern, professional logo, minimal, works at small sizes, no text unless specified.`,
   });
 
@@ -76,7 +76,7 @@ export async function generateBanner(
   aspectRatio: "16:9" | "3:1" | "2:1" = "16:9"
 ): Promise<GeneratedImage> {
   const { image } = await generateImage({
-    model: xai.image("grok-2-image"),
+    model: xai.image("grok-2-image-1212"),
     prompt: `Social media banner (${aspectRatio} aspect ratio): ${prompt}. Professional, eye-catching, suitable for Twitter/Discord/Telegram header.`,
   });
 
