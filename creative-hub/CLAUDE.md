@@ -7,6 +7,34 @@
 
 ---
 
+## Human-AI Workflow
+
+**Pattern**: Human does human stuff, Claude does machine stuff.
+
+### Key Files
+- **`HUMAN_TODOS.md`** - Master checklist for human tasks (Claude maintains this)
+- **`docs/STATUS_2025-12-30.md`** - Latest status and what's built
+
+### How It Works
+1. Claude adds tasks to `HUMAN_TODOS.md` when human action needed
+2. Human checks items off as completed
+3. Claude reads this at session start to know what's done
+4. Anything requiring accounts, forms, API keys → goes to HUMAN_TODOS.md
+
+### Quick Commands for Human
+```bash
+# See what you need to do
+cat HUMAN_TODOS.md
+
+# Push schema changes
+pnpm exec drizzle-kit push
+
+# Deploy
+git add . && git commit -m "update" && git push
+```
+
+---
+
 ## Project Overview
 
 White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators** and **hip hop artists**. Users pay with **5 different payment rails** to generate viral-optimized music, album art, and brand packages.
@@ -118,6 +146,7 @@ QDRANT_URL=https://fd0f714a-fc22-4577-a32a-19f0980f6f2d.us-east4-0.gcp.cloud.qdr
 ELEVENLABS_API_KEY=sk_14e8...
 ANTHROPIC_API_KEY=sk-ant-api03-Kc2f...
 REPLICATE_API_TOKEN=r8_8UlA5...
+XAI_API_KEY=xai-4p68...  # Voice cloning & realtime voice
 ```
 
 ---
