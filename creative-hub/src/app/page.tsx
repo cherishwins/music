@@ -11,6 +11,7 @@ import { FeaturesSection } from "@/components/sections/features-section";
 import { ShowcaseSection } from "@/components/sections/showcase-section";
 import { PricingSection } from "@/components/sections/pricing-section";
 import { PaymentModal } from "@/components/payments/telegram-payment";
+import { PepePandaMorph } from "@/components/pepe-panda-morph";
 
 // Dynamically import Three.js scene to reduce initial bundle
 const CosmicScene = dynamic(
@@ -83,6 +84,9 @@ export default function HomePage() {
           <CosmicScene onLoaded={handleSceneReady} />
         </motion.div>
       )}
+
+      {/* Pepe→Panda morphing asteroid */}
+      <PepePandaMorph />
 
       {/* Content layer */}
       <div className="content-layer">

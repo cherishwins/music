@@ -5,6 +5,7 @@
 | Need | Read |
 |------|------|
 | **What's working right now?** | [STATUS_2025-12-28.md](./STATUS_2025-12-28.md) |
+| **How do we launch & grow?** | [GTM_STRATEGY.md](./GTM_STRATEGY.md) **(NEW!)** |
 | **How to set up?** | [SETUP_GUIDE.md](./SETUP_GUIDE.md) |
 | **How does the music intelligence work?** | [HIT_DNA_ARCHITECTURE.md](./HIT_DNA_ARCHITECTURE.md) |
 | **How do we make money?** | [MONETIZATION_ARCHITECTURE.md](./MONETIZATION_ARCHITECTURE.md) |
@@ -17,6 +18,14 @@
 - **Lyric Pipeline**: `../scripts/lyric-pipeline/README.md` - Python tools
 
 ## Document Purposes
+
+### GTM_STRATEGY.md **(NEW!)**
+Complete go-to-market strategy:
+- Distribution channels (Telegram, MCP, Product Hunt)
+- Launch timeline (Week 1-4)
+- Value capture opportunities
+- Competitive positioning
+- Growth metrics and targets
 
 ### STATUS_2025-12-28.md
 **Read this first tomorrow.** Shows what's live, credentials, next steps.
@@ -48,4 +57,4 @@ Why we chose Turso + Qdrant over alternatives. Reference for future decisions.
 
 ---
 
-*Updated: 2025-12-28*
+*Updated: 2025-12-30*
