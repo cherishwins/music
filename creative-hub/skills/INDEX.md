@@ -26,6 +26,9 @@ skills/
 ├── PAYMENT EMPIRE
 │   └── PAYMENT_EMPIRE.skill.md       # x402, MCP Server, Facilitator, TON, Stars
 │
+├── BRANDING & DESIGN
+│   └── BRAND_KIT_MASTER.skill.md     # Complete brand kit creation workflow
+│
 ├── research/
 │   ├── HIT_ANALYSIS_FRAMEWORK.md     # Genre/region research prompts
 │   ├── NA_HIPHOP_PATTERNS_2024.md    # North American patterns
