@@ -1,24 +1,44 @@
-# Creative Hub
+# JPANDA Ecosystem
 
-> AI Music Production + Payment Empire + Music Intelligence
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![TON](https://img.shields.io/badge/TON-Blockchain-0098EA)](https://ton.org)
+[![Telegram](https://img.shields.io/badge/Telegram-Mini%20App-26A5E4)](https://t.me/MSUCOBot)
+
+> **5 interconnected products for the degen economy on TON**
 
 **Live**: [creative-hub-virid.vercel.app](https://creative-hub-virid.vercel.app)
 **Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
+**Command Center**: [/command](https://creative-hub-virid.vercel.app/command)
 
-## What Is This?
+## The 5 Pillars
 
-A Telegram Mini App that generates hit songs using AI, with built-in payments (Stars, TON, USDC) and a music intelligence system that learns what makes songs successful.
+| Pillar | Status | Description |
+|--------|--------|-------------|
+| 🐯 **White Tiger Studio** | ✅ LIVE | AI music generation ($0.50/track) |
+| 🛡️ **Rug Score** | ✅ LIVE | Minter credit scoring - "Equifax for meme coins" |
+| 🎨 **Brand Forge** | ✅ LIVE | AI meme coin branding ($0.25/package) |
+| 🔏 **MemeSeal** | ✅ LIVE | Proof-of-prediction timestamps |
+| 🎲 **SealBet** | 🔜 NEXT | Prediction markets settled by Rug Score |
 
-## Current Status (Dec 2025)
+## Why This Matters
+
+- **900M Telegram users** - massive distribution
+- **No competition on TON** - first mover advantage
+- **Data moat** - 4,832+ tracks analyzed for viral patterns
+- **Revenue ready** - 5 payment rails (Stars, TON, USDC, Card, Onramp)
+
+## Current Status (Dec 30, 2025)
 
 | System | Status |
 |--------|--------|
-| **Turso DB** | ✅ 8 tables (users, tracks, payments) |
-| **Qdrant** | ✅ 1000 lyric patterns loaded |
+| **Turso DB** | ✅ 9 tables (users, tracks, payments, cloned_voices) |
+| **Qdrant** | ✅ 4,832 hip hop vectors for viral analysis |
 | **@MSUCOBot** | ✅ Menu button configured |
 | **Payments** | ✅ Stars, TON, x402 (USDC) ready |
+| **Minter API** | ✅ `/api/minter-score/{address}` |
+| **MemeSeal API** | ✅ `/api/seal` |
 
-See `docs/STATUS_2025-12-28.md` for full details.
+See `docs/MASTER_BRAIN.md` for complete documentation.
 
 ## The Stack
 
