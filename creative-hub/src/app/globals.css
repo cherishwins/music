@@ -412,3 +412,93 @@ h1, h2, h3 {
   pointer-events: none;
   z-index: 100;
 }
+
+/* Glitch text effect animations */
+@keyframes glitch-1 {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-3px, 3px);
+  }
+  40% {
+    transform: translate(-3px, -3px);
+  }
+  60% {
+    transform: translate(3px, 3px);
+  }
+  80% {
+    transform: translate(3px, -3px);
+  }
+}
+
+@keyframes glitch-2 {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(3px, -3px);
+  }
+  40% {
+    transform: translate(3px, 3px);
+  }
+  60% {
+    transform: translate(-3px, -3px);
+  }
+  80% {
+    transform: translate(-3px, 3px);
+  }
+}
+
+.animate-glitch-1 {
+  animation: glitch-1 0.3s ease-in-out infinite;
+}
+
+.animate-glitch-2 {
+  animation: glitch-2 0.3s ease-in-out infinite;
+}
+
+/* Marquee animation for stats */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Orbital ring rotations */
+@keyframes orbit-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-orbit-30s {
+  animation: orbit-slow 30s linear infinite;
+}
+
+.animate-orbit-25s {
+  animation: orbit-reverse 25s linear infinite;
+}
+
+.animate-orbit-40s {
+  animation: orbit-slow 40s linear infinite;
+}
