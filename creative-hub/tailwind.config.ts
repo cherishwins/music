@@ -9,32 +9,41 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // WHITE TIGER - Cyberpunk Purple Palette
-        obsidian: "#0A0A0A",
-        crucible: "#1A1A1A",
+        // WHITE TIGER - Synthwave Holographic Palette
+        obsidian: "#050508",
+        crucible: "#0A0A10",
+        void: "#000000",
         tiger: {
-          DEFAULT: "#8B5CF6",
-          muted: "#6D28D9",
-          light: "#A78BFA",
-          dark: "#7C3AED",
-          glow: "#C4B5FD",
+          DEFAULT: "#FF10F0",      // Electric pink (PRIMARY)
+          muted: "#CC00CC",
+          light: "#FF6BF0",
+          dark: "#AA00AA",
+          glow: "#FF10F0",
         },
         neon: {
-          cyan: "#22D3EE",
-          pink: "#F472B6",
-          blue: "#3B82F6",
+          cyan: "#00FFFF",         // Pure cyan
+          pink: "#FF10F0",         // Hot pink
+          blue: "#00BFFF",         // Electric blue
+          purple: "#8B5CF6",       // Accent purple
+          green: "#39FF14",        // Toxic green accent
         },
-        // Legacy support (gold → tiger alias)
+        holo: {
+          pink: "#FF6BD6",
+          cyan: "#00F5FF",
+          purple: "#BF5FFF",
+          shift: "#FF00FF",        // For animations
+        },
+        // Legacy support
         gold: {
-          DEFAULT: "#8B5CF6",
-          muted: "#6D28D9",
-          light: "#A78BFA",
-          dark: "#7C3AED",
+          DEFAULT: "#FF10F0",
+          muted: "#CC00CC",
+          light: "#FF6BF0",
+          dark: "#AA00AA",
         },
         fire: {
-          500: "#8B5CF6",
-          600: "#7C3AED",
-          700: "#6D28D9",
+          500: "#FF10F0",
+          600: "#00FFFF",
+          700: "#8B5CF6",
         },
       },
       fontFamily: {
@@ -61,8 +70,8 @@ const config: Config = {
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         glowPulse: {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(139, 92, 246, 0.3)" },
-          "50%": { boxShadow: "0 0 40px rgba(139, 92, 246, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(255, 16, 240, 0.4), 0 0 40px rgba(0, 255, 255, 0.2)" },
+          "50%": { boxShadow: "0 0 40px rgba(255, 16, 240, 0.7), 0 0 80px rgba(0, 255, 255, 0.4)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
@@ -82,22 +91,27 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "tiger-gradient": "linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%)",
-        "purple-gradient": "linear-gradient(135deg, #6D28D9 0%, #8B5CF6 50%, #A78BFA 100%)",
-        "cyberpunk-gradient": "linear-gradient(135deg, #8B5CF6 0%, #F472B6 50%, #22D3EE 100%)",
+        "tiger-gradient": "linear-gradient(135deg, #050508 0%, #0A0A10 50%, #050508 100%)",
+        "synthwave-gradient": "linear-gradient(135deg, #FF10F0 0%, #00FFFF 50%, #8B5CF6 100%)",
+        "holo-gradient": "linear-gradient(135deg, #FF6BD6 0%, #00F5FF 33%, #BF5FFF 66%, #FF10F0 100%)",
+        "cyberpunk-gradient": "linear-gradient(135deg, #FF10F0 0%, #00FFFF 100%)",
+        "neon-glow": "radial-gradient(ellipse at center, rgba(255, 16, 240, 0.3) 0%, transparent 70%)",
         // Legacy
-        "alchemy-gradient": "linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%)",
-        "gold-gradient": "linear-gradient(135deg, #6D28D9 0%, #8B5CF6 50%, #A78BFA 100%)",
+        "alchemy-gradient": "linear-gradient(135deg, #050508 0%, #0A0A10 50%, #050508 100%)",
+        "gold-gradient": "linear-gradient(135deg, #FF10F0 0%, #00FFFF 100%)",
+        "purple-gradient": "linear-gradient(135deg, #FF10F0 0%, #8B5CF6 50%, #00FFFF 100%)",
       },
       boxShadow: {
-        "tiger": "0 4px 20px rgba(139, 92, 246, 0.15)",
-        "tiger-lg": "0 0 25px rgba(139, 92, 246, 0.4)",
-        "tiger-glow": "0 0 40px rgba(139, 92, 246, 0.3)",
-        "neon": "0 0 20px rgba(34, 211, 238, 0.5)",
+        "tiger": "0 4px 20px rgba(255, 16, 240, 0.25)",
+        "tiger-lg": "0 0 30px rgba(255, 16, 240, 0.5)",
+        "tiger-glow": "0 0 50px rgba(255, 16, 240, 0.4)",
+        "neon": "0 0 25px rgba(0, 255, 255, 0.6)",
+        "neon-pink": "0 0 30px rgba(255, 16, 240, 0.6)",
+        "holo": "0 0 40px rgba(255, 16, 240, 0.3), 0 0 80px rgba(0, 255, 255, 0.2)",
         // Legacy
-        "gold": "0 4px 20px rgba(139, 92, 246, 0.15)",
-        "gold-lg": "0 0 25px rgba(139, 92, 246, 0.4)",
-        "gold-glow": "0 0 40px rgba(139, 92, 246, 0.3)",
+        "gold": "0 4px 20px rgba(255, 16, 240, 0.25)",
+        "gold-lg": "0 0 30px rgba(255, 16, 240, 0.5)",
+        "gold-glow": "0 0 50px rgba(255, 16, 240, 0.4)",
       },
     },
   },

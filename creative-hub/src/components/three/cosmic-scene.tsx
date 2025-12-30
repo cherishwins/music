@@ -15,9 +15,10 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Suspense } from "react";
 
-// Gold particle system representing wealth/value flowing
-function GoldParticles({ count = 500 }) {
-  const points = useRef<THREE.Points>(null);
+// Synthwave particle system - pink and cyan energy
+function NeonParticles({ count = 500 }) {
+  const pinkPoints = useRef<THREE.Points>(null);
+  const cyanPoints = useRef<THREE.Points>(null);
 
   const particlesPosition = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -33,57 +34,77 @@ function GoldParticles({ count = 500 }) {
     return positions;
   }, [count]);
 
-  const particlesSizes = useMemo(() => {
-    const sizes = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      sizes[i] = Math.random() * 0.05 + 0.02;
-    }
-    return sizes;
-  }, [count]);
-
   useFrame((state) => {
-    if (points.current) {
-      points.current.rotation.y = state.clock.elapsedTime * 0.02;
-      points.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.01) * 0.1;
+    const t = state.clock.elapsedTime;
+    if (pinkPoints.current) {
+      pinkPoints.current.rotation.y = t * 0.02;
+      pinkPoints.current.rotation.x = Math.sin(t * 0.01) * 0.1;
+    }
+    if (cyanPoints.current) {
+      cyanPoints.current.rotation.y = -t * 0.015;
+      cyanPoints.current.rotation.z = Math.cos(t * 0.008) * 0.1;
     }
   });
 
   return (
-    <points ref={points}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={particlesPosition}
-          itemSize={3}
+    <>
+      {/* Pink particles */}
+      <points ref={pinkPoints}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={count}
+            array={particlesPosition}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.06}
+          color="#FF10F0"
+          transparent
+          opacity={0.9}
+          sizeAttenuation
+          blending={THREE.AdditiveBlending}
         />
-        <bufferAttribute
-          attach="attributes-size"
-          count={count}
-          array={particlesSizes}
-          itemSize={1}
+      </points>
+      {/* Cyan particles - offset position */}
+      <points ref={cyanPoints} position={[0.5, 0.5, 0.5]}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={count}
+            array={particlesPosition}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.04}
+          color="#00FFFF"
+          transparent
+          opacity={0.7}
+          sizeAttenuation
+          blending={THREE.AdditiveBlending}
         />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.05}
-        color="#D4AF37"
-        transparent
-        opacity={0.8}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
+      </points>
+    </>
   );
 }
 
-// Central cosmic orb - represents the "quantum superposition" concept
+// Central cosmic orb - synthwave holographic sphere
 function CosmicOrb() {
   const meshRef = useRef<THREE.Mesh>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
+    const t = state.clock.elapsedTime;
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.15;
+      meshRef.current.rotation.x = t * 0.1;
+      meshRef.current.rotation.y = t * 0.15;
+    }
+    if (glowRef.current) {
+      // Pulsing glow effect
+      const scale = 1 + Math.sin(t * 2) * 0.05;
+      glowRef.current.scale.setScalar(scale);
     }
   });
 
@@ -91,29 +112,34 @@ function CosmicOrb() {
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
       <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
         <MeshDistortMaterial
-          color="#8C7330"
+          color="#AA00AA"
           attach="material"
           distort={0.4}
           speed={2}
-          roughness={0.2}
-          metalness={0.9}
-          emissive="#D4AF37"
-          emissiveIntensity={0.3}
+          roughness={0.15}
+          metalness={0.95}
+          emissive="#FF10F0"
+          emissiveIntensity={0.5}
         />
       </Sphere>
-      {/* Inner glow sphere */}
-      <Sphere args={[1.2, 32, 32]} position={[0, 0, 0]}>
-        <meshBasicMaterial color="#D4AF37" transparent opacity={0.12} />
+      {/* Inner pink glow sphere */}
+      <Sphere args={[1.3, 32, 32]} position={[0, 0, 0]}>
+        <meshBasicMaterial color="#FF10F0" transparent opacity={0.15} />
+      </Sphere>
+      {/* Outer cyan glow sphere */}
+      <Sphere ref={glowRef} args={[1.8, 32, 32]} position={[0, 0, 0]}>
+        <meshBasicMaterial color="#00FFFF" transparent opacity={0.08} />
       </Sphere>
     </Float>
   );
 }
 
-// Orbiting rings - representing the "cosmic orbit" wealth protection
+// Orbiting rings - synthwave neon rings
 function OrbitalRings() {
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
   const ring3Ref = useRef<THREE.Mesh>(null);
+  const ring4Ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
@@ -129,21 +155,33 @@ function OrbitalRings() {
       ring3Ref.current.rotation.x = -t * 0.1;
       ring3Ref.current.rotation.y = t * 0.12;
     }
+    if (ring4Ref.current) {
+      ring4Ref.current.rotation.y = -t * 0.18;
+      ring4Ref.current.rotation.x = t * 0.05;
+    }
   });
 
   return (
     <group>
+      {/* Hot pink ring */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[3, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#D4AF37" transparent opacity={0.6} />
+        <torusGeometry args={[3, 0.025, 16, 100]} />
+        <meshBasicMaterial color="#FF10F0" transparent opacity={0.8} />
       </mesh>
+      {/* Cyan ring */}
       <mesh ref={ring2Ref} rotation={[Math.PI / 4, Math.PI / 4, 0]}>
-        <torusGeometry args={[3.5, 0.015, 16, 100]} />
-        <meshBasicMaterial color="#8C7330" transparent opacity={0.4} />
+        <torusGeometry args={[3.5, 0.02, 16, 100]} />
+        <meshBasicMaterial color="#00FFFF" transparent opacity={0.6} />
       </mesh>
+      {/* Purple ring */}
       <mesh ref={ring3Ref} rotation={[Math.PI / 6, -Math.PI / 3, 0]}>
-        <torusGeometry args={[4, 0.01, 16, 100]} />
-        <meshBasicMaterial color="#E5C76B" transparent opacity={0.3} />
+        <torusGeometry args={[4, 0.015, 16, 100]} />
+        <meshBasicMaterial color="#8B5CF6" transparent opacity={0.5} />
+      </mesh>
+      {/* Outer pink glow ring */}
+      <mesh ref={ring4Ref} rotation={[Math.PI / 5, Math.PI / 6, 0]}>
+        <torusGeometry args={[4.5, 0.01, 16, 100]} />
+        <meshBasicMaterial color="#FF6BF0" transparent opacity={0.3} />
       </mesh>
     </group>
   );
@@ -163,7 +201,7 @@ function CameraController() {
   return null;
 }
 
-// Loading indicator within Three.js
+// Loading indicator within Three.js - Synthwave style
 function Loader() {
   const { progress } = useProgress();
 
@@ -172,11 +210,11 @@ function Loader() {
       <div className="flex flex-col items-center gap-4">
         <div className="w-48 h-1 bg-white/20 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-gold-400 to-gold-600 transition-all duration-300"
+            className="h-full bg-gradient-to-r from-tiger to-neon-cyan transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <p className="text-gold-400 text-sm font-medium">
+        <p className="text-tiger text-sm font-medium">
           {progress.toFixed(0)}%
         </p>
       </div>
@@ -184,7 +222,7 @@ function Loader() {
   );
 }
 
-// Main scene composition
+// Main scene composition - SYNTHWAVE HOLOGRAPHIC
 function Scene({ onLoaded }: { onLoaded?: () => void }) {
   const { progress } = useProgress();
 
@@ -196,38 +234,39 @@ function Scene({ onLoaded }: { onLoaded?: () => void }) {
 
   return (
     <>
-      {/* Ambient and directional lighting */}
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[5, 5, 5]} intensity={0.5} color="#D4AF37" />
-      <pointLight position={[-5, -5, -5]} intensity={0.3} color="#8C7330" />
+      {/* Synthwave lighting - pink and cyan */}
+      <ambientLight intensity={0.15} />
+      <directionalLight position={[5, 5, 5]} intensity={0.6} color="#FF10F0" />
+      <pointLight position={[-5, -5, -5]} intensity={0.4} color="#00FFFF" />
+      <pointLight position={[0, 5, 0]} intensity={0.2} color="#8B5CF6" />
 
-      {/* Background stars */}
+      {/* Background stars - slightly tinted */}
       <Stars
         radius={100}
         depth={50}
-        count={5000}
+        count={6000}
         factor={4}
-        saturation={0}
+        saturation={0.3}
         fade
-        speed={1}
+        speed={1.5}
       />
 
       {/* Main scene elements */}
       <CosmicOrb />
       <OrbitalRings />
-      <GoldParticles count={800} />
+      <NeonParticles count={600} />
 
       {/* Camera animation */}
       <CameraController />
 
-      {/* Post-processing effects */}
+      {/* Post-processing effects - enhanced bloom for neon glow */}
       <EffectComposer>
         <Bloom
-          luminanceThreshold={0.2}
+          luminanceThreshold={0.1}
           luminanceSmoothing={0.9}
-          intensity={0.8}
+          intensity={1.2}
         />
-        <Vignette eskil={false} offset={0.1} darkness={0.8} />
+        <Vignette eskil={false} offset={0.1} darkness={0.7} />
       </EffectComposer>
     </>
   );
