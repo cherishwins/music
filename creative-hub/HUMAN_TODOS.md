@@ -77,29 +77,51 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ## URGENT (Do Today)
 
-### 🔮 Shodan Infrastructure Intelligence (NEW!)
-**Goal:** Monitor exchange/protocol INFRASTRUCTURE to predict hacks before they happen
+### 🐯 RUG SCORE MARKETING (Revenue Target: $100 in 2 weeks)
 
-- [ ] **Buy Shodan Membership** - https://account.shodan.io/billing ($49 one-time, LIFETIME)
-- [ ] **Get API Key** - https://account.shodan.io
-- [ ] **Add to .env** - `SHODAN_API_KEY=your_key_here`
-- [ ] **Add to Vercel** - `vercel env add SHODAN_API_KEY`
+**Scammer detection is LIVE!** 112 known scammers in database. Ready to market.
 
-**What's Built:**
-- `src/lib/shodan.ts` - TypeScript Shodan client
-- `scripts/shodan-crypto-intel.py` - Python scanner with leaderboard
-- `src/app/api/infra-score/route.ts` - API endpoint
-- Database schema for `infra_scores`, `infra_alerts`, `whale_wallets`
+**Marketing copy in:** `docs/MARKETING_COPY.md`
 
-**Test After Setup:**
+#### Day 1-2: Telegram Group Blitz
+- [ ] **Post in TON Memes / TON Degens** - Use launch post from MARKETING_COPY.md
+- [ ] **Post in DeDust community** - Same template
+- [ ] **Post in STON.fi community** - Same template
+- [ ] **Post in 2 Russian TON groups** - Translate or use English
+
+#### Day 3-5: Helpful Engagement
+- [ ] **Reply to "is this safe?" questions** with actual rug checks (be helpful, not spammy)
+- [ ] **Share interesting findings** - "Just caught a scammer wallet..."
+- [ ] **Post "Rug of the Day" warning** in 1-2 groups
+
+#### Day 6-7: Twitter Thread
+- [ ] **Post thread** - "How I check every meme coin" (copy in MARKETING_COPY.md)
+- [ ] **Quote-tweet** a new coin launch with its rug score
+
+**Test Scammer Detection:**
 ```bash
-# Python CLI
-python scripts/shodan-crypto-intel.py --info
-python scripts/shodan-crypto-intel.py --exchanges
+# Known scammer (score = 0, grade F, CRITICAL)
+curl https://creative-hub-virid.vercel.app/api/minter-score/EQBe-OxgGw8mHgBpbafhc652p7eLgp8dqEwFU8mKh5vsL3a8
 
-# API
-curl https://creative-hub-virid.vercel.app/api/infra-score?entity=binance
+# Clean wallet
+curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf
 ```
+
+---
+
+### 🔮 Shodan Infrastructure Intelligence (SAVED FOR LATER)
+**Status:** Plan saved in `docs/FUTURE_SHODAN_PLAN.md`
+**When to execute:** After 100+ Rug Score users OR $200+ runway
+
+**What's Built (Ready to Activate):**
+- `src/lib/shodan.ts` - TypeScript Shodan client
+- `scripts/shodan-crypto-intel.py` - Python scanner
+- `src/app/api/infra-score/route.ts` - API endpoint
+
+**To Activate (When Ready):**
+1. Buy Shodan: https://account.shodan.io/billing ($49 one-time)
+2. Add `SHODAN_API_KEY` to .env and Vercel
+3. Test: `python scripts/shodan-crypto-intel.py --exchanges`
 
 ### 🔐 API Keys - ROTATED Dec 30 (Update Render!)
 - [x] **Rotate TonAPI keys** - ✅ All 3 rotated in TonConsole
@@ -228,6 +250,10 @@ curl https://creative-hub-virid.vercel.app/api/infra-score?entity=binance
 - [x] **Command Center Dashboard** - Live at `/command` with real-time monitoring
 - [x] Quick-check token buttons on Rug Score page
 - [x] Navigation updated with Command Center link
+- [x] **SCAMMER DETECTION LIVE** - 112 known scammers from ton-labels database
+- [x] **Monetization Plan** - `docs/RUG_SCORE_MONETIZATION.md` ($100 in 2 weeks)
+- [x] **Marketing Copy** - `docs/MARKETING_COPY.md` (ready-to-post templates)
+- [x] **Shodan Plan Saved** - `docs/FUTURE_SHODAN_PLAN.md` (for later)
 
 ---
 
