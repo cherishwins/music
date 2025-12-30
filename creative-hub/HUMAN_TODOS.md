@@ -77,6 +77,16 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ## URGENT (Do Today)
 
+### 🔐 API Keys - ROTATED Dec 30 (Update Render!)
+- [x] **Rotate TonAPI keys** - ✅ All 3 rotated in TonConsole
+- [x] **Update Vercel** - ✅ Claude updated TONAPI_KEY in creative-hub
+- [x] **Update Render** - ✅ Updated Dec 30, redeploying
+
+### STON.fi Grant
+- [x] **Made repos public** - ✅ notaryton-bot, music, memeseal-casino
+- [x] **Legendary README** - ✅ Updated music repo
+- [ ] **Send email to Ethan** - Reply with repo links (draft in previous session)
+
 ### API Keys & Accounts
 - [x] **Rotate xAI API key** - ✅ Rotated Dec 30, new key "whitetiger" active
 - [ ] **Create npm account** - https://www.npmjs.com/signup (if you don't have one)
