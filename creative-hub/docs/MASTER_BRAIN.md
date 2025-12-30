@@ -126,19 +126,51 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ---
 
-### 4. MEMESEAL (CONCEPT)
-**Status:** RESEARCH COMPLETE - Not yet built
+### 4. MEMESEAL (MVP LIVE)
+**Status:** PRODUCTION - API deployed
+**API:** `/api/seal`
 
 **What it does:**
-- Timestamps predictions on-chain
-- Creates verifiable proof of calls
+- Timestamps predictions with cryptographic hashes
+- Creates verifiable proof of calls before outcomes
 - "Trust Me" → "Prove It"
 - Powers SealBet oracle
+- Builds predictor reputation over time
+
+**API Endpoints:**
+```
+POST /api/seal           - Create a new prediction seal
+GET  /api/seal?id=xxx    - Get seal by ID
+GET  /api/seal?creator=xxx - Get seals by creator
+GET  /api/seal?target=xxx  - Get seals about a token
+POST /api/seal/verify    - Verify seal authenticity
+GET  /api/seal/verify?creator=xxx - Get predictor reputation
+POST /api/seal/resolve   - Resolve prediction outcome (oracle)
+```
+
+**Prediction Types:**
+- `rug_pull` - Will this token rug?
+- `price_target` - Will token hit price X?
+- `launch_success` - Will launch succeed?
+- `whale_dump` - Will whale dump?
+- `custom` - Free-form prediction
+
+**Reputation System:**
+- Novice → Apprentice → Expert → Oracle
+- Badges for streaks and accuracy
+- Public leaderboard potential
+
+**Key Files:**
+- `/src/lib/memeseal.ts` - Core sealing logic + Tact contract template
+- `/src/app/api/seal/route.ts` - Create/get seals
+- `/src/app/api/seal/verify/route.ts` - Verification + reputation
+- `/src/app/api/seal/resolve/route.ts` - Oracle resolution
 
 **Integration with Other Pillars:**
 - Rug Score predictions get sealed
 - Accurate predictors build reputation
-- Reputation unlocks benefits
+- Reputation unlocks SealBet privileges
+- On-chain storage via Tact smart contract (template ready)
 
 ---
 
@@ -284,6 +316,16 @@ GET  /api/minter-score/[address]  - Analyze wallet/token
 POST /api/minter-score/[address]  - Batch analysis
 ```
 
+### MemeSeal API (Free)
+```
+POST /api/seal              - Create prediction seal
+GET  /api/seal?id=xxx       - Get seal by ID
+GET  /api/seal?creator=xxx  - Get seals by creator
+POST /api/seal/verify       - Verify seal authenticity
+GET  /api/seal/verify?creator=xxx - Get predictor reputation
+POST /api/seal/resolve      - Resolve prediction (oracle)
+```
+
 ### Internal APIs
 ```
 POST /api/funnel/track     - Track user events
@@ -346,16 +388,20 @@ Key credentials:
 - [x] **DYOR.io integration LIVE** (Dec 30, free tier)
 - [x] **Minter Score API deployed to production** (Dec 30)
 - [x] **Edge runtime bugs fixed** (limit, endpoint, env vars)
+- [x] **MemeSeal MVP LIVE** (Dec 30) - Prediction sealing API
+- [x] **MinterScoreCard React component** (Dec 30)
+- [x] **TON Ecosystem Bible documented** (Dec 30)
+- [x] **Tact smart contract template** for on-chain seals (Dec 30)
 
 ### IN PROGRESS
-- [ ] Build Minter Score React component for UI
 - [ ] Directory submissions (human task)
 - [ ] Enhance scoring with TON MCP real-time data
+- [ ] Wire MinterScoreCard into Rug Score page
 
 ### NEXT (January 2026)
-- [ ] MemeSeal MVP - Proof timestamping
+- [ ] MemeSeal on-chain deployment (Tact contract)
 - [ ] SealBet MVP - One market type ("Will it rug?")
-- [ ] FunC smart contracts
+- [ ] Predictor leaderboard UI
 - [ ] Product Hunt launch
 
 ### FUTURE (Q1 2026)
