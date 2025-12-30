@@ -158,10 +158,44 @@ export function MultiRailCheckout({
       return;
     }
 
+    const paymentTimestamp = Date.now();
     const payment = createTonPayment(productId as TonPlanId, userId || "anonymous");
     const result = await tonConnectUI.sendTransaction(payment);
 
     if (result) {
+      // Transaction sent - now verify it on-chain
+      // Wait a moment for blockchain confirmation
+      setError(null);
+
+      // Poll for verification (try up to 5 times)
+      for (let attempt = 0; attempt < 5; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3s between attempts
+
+        try {
+          const verifyResponse = await fetch("/api/payments/verify-ton", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              telegramId: userId ? parseInt(userId) : 0,
+              planId: productId,
+              timestamp: paymentTimestamp,
+            }),
+          });
+
+          const verifyData = await verifyResponse.json();
+
+          if (verifyData.success) {
+            onSuccess?.("ton", verifyData.txHash);
+            return;
+          }
+        } catch (e) {
+          console.error("Verification attempt failed:", e);
+        }
+      }
+
+      // If verification didn't succeed after 5 attempts, still call success
+      // (user can manually verify later)
+      setError("Payment sent! Verification pending - credits will be added shortly.");
       onSuccess?.("ton", result.boc);
     }
   };

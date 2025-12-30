@@ -1,87 +1,75 @@
-# ALCHEMY - Transmute Noise into Gold
+# White Tiger 808
 
-AI-powered audio production platform. Turn community threads into polished tracks.
+> AI-powered meme coin branding & anthem generation platform
+
+**Status**: Active Development
+**Stack**: Next.js 14, TypeScript, Telegram Mini App
+**Live**: [@MSUCOBot](https://t.me/MSUCOBot) | [creative-hub-virid.vercel.app](https://creative-hub-virid.vercel.app)
+
+---
+
+## What is this?
+
+One-stop shop for meme coin creators:
+- **Brand Forge** - Name, ticker, colors, logo prompt
+- **Anthem Generator** - AI voice + custom track for your coin
+- **Album Art** - Cover art, PFPs, banners
+- **Social Kit** - Twitter/TG templates, bios
+
+Pay with Telegram Stars, TON, or USDC.
+
+---
 
 ## Repository Structure
 
 ```
 music/
-├── creative-hub/           # Main web application (Next.js 14)
-│   ├── src/
-│   │   ├── app/            # Pages & API routes
-│   │   │   ├── api/        # BACKEND - API endpoints
-│   │   │   │   ├── generate/
-│   │   │   │   │   ├── thread-to-hit/   # Thread → Song pipeline
-│   │   │   │   │   ├── voice/           # ElevenLabs TTS
-│   │   │   │   │   ├── slides/          # Presentation generator
-│   │   │   │   │   └── video-prompt/    # Video prompt generator
-│   │   │   │   └── payments/            # Telegram Stars + TON
-│   │   │   ├── create/     # Creation wizard page
-│   │   │   ├── dashboard/  # User dashboard page
-│   │   │   └── page.tsx    # Landing page
-│   │   ├── components/     # FRONTEND - React components
-│   │   │   ├── sections/   # Landing page sections
-│   │   │   ├── three/      # Three.js 3D scenes
-│   │   │   ├── payments/   # Payment UI
-│   │   │   └── video/      # Video player
-│   │   └── lib/            # BACKEND - Core logic
-│   │       ├── ai.ts       # Claude API integration
-│   │       ├── music.ts    # Suno music generation
-│   │       ├── voice.ts    # ElevenLabs integration
-│   │       ├── telegram.ts # Telegram Stars payments
-│   │       └── store.ts    # Zustand state
-│   └── public/             # Static assets
-│       └── assets/         # Brand logos
+├── creative-hub/          # Main Next.js app (THE PRODUCT)
+│   ├── src/app/           # Pages and API routes
+│   ├── src/lib/           # Integrations (payments, AI, db)
+│   ├── src/components/    # React components
+│   ├── scripts/           # Lyric intelligence pipeline
+│   ├── skills/            # AI prompt engineering docs
+│   └── docs/              # Technical documentation
 │
-├── ThreadToHitRemix/       # Brand assets & original concept
-│   └── *.png, *.svg        # Logo files
+├── docs/                  # Project-level docs
+│   ├── ARCHITECTURE.md    # System design
+│   └── BUSINESS.md        # Financial tracking
 │
-└── CLAUDE.md               # AI agent instructions
+├── _archive/              # Deprecated/experimental code
+│   ├── ThreadToHitRemix/  # Legacy Python pipeline
+│   ├── mcp-server/        # Claude MCP integration (future)
+│   └── facilitator/       # x402 payment service (future)
+│
+└── CLAUDE.md              # AI assistant instructions
 ```
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js 14, React, Tailwind CSS, Framer Motion |
-| 3D | Three.js, React Three Fiber, Drei |
-| Backend | Next.js API Routes |
-| AI | Claude (Anthropic), Suno, ElevenLabs |
-| Payments | Telegram Stars, TON Connect |
-| State | Zustand |
-| Hosting | Vercel |
+---
 
 ## Quick Start
 
 ```bash
 cd creative-hub
 pnpm install
+cp .env.example .env  # Add your API keys
 pnpm dev
 ```
 
-## Environment Variables
+---
 
-Copy `.env.example` to `.env` and fill in:
+## Documentation
 
-```bash
-TELEGRAM_BOT_TOKEN=       # From @BotFather
-ANTHROPIC_API_KEY=        # From console.anthropic.com
-SUNO_API_KEY=             # From sunoapi.org
-ELEVENLABS_API_KEY=       # From elevenlabs.io (optional)
-NEXT_PUBLIC_TON_WALLET_ADDRESS=  # Your TON wallet
-```
+| Doc | Description |
+|-----|-------------|
+| [CLAUDE.md](./CLAUDE.md) | AI assistant context |
+| [creative-hub/STATUS.md](./creative-hub/STATUS.md) | What's live now |
+| [creative-hub/SETUP.md](./creative-hub/SETUP.md) | Setup guide |
+| [creative-hub/skills/](./creative-hub/skills/) | AI generation skills |
 
-## Live URLs
+---
 
-- **App**: https://creative-hub-of8.vercel.app
-- **Telegram Bot**: @Alchemy_Studio_Bot
+## Links
 
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| `src/lib/ai.ts` | Claude API - lyrics, slides, prompts |
-| `src/lib/music.ts` | Suno API - Thread-to-Hit pipeline |
-| `src/lib/voice.ts` | ElevenLabs - voice synthesis |
-| `src/lib/telegram.ts` | Telegram Stars payments |
-| `src/app/api/generate/*` | API endpoints for all features |
+- **Telegram Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
+- **Vercel**: [of8/creative-hub](https://vercel.com/of8/creative-hub)
+- **GitHub**: [cherishwins/music](https://github.com/cherishwins/music)
