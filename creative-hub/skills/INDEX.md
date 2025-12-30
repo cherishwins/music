@@ -1,7 +1,8 @@
-# Creative Hub Skills Index
-## AI Music Production + Payment Empire + Music Intelligence
+# White Tiger Skills Index
+## AI Music Production + Payment Empire + Viral Intelligence
 
-**Last Updated**: 2025-12-28
+**Last Updated**: 2025-12-30
+**Brand**: White Tiger (Cyberpunk Purple)
 
 ---
 
@@ -30,6 +31,7 @@ skills/
 │   └── BRAND_KIT_MASTER.skill.md     # Complete brand kit creation workflow
 │
 ├── research/
+│   ├── VIRAL_HYPOTHESIS.md           # Loop-First Lyric Design (CURRENT)
 │   ├── HIT_ANALYSIS_FRAMEWORK.md     # Genre/region research prompts
 │   ├── NA_HIPHOP_PATTERNS_2024.md    # North American patterns
 │   ├── LYRIC_INTELLIGENCE.md         # Lyric vectorization research
@@ -74,31 +76,31 @@ skills/
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │                    MUSIC INTELLIGENCE (Moat)                      │   │
+│  │                    VIRAL INTELLIGENCE (Moat)                      │   │
 │  │                                                                   │   │
 │  │  Qdrant (Vector DB)          Turso (Relational)                  │   │
-│  │  ├── hit_songs embeddings    ├── users                           │   │
-│  │  ├── user_tracks             ├── tracks                          │   │
-│  │  └── learned_patterns        ├── transactions                    │   │
+│  │  ├── hiphop_viral (4,832)    ├── users                           │   │
+│  │  ├── viral_score tracking    ├── tracks                          │   │
+│  │  └── hook/repetition data    ├── transactions                    │   │
 │  │                              └── cost_events                     │   │
 │  │                                                                   │   │
-│  │  CLAP → Audio semantic search ("find songs that feel like...")   │   │
-│  │  Lyrics → 12 hit themes (73.4% prediction accuracy)              │   │
-│  │  Learning Loop → What works? Reinforce it.                       │   │
+│  │  HIP HOP ONLY - No country, no classical, no ABBA                │   │
+│  │  Viral Score → 0-100 rating per track                            │   │
+│  │  Research → 3x repetition, 150x hooks in viral tracks            │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │                    LYRIC INTELLIGENCE (Moat)                     │   │
 │  │                                                                   │   │
-│  │  Vectorization → Clustering → Pattern Discovery → Generation     │   │
+│  │  "Loop-First Lyric Design" - Optimized for TikTok virality       │   │
 │  │                                                                   │   │
 │  │  scripts/lyric-pipeline/                                         │   │
-│  │  ├── embed_lyrics.py      → Sentence Transformers (384-dim)      │   │
+│  │  ├── embed_hiphop_viral.py → Hip hop + viral features (384-dim)  │   │
+│  │  ├── upload_hiphop_qdrant.py → Store in hiphop_viral collection  │   │
 │  │  ├── cluster_lyrics.py    → K-means thematic clusters            │   │
 │  │  ├── theme_classifier.py  → 12 proven Billboard themes           │   │
-│  │  ├── analyze_performance.py → Correlate with hit metrics         │   │
 │  │  ├── generation_optimizer.py → Build prompts from patterns       │   │
-│  │  └── upload_to_qdrant.py  → Store in lyric_patterns collection   │   │
+│  │  └── hiphop_embeddings/   → 4,832 vectors + metadata             │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │

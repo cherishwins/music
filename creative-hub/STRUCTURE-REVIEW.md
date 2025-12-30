@@ -257,7 +257,7 @@ Thread → Claude Story → Claude Lyrics → [
 
 ## Related Projects
 
-This is part of the **ALCHEMY** brand in the JPanda ecosystem.
+This is part of the **White Tiger** brand in the JPanda ecosystem.
 
 See also:
 - `/home/jesse/dev/projects/personal/music/ThreadToHitRemix/` - Python CLI version

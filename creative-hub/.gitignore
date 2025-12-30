@@ -46,3 +46,4 @@ coverage/
 *.seed
 *.pid.lock
 outputs/*
+mux-access-token-music.env

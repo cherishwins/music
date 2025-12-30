@@ -1,8 +1,9 @@
-# MSUCO - Project Status
+# White Tiger (MSUCO) - Project Status
 
-> **Last Updated**: December 28, 2025
+> **Last Updated**: December 30, 2025
 > **Bot**: [@MSUCOBot](https://t.me/MSUCOBot)
 > **App**: https://creative-hub-virid.vercel.app
+> **Brand**: White Tiger (Cyberpunk Purple)
 
 ---
 
@@ -12,7 +13,7 @@
 - **Username**: @MSUCOBot
 - **Token**: Configured in `.env`
 - **Menu Button**: Opens Mini App
-- **Branding**: Purple tiger crown logo
+- **Branding**: White Tiger / Cyberpunk Purple
 
 ### Payment Rails (5 methods)
 
@@ -28,8 +29,15 @@
 
 | Service | Status | Contents |
 |---------|--------|----------|
-| **Qdrant** | 1000 vectors | `lyric_patterns` collection |
+| **Qdrant** | 4,832 vectors | `hiphop_viral` collection (HIP HOP ONLY) |
 | **Turso** | 8 tables | users, tracks, transactions, etc. |
+
+### Infrastructure Health
+
+| Endpoint | Purpose | Schedule |
+|----------|---------|----------|
+| `/api/health` | Full health check | On-demand |
+| `/api/cron/keep-alive` | Prevent Qdrant auto-delete | Daily 8am UTC |
 
 ### API Endpoints (x402 Protected)
 
@@ -69,29 +77,43 @@ REPLICATE_API_TOKEN=r8_8UlA5...
 
 **Location**: `scripts/lyric-pipeline/`
 
+### Current State: HIP HOP VIRAL INTELLIGENCE (4,832 tracks)
+
+**OLD DATA DELETED**: ABBA, Alabama, Air Supply garbage is GONE.
+
+**NEW DATA**: Pure hip hop from `Cropinky/rap_lyrics_english` HuggingFace dataset.
+
 ### What's Been Run
 ```bash
-# 1000 songs embedded and clustered
-python embed_lyrics.py --hf-dataset vishnupriyavr/spotify-million-song-dataset --max-samples 1000
-python cluster_lyrics.py --input ./lyric_embeddings --clusters 12
-python theme_classifier.py --corpus ./lyric_embeddings
-python upload_to_qdrant.py --input ./lyric_embeddings
+# Hip Hop Viral Pipeline (December 30, 2025)
+python embed_hiphop_viral.py --max-samples 5000 --output ./hiphop_embeddings
+python upload_hiphop_qdrant.py --input ./hiphop_embeddings --replace --delete-old
 ```
 
 ### Results Stored
-- `lyric_embeddings/embeddings.npy` - 1000 x 384 vectors
-- `lyric_embeddings/cluster_analysis.json` - 12 pattern clusters
-- `lyric_embeddings/theme_classification.json` - Hit theme mapping
-- **Qdrant**: `lyric_patterns` collection (1000 vectors, status: green)
+- `hiphop_embeddings/embeddings.npy` - 4,832 x 384 vectors
+- `hiphop_embeddings/metadata.jsonl` - Track metadata + viral features
+- `hiphop_embeddings/stats.json` - Viral score distribution
+- **Qdrant**: `hiphop_viral` collection (4,832 vectors, status: green)
 
-### Theme Distribution Found
+### Viral Score Distribution (0-100)
 ```
-breakup         17.1%  ← Always works
-loss            16.9%
-desire          15.6%
-escapism         9.8%
-inspiration      6.4%
+0-20:    4,132 tracks (85.5%)  ← Most rap is NOT viral
+20-40:     328 tracks (6.8%)
+40-60:     104 tracks (2.2%)
+60-80:      70 tracks (1.4%)
+80-100:    198 tracks (4.1%)   ← THESE are the patterns we want
 ```
+
+### Viral Features Tracked Per Track
+- `viral_score` - Overall 0-100 score
+- `hook_score` - Repeated phrase count
+- `repetition_ratio` - % of words that repeat
+- `adlib_density` - "yeah", "skrt", "sheesh" per word
+- `short_line_ratio` - Lines ≤6 words
+- `phonk_score` - Dark/phonk vocabulary match
+- `first_line_punch` - Does opening line hit?
+- `top_hooks` - Most repeated phrases
 
 ---
 
@@ -100,36 +122,51 @@ inspiration      6.4%
 ```
 creative-hub/
 ├── .env                          # All credentials
+├── vercel.json                   # Cron job config (daily keep-alive)
 ├── src/
 │   ├── app/
 │   │   └── api/
-│   │       └── generate/
-│   │           ├── music/route.ts      # x402 protected
-│   │           ├── album-art/route.ts  # x402 protected
-│   │           └── brand/route.ts      # x402 protected
+│   │       ├── cron/
+│   │       │   └── keep-alive/route.ts  # Daily ping to keep Qdrant alive
+│   │       ├── health/route.ts          # Full health check endpoint
+│   │       ├── generate/
+│   │       │   ├── music/route.ts       # x402 protected $0.50
+│   │       │   ├── album-art/route.ts   # x402 protected $0.10
+│   │       │   └── brand/route.ts       # x402 protected $0.25
+│   │       ├── payments/
+│   │       │   └── verify-ton/route.ts  # TON payment verification
+│   │       └── telegram/
+│   │           └── webhook/route.ts     # Stars payment webhook
 │   ├── lib/
 │   │   ├── x402.ts              # Payment middleware
 │   │   ├── ton.ts               # TON Connect integration
 │   │   ├── coinbase.ts          # Onramp integration
-│   │   └── telegram.ts          # Stars payments
+│   │   ├── telegram.ts          # Stars payments
+│   │   └── telegram-native.ts   # TG Mini App SDK wrapper
 │   └── components/
 │       └── payments/
 │           └── multi-rail-checkout.tsx  # Universal checkout
 ├── scripts/
 │   └── lyric-pipeline/          # Intelligence engine
-│       ├── embed_lyrics.py
+│       ├── embed_hiphop_viral.py    # NEW: Hip hop viral embeddings
+│       ├── upload_hiphop_qdrant.py  # NEW: Upload to hiphop_viral
+│       ├── embed_lyrics.py          # OLD: Generic lyrics
 │       ├── cluster_lyrics.py
 │       ├── theme_classifier.py
-│       └── upload_to_qdrant.py
+│       ├── generation_optimizer.py
+│       ├── hiphop_embeddings/       # 4,832 hip hop vectors
+│       └── lyric_embeddings/        # OLD: 1000 generic (archived)
 ├── public/
-│   ├── tonconnect-manifest.json # MSUCO branding
-│   └── assets/
-│       ├── msislogo.jpg         # Logo variant 1
-│       └── musiclogo2.jpg       # Logo variant 2 (main)
+│   ├── tonconnect-manifest.json # White Tiger branding
+│   └── assets/brand/            # All brand assets
+│       ├── icons/               # PWA icons
+│       └── social/              # Social media assets
 └── skills/                      # Documentation
     ├── INDEX.md
     ├── PAYMENT_EMPIRE.skill.md
-    └── ...
+    └── research/
+        ├── LYRIC_INTELLIGENCE.md
+        └── LYRICS_INTELLIGENCE_ENGINE.md
 ```
 
 ---
@@ -169,8 +206,25 @@ pnpm tsx scripts/test-db.ts
 - [ ] Stripe (needs keys)
 - [ ] MCP Server deployment (`/mcp-server/`)
 - [ ] x402 Facilitator deployment (`/facilitator/`)
-- [ ] Scale to 10K+ lyrics
+- [ ] Wire viral hypothesis into generation prompts
+- [ ] Scale to 10K+ hip hop lyrics
 - [ ] CLAP audio embeddings
+
+## Viral Hypothesis (Ready to Implement)
+
+**"Loop-First Lyric Design"** - Generate lyrics optimized for TikTok virality:
+
+1. **First 8 words must SLAP** - TikTok scroll = instant hook or death
+2. **Contiguous repetition** - Stack repeats (not spread out)
+3. **Short punchy lines** - 70%+ ≤6 words
+4. **Ad-lib density** - 3-5% "yeah", "sheesh", "let's go"
+5. **ONE memorable hook** - Repeat 4+ times
+
+**Research Findings**:
+- High viral tracks: 49.5% repetition vs 15.9% low viral (3x)
+- Hook score: 8.0 high viral vs 0.05 low viral (150x)
+- 84% of Billboard Global 200 went viral on TikTok first
+- Phonk: 31B TikTok views, "built for looping"
 
 ---
 
