@@ -23,11 +23,12 @@ export function PricingSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-headline mb-4">
-            <span className="gradient-text-gold">Fair Exchange</span>
+            <span className="gradient-text-cyberpunk">Simple Pricing</span> 💰
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Pay with Telegram Stars or TON. No subscriptions, no hidden fees.
-            Credits for transmutations — nothing more.
+            Pay per generation. No subscriptions, no hidden fees.
+            <br />
+            <span className="text-tiger">Stars, TON, or USDC — your choice.</span>
           </p>
         </motion.div>
 
@@ -51,25 +52,19 @@ export function PricingSection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-16 flex flex-wrap items-center justify-center gap-8 text-gold-muted"
+          className="mt-16 flex flex-wrap items-center justify-center gap-8 text-tiger-muted"
         >
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
+            <span className="text-xl">💎</span>
             <span className="text-sm">Powered by TON</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-            <span className="text-sm">Alchemically Sealed</span>
+            <span className="text-xl">⭐</span>
+            <span className="text-sm">Telegram Stars</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-            </svg>
-            <span className="text-sm">Instant Transmutation</span>
+            <span className="text-xl">⚡</span>
+            <span className="text-sm">Instant Generation</span>
           </div>
         </motion.div>
       </div>

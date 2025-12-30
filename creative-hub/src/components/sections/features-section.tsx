@@ -3,71 +3,79 @@
 import { motion } from "framer-motion";
 import {
   Music,
-  FileText,
-  Video,
-  Share2,
+  ImageIcon,
+  Palette,
   Mic2,
-  Sparkles,
   Zap,
-  Headphones,
+  Rocket,
+  Coins,
+  Share2,
 } from "lucide-react";
 
 const features = [
   {
-    icon: Sparkles,
-    title: "Thread to Hit",
+    icon: Music,
+    title: "Anthem Generator",
     description:
-      "Paste your story or post. We extract the essence, transmute the words into lyrics, and forge a complete track.",
-    color: "from-gold to-gold-muted",
+      "Drop your coin name and vibe. Get a full track with vocals, beat, and lyrics that slap. Your community anthem in minutes.",
+    emoji: "🎵",
+    color: "from-tiger to-tiger-muted",
+  },
+  {
+    icon: ImageIcon,
+    title: "Album Art",
+    description:
+      "AI-generated cover art that matches your brand. Cyberpunk, cute, degen — whatever fits your token's energy.",
+    emoji: "🎨",
+    color: "from-tiger-light to-tiger",
+  },
+  {
+    icon: Palette,
+    title: "Brand Forge",
+    description:
+      "Complete brand package: logo concepts, color palette, social templates. Everything for your launch.",
+    emoji: "✨",
+    color: "from-neon-pink to-tiger",
   },
   {
     icon: Mic2,
-    title: "Voice Crucible",
+    title: "Voice Lab",
     description:
-      "8 distinct AI voices refined to perfection. Select your vessel for the transmutation of text to speech.",
-    color: "from-gold-light to-gold",
+      "8 AI voices from hard rap to smooth singer. Pick your vibe, we synthesize the vocals.",
+    emoji: "🎤",
+    color: "from-tiger to-neon-cyan",
   },
   {
-    icon: Music,
-    title: "Forge Chamber",
+    icon: Rocket,
+    title: "Launch Pack",
     description:
-      "Suno-powered beat generation. Trap, lo-fi, drill, phonk — whatever element you require, we synthesize it.",
-    color: "from-gold-muted to-gold-dark",
-  },
-  {
-    icon: Headphones,
-    title: "Master Works",
-    description:
-      "Not mere vocals over beats. Full production with mixing, mastering — the complete philosopher's stone.",
-    color: "from-gold to-gold-light",
-  },
-  {
-    icon: FileText,
-    title: "Arcane Slides",
-    description:
-      "Drop your topic, receive presentations that convey power and presence. Knowledge, refined.",
-    color: "from-gold-muted to-gold",
-  },
-  {
-    icon: Video,
-    title: "Vision Prompts",
-    description:
-      "AI-optimized prompts for Runway, Pika, or any video tool. Scene breakdowns crafted with precision.",
-    color: "from-gold-light to-gold-muted",
+      "Music + art + socials in one drop. Everything you need to make noise on launch day.",
+    emoji: "🚀",
+    color: "from-neon-cyan to-tiger",
   },
   {
     icon: Share2,
-    title: "Distribution Net",
+    title: "Social Kit",
     description:
-      "One click to broadcast your creation to TikTok, Instagram, X, Telegram — all channels unified.",
-    color: "from-gold to-gold-dark",
+      "Sized for every platform. TikTok, X, Telegram, Discord — post everywhere instantly.",
+    emoji: "📱",
+    color: "from-tiger-muted to-tiger-light",
+  },
+  {
+    icon: Coins,
+    title: "Pay Your Way",
+    description:
+      "Telegram Stars, TON, USDC on Base, or card. Frictionless payments, no wallet drama.",
+    emoji: "💎",
+    color: "from-neon-pink to-neon-cyan",
   },
   {
     icon: Zap,
-    title: "Instant Transmutation",
+    title: "Instant Drop",
     description:
-      "No waiting. Pay with Telegram Stars or TON, receive your refined content within minutes.",
-    color: "from-gold-muted to-gold-light",
+      "No waiting days. Pay, generate, download. Your content ready in minutes not weeks.",
+    emoji: "⚡",
+    color: "from-tiger-light to-neon-pink",
   },
 ];
 
@@ -83,11 +91,12 @@ export function FeaturesSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-headline mb-4">
-            The <span className="gradient-text-gold">Alchemist's Tools</span>
+            Your <span className="gradient-text-cyberpunk">Launch Arsenal</span> 🔥
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Everything required to transform raw ideas into golden content.
-            No experience necessary — bring only your vision.
+            Everything you need to make your meme coin unforgettable.
+            <br />
+            <span className="text-tiger">No design skills needed. Just vibes.</span>
           </p>
         </motion.div>
 
@@ -100,18 +109,24 @@ export function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group p-6 glass-gold rounded-2xl card-hover"
+              className="group p-6 glass-tiger rounded-2xl card-hover relative overflow-hidden"
             >
+              {/* Background emoji */}
+              <div className="absolute -right-2 -top-2 text-6xl opacity-10 group-hover:opacity-20 transition-opacity">
+                {feature.emoji}
+              </div>
+
               {/* Icon */}
               <div
                 className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
               >
-                <feature.icon className="w-6 h-6 text-obsidian" />
+                <feature.icon className="w-6 h-6 text-white" />
               </div>
 
               {/* Content */}
-              <h3 className="text-lg font-semibold mb-2 group-hover:text-gold transition-colors">
+              <h3 className="text-lg font-semibold mb-2 group-hover:text-tiger transition-colors flex items-center gap-2">
                 {feature.title}
+                <span className="text-base">{feature.emoji}</span>
               </h3>
               <p className="text-white/60 text-sm leading-relaxed">
                 {feature.description}

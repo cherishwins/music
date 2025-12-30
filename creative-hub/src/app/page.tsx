@@ -92,42 +92,42 @@ export default function HomePage() {
         <PricingSection />
 
         {/* Footer */}
-        <footer className="py-12 px-6 border-t border-gold/10">
+        <footer className="py-12 px-6 border-t border-tiger/10">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
               {/* Brand */}
               <div>
-                <h3 className="text-xl font-headline gradient-text-gold mb-4">
-                  ALCHEMY
+                <h3 className="text-xl font-headline gradient-text-cyberpunk mb-4">
+                  WHITE TIGER 🐯
                 </h3>
                 <p className="text-white/60 text-sm">
-                  Transmute Noise into Gold.
-                  AI-powered audio production applying ancient transformation principles.
+                  AI-powered music and branding for meme coin creators.
+                  Make noise. Go viral. Moon. 🚀
                 </p>
               </div>
 
               {/* Products */}
               <div>
-                <h4 className="font-semibold mb-4 text-gold-light">Laboratory</h4>
+                <h4 className="font-semibold mb-4 text-tiger-light">Create</h4>
                 <ul className="space-y-2 text-white/60 text-sm">
                   <li>
-                    <a href="/create" className="hover:text-gold transition-colors">
-                      Thread to Hit
+                    <a href="/create" className="hover:text-tiger transition-colors">
+                      🎵 Anthem Generator
                     </a>
                   </li>
                   <li>
-                    <a href="/create" className="hover:text-gold transition-colors">
-                      Voice Crucible
+                    <a href="/create" className="hover:text-tiger transition-colors">
+                      🎨 Album Art
                     </a>
                   </li>
                   <li>
-                    <a href="/create" className="hover:text-gold transition-colors">
-                      Forge Chamber
+                    <a href="/create" className="hover:text-tiger transition-colors">
+                      ✨ Brand Forge
                     </a>
                   </li>
                   <li>
-                    <a href="/create" className="hover:text-gold transition-colors">
-                      Arcane Slides
+                    <a href="/create" className="hover:text-tiger transition-colors">
+                      🚀 Launch Pack
                     </a>
                   </li>
                 </ul>
@@ -135,25 +135,20 @@ export default function HomePage() {
 
               {/* Resources */}
               <div>
-                <h4 className="font-semibold mb-4 text-gold-light">Knowledge</h4>
+                <h4 className="font-semibold mb-4 text-tiger-light">Info</h4>
                 <ul className="space-y-2 text-white/60 text-sm">
                   <li>
-                    <a href="#" className="hover:text-gold transition-colors">
-                      The Process
+                    <a href="#" className="hover:text-tiger transition-colors">
+                      How It Works
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold transition-colors">
-                      Transmutations
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-gold transition-colors">
+                    <a href="#" className="hover:text-tiger transition-colors">
                       Pricing
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold transition-colors">
+                    <a href="#" className="hover:text-tiger transition-colors">
                       FAQ
                     </a>
                   </li>
@@ -162,26 +157,21 @@ export default function HomePage() {
 
               {/* Connect */}
               <div>
-                <h4 className="font-semibold mb-4 text-gold-light">Guild</h4>
+                <h4 className="font-semibold mb-4 text-tiger-light">Connect</h4>
                 <ul className="space-y-2 text-white/60 text-sm">
                   <li>
-                    <a href="#" className="hover:text-gold transition-colors">
-                      Telegram
+                    <a href="https://t.me/MSUCOBot" className="hover:text-tiger transition-colors">
+                      📱 Telegram Bot
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold transition-colors">
-                      X (Twitter)
+                    <a href="#" className="hover:text-tiger transition-colors">
+                      🐦 X (Twitter)
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-gold transition-colors">
-                      Discord
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-gold transition-colors">
-                      YouTube
+                    <a href="#" className="hover:text-tiger transition-colors">
+                      💬 Discord
                     </a>
                   </li>
                 </ul>
@@ -189,15 +179,15 @@ export default function HomePage() {
             </div>
 
             {/* Bottom bar */}
-            <div className="pt-8 border-t border-gold/10 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="pt-8 border-t border-tiger/10 flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-white/40 text-sm">
-                &copy; 2024 ALCHEMY. All rights reserved.
+                &copy; 2025 White Tiger. Built for degens. 🔥
               </p>
               <div className="flex items-center gap-6 text-white/40 text-sm">
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#" className="hover:text-tiger transition-colors">
                   Privacy
                 </a>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#" className="hover:text-tiger transition-colors">
                   Terms
                 </a>
               </div>
