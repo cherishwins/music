@@ -504,3 +504,151 @@ export type Referral = typeof referrals.$inferSelect;
 export type NewReferral = typeof referrals.$inferInsert;
 export type ClonedVoice = typeof clonedVoices.$inferSelect;
 export type NewClonedVoice = typeof clonedVoices.$inferInsert;
+
+// ============================================
+// INFRASTRUCTURE SCORES (Shodan Intelligence)
+// ============================================
+
+export const infraScores = sqliteTable("infra_scores", {
+  id: text("id").primaryKey(), // UUID
+
+  // Entity identification
+  entity: text("entity").notNull(), // "Binance", "TON Network", etc.
+  entityType: text("entity_type", {
+    enum: ["exchange", "protocol", "blockchain", "defi", "validator"],
+  }).notNull(),
+  orgQuery: text("org_query"), // Shodan org query used
+
+  // Scores
+  score: integer("score").notNull(), // 0-100
+  grade: text("grade", {
+    enum: ["A", "B", "C", "D", "F"],
+  }).notNull(),
+
+  // Factor breakdown (JSON)
+  factors: text("factors").notNull(), // JSON: {exposedPorts, vulnerabilities, sslHealth, adminPanels, databaseExposure}
+
+  // Identified risks
+  risks: text("risks"), // JSON array of risk strings
+
+  // Trend tracking
+  previousScore: integer("previous_score"),
+  trend: text("trend", {
+    enum: ["improving", "stable", "degrading"],
+  }).default("stable"),
+
+  // Shodan metadata
+  totalHostsFound: integer("total_hosts_found"),
+  queryCreditsUsed: integer("query_credits_used"),
+
+  scannedAt: integer("scanned_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
+// INFRASTRUCTURE ALERTS (Pre-Hack Warnings)
+// ============================================
+
+export const infraAlerts = sqliteTable("infra_alerts", {
+  id: text("id").primaryKey(), // UUID
+
+  // Reference to score
+  infraScoreId: text("infra_score_id")
+    .references(() => infraScores.id, { onDelete: "cascade" })
+    .notNull(),
+  entity: text("entity").notNull(),
+
+  // Alert details
+  alertType: text("alert_type", {
+    enum: [
+      "score_drop",        // Score dropped significantly
+      "new_vulnerability", // New CVE detected
+      "exposed_database",  // Database port exposed
+      "expired_ssl",       // SSL cert expired
+      "admin_panel",       // Admin panel exposed
+      "trend_degrading",   // Consistent decline
+    ],
+  }).notNull(),
+
+  severity: text("severity", {
+    enum: ["critical", "high", "medium", "low"],
+  }).notNull(),
+
+  message: text("message").notNull(),
+
+  // Score context
+  scoreBefore: integer("score_before"),
+  scoreAfter: integer("score_after"),
+
+  // Resolution
+  isResolved: integer("is_resolved", { mode: "boolean" }).default(false),
+  resolvedAt: integer("resolved_at", { mode: "timestamp" }),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
+// WHALE WALLETS (Known Entity Mapping)
+// ============================================
+
+export const whaleWallets = sqliteTable("whale_wallets", {
+  id: text("id").primaryKey(), // UUID
+
+  // Wallet identification
+  address: text("address").notNull().unique(), // TON address
+  addressRaw: text("address_raw"), // Raw format
+
+  // Identity (from Fragment, DNS, labels)
+  telegramUsername: text("telegram_username"), // @username from Fragment NFT
+  tonDomain: text("ton_domain"), // .ton domain if any
+  label: text("label"), // From ton-labels dataset
+
+  // Classification
+  category: text("category", {
+    enum: [
+      "exchange",
+      "whale",
+      "fund",
+      "validator",
+      "scammer",
+      "project",
+      "influencer",
+      "unknown",
+    ],
+  }).default("unknown"),
+
+  tags: text("tags"), // JSON array: ["high_volume", "early_adopter", etc.]
+
+  // Source of identification
+  identitySource: text("identity_source", {
+    enum: ["fragment", "ton_dns", "ton_labels", "manual", "analysis"],
+  }),
+
+  // Stats (updated periodically)
+  balance: real("balance"), // TON balance
+  jettonCount: integer("jetton_count"),
+  nftCount: integer("nft_count"),
+  transactionCount: integer("transaction_count"),
+  firstSeenAt: integer("first_seen_at", { mode: "timestamp" }),
+  lastActiveAt: integer("last_active_at", { mode: "timestamp" }),
+
+  // Risk assessment
+  riskScore: integer("risk_score"), // 0-100, higher = riskier
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+export type InfraScore = typeof infraScores.$inferSelect;
+export type NewInfraScore = typeof infraScores.$inferInsert;
+export type InfraAlert = typeof infraAlerts.$inferSelect;
+export type NewInfraAlert = typeof infraAlerts.$inferInsert;
+export type WhaleWallet = typeof whaleWallets.$inferSelect;
+export type NewWhaleWallet = typeof whaleWallets.$inferInsert;

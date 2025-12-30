@@ -77,15 +77,39 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ## URGENT (Do Today)
 
+### 🔮 Shodan Infrastructure Intelligence (NEW!)
+**Goal:** Monitor exchange/protocol INFRASTRUCTURE to predict hacks before they happen
+
+- [ ] **Buy Shodan Membership** - https://account.shodan.io/billing ($49 one-time, LIFETIME)
+- [ ] **Get API Key** - https://account.shodan.io
+- [ ] **Add to .env** - `SHODAN_API_KEY=your_key_here`
+- [ ] **Add to Vercel** - `vercel env add SHODAN_API_KEY`
+
+**What's Built:**
+- `src/lib/shodan.ts` - TypeScript Shodan client
+- `scripts/shodan-crypto-intel.py` - Python scanner with leaderboard
+- `src/app/api/infra-score/route.ts` - API endpoint
+- Database schema for `infra_scores`, `infra_alerts`, `whale_wallets`
+
+**Test After Setup:**
+```bash
+# Python CLI
+python scripts/shodan-crypto-intel.py --info
+python scripts/shodan-crypto-intel.py --exchanges
+
+# API
+curl https://creative-hub-virid.vercel.app/api/infra-score?entity=binance
+```
+
 ### 🔐 API Keys - ROTATED Dec 30 (Update Render!)
 - [x] **Rotate TonAPI keys** - ✅ All 3 rotated in TonConsole
 - [x] **Update Vercel** - ✅ Claude updated TONAPI_KEY in creative-hub
 - [x] **Update Render** - ✅ Updated Dec 30, redeploying
 
-### STON.fi Grant
+### STON.fi Grant - ✅ COMPLETE
 - [x] **Made repos public** - ✅ notaryton-bot, music, memeseal-casino
 - [x] **Legendary README** - ✅ Updated music repo
-- [ ] **Send email to Ethan** - Reply with repo links (draft in previous session)
+- [x] **Send email to Ethan** - ✅ Sent Dec 30, awaiting response
 
 ### API Keys & Accounts
 - [x] **Rotate xAI API key** - ✅ Rotated Dec 30, new key "whitetiger" active

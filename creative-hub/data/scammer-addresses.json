@@ -1,0 +1,1613 @@
+{
+  "EQBe-OxgGw8mHgBpbafhc652p7eLgp8dqEwFU8mKh5vsL3a8": {
+    "category": "scammer",
+    "subcategory": "drainer",
+    "label": "scammer_camelshouse",
+    "description": "Mini-app mimic to airdrop but drains user's wallet",
+    "organization": "camelshouse",
+    "website": "https://t.me/CamelsHouseBot",
+    "comment": "Drainer contract (forwards all tokens to the owner)",
+    "tags": [],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQAVGoM9kvSkLKWYV9Yok18b8LpzyQ0Vp2S_Qpgu19K2WknZ": {
+    "category": "scammer",
+    "subcategory": "drainer",
+    "label": "scammer_camelshouse",
+    "description": "Mini-app mimic to airdrop but drains user's wallet",
+    "organization": "camelshouse",
+    "website": "https://t.me/CamelsHouseBot",
+    "comment": "Scammer main wallet to collect funds",
+    "tags": [],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQBR4EqZpp_EyhD662RDvqtCkEHinIAPCQPBTL5zVice1fYv": {
+    "category": "scammer",
+    "subcategory": "drainer",
+    "label": "scammer_camelshouse",
+    "description": "Mini-app mimic to airdrop but drains user's wallet",
+    "organization": "camelshouse",
+    "website": "https://t.me/CamelsHouseBot",
+    "comment": "Used to spam CAMEL tokens to users",
+    "tags": [],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQBGrCiq6t7XbrgHdpmqhrGTA61iR64J3wTJGsaen2FMmzPo": {
+    "category": "scammer",
+    "subcategory": "drainer",
+    "label": "scammer_camelshouse",
+    "description": "Mini-app mimic to airdrop but drains user's wallet",
+    "organization": "camelshouse",
+    "website": "https://t.me/CamelsHouseBot",
+    "comment": "claim contract",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Caranell"
+  },
+  "EQA1RdAI9YT7SVjE8jOay5pK471H3cAX2_lE7lCwSh5Hk6sJ": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "https://evpnpromo.com",
+    "comment": "Scammer",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQDBWSrToBluvkgszANfQZ61WZVMnvM9geaVb0xXatnUJnbp": {
+    "category": "scammer",
+    "subcategory": "drainer",
+    "label": "scammer_walletverificator",
+    "description": "mimic to airdrop but drains user's wallet",
+    "organization": "scammer_walletverificator",
+    "website": "",
+    "comment": "Drainer contract (forwards all tokens to the owner)",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ch4rter"
+  },
+  "EQBAT1322xxPMmgzd-7nsJCvec2oCsUekMqjSvCctNfoLNRn": {
+    "category": "scammer",
+    "subcategory": "drainer",
+    "label": "scammer_walletverificator",
+    "description": "mimic to airdrop but drains user's wallet",
+    "organization": "scammer_walletverificator",
+    "website": "",
+    "comment": "Drainer contract (forwards all tokens to the owner)",
+    "tags": [],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQAjY9I3UKBqxUTM1sB4YSKpqI0kRagNKOBCMFJfkFwygC2N": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Scammer",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "tonkeeper ton-assets",
+    "submittedBy": "ziga"
+  },
+  "EQBXeL0tDxSn9ofqrnfSRJDUc4GR1Jj13rG8DdEyziOk7sxi": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for legit CEX addresses with first and last symbols of their address",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQDDrEvFBbZEz7Tg_aQfI4lE9dTyqbY-BQaMShBfTkjcfPQb": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for legit CEX addresses with first and last symbols of their address",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQD5E0DWKAP3haSXr071771hyFbdCcsSo9Kz50v0ekQyWnOZ": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for legit CEX addresses with first and last symbols of their address",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQArgvRqn3f0CSRg3yREnyfuXpIFG2xb3iE5iaPbfPVuy40A": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for legit CEX addresses with first and last symbols of their address",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQD9FHnDxAOWM-8JEODWbHeW0XEPXDs3WpyEpja2ofJfqfsO": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $PAWS token",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Caranell"
+  },
+  "EQAIzTnzG-9SKoxtzNXEsbWZpBzixESsZ1UoqYj84btC-io9": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $PAWS, $TON and $USDT tokens",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "turic24"
+  },
+  "EQC1mgYAUhDEP6iUk6QDnESKTDx5pveqvQ6iu5w8JQ4ZTmr1": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $PAWS token",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQDtJi4jzmmnj9q7oBmgounQZd_iTOMoOOm6wRiR0fSX03IV": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Mass spam sender Reward 99TON my_tonkeeper.t.me",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "tonviewer",
+    "submittedBy": "rAndom1ze"
+  },
+  "EQDgPBPXZYYrknVPudtL6PFSav-Mcn6f_UPDicLD8fQdp1hf": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Mass spam sender 'Reward 188TON\ud83c\udf81URL: xpton.com'",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "tonviewer",
+    "submittedBy": "Caranell"
+  },
+  "EQCEHLgdtM_NOiXeXF5lCejwQsu61pw_vgsGkRN5iQmKuDEd": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Mimic for TON airdrop",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "tonviewer",
+    "submittedBy": "dddwhdd"
+  },
+  "EQAfHEny8unTSAwrD1MKRar8YIjbTGHeUj_axMUAQDJDuXJo": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "my_tonkeeper related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQAO2uCBWxzBlTs_RlShZ433Tx0RaiEOMzgUhE-YroIyMCvp": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "tonkeeper_airdrop related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQCc6rVKIVQ7bz3EVHyZ3sfrWVmuPj7jJZqOCQ7ant8m8NDL": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "tonkeeper_airdrop related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQAF3Uroomb_zZzG2QSKQCSImPyptoue0kHiVVblYjFCYjQQ": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "my_tonkeeper related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQA_tjFezNF9VdasBdwMG4wUvn-sI4d66V3Don_WvtQx4Y2d": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "tonkeeper_airdrop related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQD9CjuQX8pJVscEr61Ao-2lR4zMIr_4axC2ylPDgtepT_mZ": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "stonfi_app related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQDYjU4L071thDTfiuC41OJQ-YubngBCy7ZKKknm-nFPBAlr": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam ton-airdrops reward sender for scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "rAndom1ze"
+  },
+  "EQCDlaQnRVdqZiyq3SB9tvNdKCnB5QXJoX6XCSsPPMcIxqFL": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "USD1 EURC coins scammer",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "rAndom1ze"
+  },
+  "EQCjw3kIBwyToWK6NqwWgtKammPLzeSWllGffrIu5A7WznMk": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "tonkeeper_airdrop related scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQAq_02MmXZhcoUvLh_KruQmM6yMRSe3gR6ZORkYthScksA2": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $PAWS token",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQBGfQGp4hA7f9zXfPlGfPoLFYC8Cy7fjgbIaHOIblpSyHGk": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam ton-airdrops reward sender for scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQDT296L_zPYycUX_j4HOXu44oibiDGrSo9BEurXs47TK0BK": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam ton-airdrops reward sender for scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQBxgXzQCHjInlOUHx2dw6AESPCXpU_QEceRH6E1NeqAKP-m": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam ton-airdrops reward sender for scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQCQlraWsPKDufcovMxGc0l23lhF0uqEUweP5n2u6Ej5FZKV": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam ton-airdrops reward sender for scam",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQAINe9sPQjOt7SAe36NkaiJmpw1bIIEQ5r56y6rwstm6w-x": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $BLUM token",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "dddwhdd"
+  },
+  "EQByQFVmgWK2DMnlpCYGie5cW_BYWDCXthLEdepAhnX4oU_q": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81 200 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQBdZmfk67_CeCvURrJWaxg4pL0zusXn77STAOk-JxKeW_9Z": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81 200 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQBs1ANj02ic3OgXn_GMenl7lhqU-W3DZ5MuCy5WPmT-Ll08": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81200TON Reward at https://tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "rawen7485"
+  },
+  "EQA50cwLEKMWzJuT8xZ7FfBuzDw5Tc96Ix8cL34ykFGd89ls": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81 200 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQBjne5oSg0fNW9aZ_ZQ1Hxqku9KL-eeGcBnbj5nNxL_c026": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81 200 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQBPDt8njdiuBpWwvkLfiLqeiter4FCyMWE4cvZPQDK_23JH": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81 200 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "shuva10v"
+  },
+  "EQAAOa0gpiL4vEpZB_wmOtpaREgpXFPdVuqKBj6Btc8OkcdZ": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \u2757\ufe0fMEXC Refund\u2757\ufe0fFor refund add to contacts +14407652446 and message on telegram",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "AgentDurop"
+  },
+  "EQCZA62azRUhscqpPDcbD4eF0blcOrlA8_G_NnbJO586Ful4": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81 500TON Reward at https://tonf.cc",
+    "tags": [],
+    "source": "",
+    "submittedBy": "BiXingzhe"
+  },
+  "EQBaXZyFBbBnDQfBIvsOoS6nxWJzf7yBoGIWG0OuyUrX8S6R": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf811000 USD reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQDDm7EsaRY5EVgrzR7LAZYdvKGlkB1EhSB-RZsx9OD-Gc3v": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQDjS7nGdj1Wa0DdQWfP51BFFl1-MYYQKpS1GJhWcehLqOYc": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQDGN4P9jchAOBPAAydt_f2ujlGemQ__v8RpZs9D4YwapXwg": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500TON Reward ",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Johnu234"
+  },
+  "EQA7LltZeovTbqRs8Xubaph8EcoyJMxiGnTErvLZLZKBb7ka": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQD_grTU3nw2YQD134bue1BSLt2ZPTYKf0J54lTbEw3VM4CP": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQCfrvtntyhBukB80ZGj6AkqOHK2h5DJ_1B4Vdv2SXOptTC_": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQBUJeD9xbyyVPFxqEa5NL1kVTaoBSW90Q2BJHugSnd3449V": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "GloriaKinsburg"
+  },
+  "EQANaIi3pw5lErP7gWq-_O3np97ezEFCQ-jDrPz_fn1_rMeT": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "GloriaKinsburg"
+  },
+  "EQCuIfbcymtSBOXLRl3bOCmf9hnccF_gZudBiWYY0iKOjTIc": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "markysha"
+  },
+  "EQBljTX8Yr4IPdCSWhNM-9vm93Ne8LqHKzr2W1Ys2Fxlkg6F": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "markysha"
+  },
+  "EQDfQJuvPk7dcQGJcQE3KRYrIBtbn44VcbzU5Wh2CHFOlc4a": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "markysha"
+  },
+  "EQBVDrWhCKMXv6xd-VYRefHddsxgLK8XXznA9cmGX82Ou4rI": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500 TON reward",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "markysha"
+  },
+  "EQD5t68Y7VPzokwuA3L7ZFs7V5_xXxF2yuFKorP4m9_BZ7oD": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500TON Bouns",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "markysha"
+  },
+  "EQCUjM4qB11yb-PeHmu8_jjZ16oz0G55PjyrNM6CW_bd9tB1": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Spam \ud83c\udf81500TON Bouns",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "markysha"
+  },
+  "EQBx5wegWvTbUQljXErnkQMWR8_2qnPta0IZAI6wci85ga4J": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQB92w9-DTPdtUptE07rAjISfgWf2l04u_98D6lweyQglcTS": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQC-S4trYACvaZOpWtYEb69IrXEvkhVSyKb4qkRn_hytFCEr": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQDQHDI9wjPy6QV5tJGCbqaYheLI8wC15jvExJMHA4UAF4vr": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQBWXPkWl16KGEqpD8KypoJ4xug_BamidfzHoJGhbXY5SsK5": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQCywWDdLXBN8GV8Nh5FKLPv7QxB9og89pRWJheW1ouD7_a6": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBNspgz_2k86p5l5x4k4IyW-E2vq5P2nyrYNurFduB0Zc2Q": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQCexCLv8cyhpISBygF8EW3zUK3T-VtfOfFsxuYC0Qrd_DkN": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBoTRQUxBj04G8J7aJtKHbFuTs64jkewc2bBHGKb7UDGqfH": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBhkF-ktJ8-47GnKF0lNLuCHgYu88_Dc_R-F59gElKK6KjI": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQC25ohQcVJNQV8DNQswJujY0nU3XhDZfmfiwX7WYC-1coyl": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "JackeyMonuy"
+  },
+  "EQDlZy8lR5DoGskK16aQab_kGNtyL-ff1pcHsbW2JFf7OTS9": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQBFKXBBqEU9_FwWvQp7gmUtofPAHwFfs6YUB9AntrAFffDH": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Scam fund collector",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "JackeyMonuy"
+  },
+  "EQDZ61x_DTJw2avL3s2U47zfnp1tN3F7YvzxaVRBkc4lfkJ6": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $TSLA token",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "JackeyMonuy"
+  },
+  "EQBMRR25uY_mWI3Dsx3CaQAg852WuyEPRo7qSAEkq8sW_QLH": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mimic for $TSLA token",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "JackeyMonuy"
+  },
+  "EQCJDYmsMzXCcGucs8gNEZ8XAwu6hB85fo1-mnccIHjqxVKH": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBAN0OnPhwrmYSx-Nh7EIQD05qsm04mEI5DQjnABXUL83F2": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQAEwd38WyUTPqFkBNyJKEVARMS2guY6EaVPU1WiZM_1FbsP": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\u2705500TON AIRDROP Get https://tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQAk44WXYhGYBpKoPWKcnm6q7Plam-LSXZQNZ6ld7lHYC-I1": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Official New event! Join to get 888 mobile phone number! Contact us! tg:   daolanba",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBtpiIgEoQBLzoeaNILUtDWCUj3oQQL-uAKHer3xlyYFOKJ": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQCMvmvSQjSBlKangfzqz-_tZFLyURkgxr7mt4fZcQFwkLue": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "500TON at \ud83d\udcf2tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQCGCBhZdMuZDiq4M0wN5L5GDWA_J-NnZzaJzLTCOPyh0uoc": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON at \ud83d\udcf2tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQA67jx-4D8eA5fq3kDFlERv2727EX4Kr2T3maSr1eIXsvG1": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON at \ud83d\udcf2tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQD2dNOUuJjEWxk1G2knwkuC_EPpUVYs8NX5F8QNS3vrHDZD": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ at \ud83d\udcf2TONSAVE.COM",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQC8IMZQ_gDCVb_xv-mPsxTSTXzSqMbgo6lo_Cw24TE5iYV9": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Accumulation of funds from scam-related activity",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBfq5KPvxJuCGRlxnzRW6bBohc6jN6rBujPa2gJ2y0OLCre": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ at \ud83c\udf10TONSAVE.COM, system-alerts.ton",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQC_OR8NXj1zHM4aSxiP7X4du0ym0wPGFdqoIIVmjolYwqdn": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf0ftontg.org Claim 500USD",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQAMOBmTGdgDmZ4NEkCb4E0ephnkp1Cq2E5RcP_FjVari1Cu": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQCUsic2lZUE1kqRmPv6vBhcZFBbeFTgtVQQViRdGn8nMOyr": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ at \ud83c\udf10TONSAVE",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQASAuk6FEx3ypcC6IsywscfZum11TeT-DV7RqZNhzvum3Yn": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ at \ud83c\udf10TONSAVE.COM",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQB2lBKDEpl8Q_YmMGcu7syJ3v9eV9vwhklWn8e2IdtXEH6N": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ at \ud83c\udf10TONKEEP.SALE, system-messages.ton",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQBr0PHmimTxO5KoIgF4AZ_Aef9yP04-qBWCuMtmpRRfYuDL": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at https://tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQCKyq0pIPxovRFzYl913AYs6JnlrAPMnFVWmM4lBp2K-HDA": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at https://tontg.org",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQAuEYIkASlZolGQfnIzJ6s_i9H5dCbcFEPF2uBV2j-SayJ2": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Mimic first and last letters of the address to confuse the wallet owner.",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQA53goR-_oSPl1sF8aeJE0EYVPsQRP8NurF6yQaA3pKGWPg": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Your reward is \ud83d\udc49airton\u0702site\ud83d\udc48",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQBt2zRcZYKZSCeRi-H7tCJLEneC7qjqYsExInTPXjDD-pJw": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "75TON\ud83c\udf81tgspins.top",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQATaWt9o-PIstWd-LdPtxEBgRoKvLATuSI1is4VWQvPi6Zp": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "collects fees from other spammer accounts",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQCY1dXQI7a8dFBPP7mtGJ04ORAAb12V4fwusZoSZruB5x8m": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "jetton master, 'tsTON receive at tston.my'",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQBF9imJZfFU9CcKAprKpniMCrp0Dlf6ofhjk-MWxslsjWYC": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Mimic first and last letters of the address to confuse the wallet owner.",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQD0N3pA5hTDqQ0OPxzjNX0WK4PcQUA4rP7ZJcpUVhSNipBn": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at https://tontg.org",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQBiwXEmRMwmJr88mHOGOt3jAPE_WwLWAiIu7Kfb-StvPzln": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81500TON Bouns at https://tontg.org",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQB3m32AN-iOeACsXRwUTyrzKY0wF9hbZvxVxG-dxK81OB4-": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ claim at TONSAVE.SPACE",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQCOutA9yaMyHnz4Ur5zR7eZdQIKm0iHqeCOEfzQm232s-xA": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "tonsave-com, system-alerts.ton",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ohld"
+  },
+  "EQBF7pBeXwmObsQrN5EHm-DlU8joIMC6ZZyz-Mzrw1nhx-oa": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "spams \ud83c\udf81700$ at \ud83e\udd16 @AAFB_bot",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQAAeeABDLpEtSsSyHUajK8wnFxf5r0ejsYEpZk4F_HfebQI": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ claim at TONSAVE.SPACE",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQB7Yhb_GmYgGA7wCRi_YGBxeFt6k4r5PGekm-01PfKzy-RC": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "tonsave-com, system-alerts.ton",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQC_93Htof5SP6Pm4jXmkT4tlEC1EI_-L2meOjFQGWo4BbxP": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81700$ claim at TONSAVE.SPACE",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBWfiYueTHH-WSvsxMJvKVyGOK9C1nq5bb7UgwKHKNQCPRY": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQDDfRxcZy4JZ-ITYzUHsNgrutYghDx7lZz4MtKI5pZB73NB": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQBG5-ivVrXnfMFTVdTylDEEXxtVPt-NNzddpHc-FEzIoSEt": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\ud83c\udf81\ud835\ude54\ud835\ude64\ud835\ude6a \ud835\ude6c\ud835\ude64\ud835\ude63 100 \ud835\ude4f\ud835\ude4a\ud835\ude49 \ud835\ude64\ud835\ude63 \u1d1b\u200a\u1d0f\u200a\u0274\u200a\u1d1b\u200a\u0262\u200a.\u1d0f\u0280\u0262",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQAYTq7TEFfYNYvvXIMueJB9qvZ05qfMDIu94CYteV1c70eS": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\u2757\ufe0fBinance Support!\u2757\ufe0fFor refund add to contacts +447378567021 and message on telegram",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQA0DthLy61QX2Jb55PBvJksDMx394xq6dlWMd3cFGent9mc": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\u2757\ufe0fBinance Support!\u2757\ufe0fFor refund add to contacts +447378567021 and message on telegram",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQD0rmwi9zFhEyGHdGtSD9NTyCK4wrPKWegEcsCTfbN_bjPn": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "\u2757\ufe0fBinance Support!\u2757\ufe0fFor refund add to contacts +447378567021 and message on telegram",
+    "tags": [],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  },
+  "EQCA0ehPfZjM0UeKKAtZ4vNoP-i80-S52ShmSfn2NA3Hj_FL": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "blnance.ton, mimics Binance exchange",
+    "tags": [],
+    "source": "",
+    "submittedBy": "turic24"
+  },
+  "EQAIMP6alimmS-Q9g25H5R6nljMRFcQXvvaEM2YGqK4w7a9g": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "mexc-1.ton, mimics MEXC exchange",
+    "tags": [],
+    "source": "",
+    "submittedBy": "ef-code"
+  },
+  "EQAT-0dGFHvvGSMVv3L9JCENb2_rrc6osa4t4kJOgkS_zuzl": {
+    "category": "scammer",
+    "subcategory": "",
+    "label": "scammer",
+    "description": "",
+    "organization": "individual",
+    "website": "",
+    "comment": "Mimic first and last letters of the address to confuse the wallet owner.",
+    "tags": [
+      "scammer",
+      "suspicious"
+    ],
+    "source": "",
+    "submittedBy": "Lucky0041"
+  }
+}
