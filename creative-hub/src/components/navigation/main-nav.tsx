@@ -14,6 +14,7 @@ import {
   Globe,
   Zap,
   Star,
+  Terminal,
 } from "lucide-react";
 
 const navLinks = [
@@ -47,6 +48,13 @@ const navLinks = [
     href: "/brand",
     icon: Palette,
     description: "Design Resources",
+  },
+  {
+    name: "Command",
+    href: "/command",
+    icon: Terminal,
+    description: "Ecosystem Control",
+    badge: "OPS",
   },
 ];
 
