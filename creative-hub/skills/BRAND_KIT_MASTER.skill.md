@@ -1,8 +1,62 @@
 # Brand Kit Master - Domain Expert Skill
 
 > **Trigger Patterns**: "create brand kit", "generate branding", "build brand assets", "PWA assets", "/brand", "/branding"
-> **Integrations**: Canva, Grok Imagine, Banana3, Midjourney, DALL-E
-> **Version**: 1.0.0
+> **Integrations**: Canva (MCP), Grok Imagine, Banana3, Midjourney, DALL-E
+> **Version**: 1.1.0
+
+---
+
+## Canva MCP Integration (Recommended)
+
+If you have Canva MCP connected, you can automate the entire asset production pipeline:
+
+### Setup (One-time)
+
+**Claude Code:**
+```bash
+claude mcp add --transport http Canva https://mcp.canva.com/mcp
+```
+
+**Claude Desktop:**
+Add to MCP config (Settings → Developer → Edit Config):
+```json
+{
+  "mcpServers": {
+    "Canva": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.canva.com/mcp"]
+    }
+  }
+}
+```
+
+### Automated Workflow
+
+Once connected, say:
+```
+"Show me my recent designs" → Find your master logo
+"Export [design] as 512x512 PNG" → Get master size
+"Export [design] as 192x192 PNG" → PWA icon
+"Export [design] as 72x72 PNG" → Small icon
+... repeat for all sizes
+```
+
+### What's Available (Free Canva Plan)
+
+| Feature | Status |
+|---------|--------|
+| Create empty designs | Yes |
+| Find existing designs | Yes |
+| Export as PNG/PDF | Yes |
+| Autofill templates | Enterprise only |
+
+### Batch Export Script
+
+Ask Claude to batch export all sizes:
+```
+"From my [logo design], export all PWA icon sizes:
+72, 96, 128, 144, 152, 192, 384, 512 pixels"
+```
 
 ---
 
@@ -364,18 +418,22 @@ brand-kit/
 
 ## Integration Notes
 
-### Canva MCP
-When connected to Canva, you can:
-- Create designs directly in brand templates
-- Access Brand Kit colors/fonts
-- Batch export multiple sizes
-- Use Magic Resize for social variants
+### Canva MCP (Preferred)
+When connected to Canva via MCP:
+- Find and list your existing designs
+- Export designs at any custom size (40-8000px)
+- Export as PNG, JPG, PDF, GIF, MP4
+- No OAuth setup needed - MCP handles auth via browser
+- Works with free Canva plan (autofill requires Enterprise)
+
+**Setup:** `claude mcp add --transport http Canva https://mcp.canva.com/mcp`
 
 ### Image Generation Tools
-- **Grok Imagine**: Best for quick iterations
+- **Grok Imagine**: Best for quick iterations (X.com)
 - **Banana3**: Great for artistic/abstract
 - **Midjourney**: Highest quality, needs Discord
 - **DALL-E**: Good for icons/simple graphics
+- **Gemini**: Good for album art with Google AI
 
 ---
 

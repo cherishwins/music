@@ -67,12 +67,14 @@ export async function GET(request: NextRequest) {
       // Add collection stats if available
       if (lyricCollection) {
         const info = await client.getCollection("lyric_patterns");
-        results.qdrant_vectors = {
-          status: "ok",
-          latency: 0,
-        };
         // @ts-expect-error - points_count exists on collection info
-        results.vector_count = info.points_count || info.vectors_count || 0;
+        const vectorCount = info.points_count || info.vectors_count || 0;
+        results.qdrant = {
+          status: "ok",
+          latency: Date.now() - qdrantStart,
+          // @ts-expect-error - adding extra info
+          vectorCount,
+        };
       }
     }
   } catch (error) {
