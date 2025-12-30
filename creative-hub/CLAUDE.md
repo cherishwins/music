@@ -41,6 +41,7 @@ White Tiger is a **Telegram Mini App** for AI-powered music creation targeting *
 
 ### Core Features
 - **AI Music Generation** (ElevenLabs) - x402 protected, $0.50/track
+- **Voice Cloning** (ElevenLabs IVC) - Clone your voice from 1-3 min audio
 - **Album Art Generation** (Gemini) - x402 protected, $0.10/image
 - **Brand Package Generation** - x402 protected, $0.25/package
 - **Hip Hop Viral Intelligence** - 4,832 tracks analyzed for viral patterns
@@ -118,7 +119,7 @@ White Tiger is a **Telegram Mini App** for AI-powered music creation targeting *
 - **@MSUCOBot** - Telegram bot with Mini App menu button
 - **5 Payment Rails** - Stars, TON, x402 USDC, Coinbase Onramp, Stripe
 - **Qdrant** - 4,832 hip hop vectors in `hiphop_viral` collection
-- **Turso** - 8 tables (users, tracks, transactions, etc.)
+- **Turso** - 9 tables (users, tracks, cloned_voices, transactions, etc.)
 - **x402 Protected APIs** - Music ($0.50), Album Art ($0.10), Brand ($0.25)
 - **Daily Keep-Alive Cron** - Prevents Qdrant free tier auto-delete
 - **Health Check** - `/api/health` monitors all services
@@ -143,10 +144,10 @@ TURSO_DATABASE_URL=libsql://msuco-lyrics-db-jpanda.aws-us-east-1.turso.io
 QDRANT_URL=https://fd0f714a-fc22-4577-a32a-19f0980f6f2d.us-east4-0.gcp.cloud.qdrant.io:6333
 
 # AI Services
-ELEVENLABS_API_KEY=sk_14e8...
+ELEVENLABS_API_KEY=sk_14e8...  # Music, TTS, Voice Cloning
 ANTHROPIC_API_KEY=sk-ant-api03-Kc2f...
 REPLICATE_API_TOKEN=r8_8UlA5...
-XAI_API_KEY=xai-4p68...  # Voice cloning & realtime voice
+XAI_API_KEY=xai-4p68...  # Grok models (text/vision only, no voice API)
 ```
 
 ---
@@ -168,6 +169,8 @@ creative-hub/
 │   │       │   └── brand/route.ts       # x402 protected, $0.25
 │   │       ├── payments/
 │   │       │   └── verify-ton/route.ts  # TON payment verification
+│   │       ├── voice/
+│   │       │   └── clone/route.ts       # Voice cloning API
 │   │       └── telegram/
 │   │           └── webhook/route.ts     # Stars payment webhook
 │   ├── lib/
@@ -177,8 +180,12 @@ creative-hub/
 │   │   └── telegram.ts             # Stars payments
 │   ├── hooks/
 │   │   └── useTelegram.ts          # Telegram React hooks
-│   └── components/payments/
-│       └── multi-rail-checkout.tsx # Universal checkout UI
+│   └── components/
+│       ├── payments/
+│       │   └── multi-rail-checkout.tsx # Universal checkout UI
+│       └── voice/
+│           ├── VoiceCloneUploader.tsx  # Drag-drop voice upload
+│           └── VoiceSelector.tsx       # Voice picker (preset + cloned)
 ├── scripts/lyric-pipeline/         # Intelligence engine
 │   ├── embed_hiphop_viral.py       # Hip hop + viral features
 │   ├── upload_hiphop_qdrant.py     # Upload to hiphop_viral
