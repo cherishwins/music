@@ -7,6 +7,57 @@
 
 ---
 
+## 💰 RUNWAY & COST DASHBOARD (Check Weekly)
+
+**API Endpoint:** `https://creative-hub-virid.vercel.app/api/admin/costs?period=month`
+
+| Metric | Value | Status |
+|--------|-------|--------|
+| **Monthly Burn** | $22 (ElevenLabs Creator) | ✅ |
+| **Available Funds** | $100 (configurable) | ⚠️ |
+| **Runway** | ~4.5 months | ⚠️ WARNING |
+| **Break-Even** | ~88 tracks/month | Target |
+
+### Cost Per Service
+| Service | Rate | Included Free |
+|---------|------|---------------|
+| ElevenLabs Music | $0.08/min | 62 min/mo |
+| ElevenLabs Voice | $0.00002/char | 100K chars |
+| Claude Haiku | $0.25/$1.25 per 1M tokens | Pay-as-you-go |
+| Replicate Flux | $0.003/image | Pay-as-you-go |
+| Turso | Free tier | 1B reads, 25M writes |
+| Qdrant | Free tier | 1M vectors |
+| Vercel | Free tier | 100K invocations |
+
+**Per Track Cost:** ~$0.23 (music + AI + storage)
+
+> 📊 **Weekly Check:** Hit the API endpoint or run `curl https://creative-hub-virid.vercel.app/api/admin/costs`
+
+---
+
+## 🐋 RUG SCORE PROJECT (The Equifax of Meme Coins)
+
+**Goal:** Build proprietary credit scoring for TON meme coins - whale watch, liquidity pools, rug history
+
+### Research Collected (See `docs/RUG_SCORE_RESEARCH.md`)
+- [ ] TON influencer list (multi-language) - 25+ handles organized by region
+- [ ] Scoring factors identified: whale behavior, liquidity locks, team history
+- [ ] Case study framework for known rugs
+
+### Data Sources to Integrate
+- [ ] TON blockchain explorer APIs
+- [ ] Whale wallet tracking
+- [ ] Liquidity pool snapshots
+- [ ] Historical rug pull database
+- [ ] Social sentiment (X/Telegram)
+
+### Monetization Path
+1. Free basic score → Paid deep analysis
+2. Insurance product (long-term)
+3. API access for other apps
+
+---
+
 ## URGENT (Do Today)
 
 ### API Keys & Accounts
