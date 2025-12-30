@@ -4,8 +4,10 @@
 
 | Need | Read |
 |------|------|
-| **What's working right now?** | [STATUS_2025-12-28.md](./STATUS_2025-12-28.md) |
-| **How do we launch & grow?** | [GTM_STRATEGY.md](./GTM_STRATEGY.md) **(NEW!)** |
+| **What's working right now?** | [STATUS_2025-12-30.md](./STATUS_2025-12-30.md) **(LATEST)** |
+| **How do we launch & grow?** | [GTM_STRATEGY.md](./GTM_STRATEGY.md) |
+| **Who are our customers?** | [CUSTOMER_PLAYBOOK.md](./CUSTOMER_PLAYBOOK.md) **(NEW!)** |
+| **Where to list the app?** | [DIRECTORY_SUBMISSIONS.md](./DIRECTORY_SUBMISSIONS.md) **(NEW!)** |
 | **How to set up?** | [SETUP_GUIDE.md](./SETUP_GUIDE.md) |
 | **How does the music intelligence work?** | [HIT_DNA_ARCHITECTURE.md](./HIT_DNA_ARCHITECTURE.md) |
 | **How do we make money?** | [MONETIZATION_ARCHITECTURE.md](./MONETIZATION_ARCHITECTURE.md) |
@@ -19,16 +21,36 @@
 
 ## Document Purposes
 
-### GTM_STRATEGY.md **(NEW!)**
+### STATUS_2025-12-30.md **(LATEST)**
+**Read this first.** Everything built today:
+- Zero-friction first generation
+- Funnel tracking system
+- A/B testing framework
+- Referral system
+- Directory submission guides
+
+### CUSTOMER_PLAYBOOK.md **(NEW!)**
+Customer acquisition strategy:
+- 3 ICPs with detailed journeys
+- TAM data (36K meme tokens/day, 150M TMA users)
+- Free value hook strategy
+- Conversion funnel testing
+- 30-60-90 day success metrics
+
+### DIRECTORY_SUBMISSIONS.md **(NEW!)**
+Where to list the app:
+- 16 directories with step-by-step guides
+- UTM tracking links
+- Week 1-4 submission timeline
+- Post templates for Reddit/HN
+
+### GTM_STRATEGY.md
 Complete go-to-market strategy:
 - Distribution channels (Telegram, MCP, Product Hunt)
 - Launch timeline (Week 1-4)
 - Value capture opportunities
 - Competitive positioning
 - Growth metrics and targets
-
-### STATUS_2025-12-28.md
-**Read this first tomorrow.** Shows what's live, credentials, next steps.
 
 ### SETUP_GUIDE.md
 How to set up Turso, Qdrant, and run migrations from scratch.
