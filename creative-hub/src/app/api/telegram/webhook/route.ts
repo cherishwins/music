@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parsePaymentPayload, sendMessage } from "@/lib/telegram";
+import { parsePaymentPayload, sendMessage, STAR_PLANS } from "@/lib/telegram";
+import { db, getOrCreateUser, recordRevenue, generateId } from "@/lib/db";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 // Telegram sends updates here when payments complete
 export async function POST(request: NextRequest) {
@@ -11,6 +14,7 @@ export async function POST(request: NextRequest) {
     if (update.message?.successful_payment) {
       const payment = update.message.successful_payment;
       const chatId = update.message.chat.id;
+      const telegramUser = update.message.from;
 
       // Parse our custom payload
       const payload = parsePaymentPayload(payment.invoice_payload);
@@ -21,18 +25,64 @@ export async function POST(request: NextRequest) {
         planId: payload.planId,
         userId: payload.userId,
         credits: payload.credits,
+        telegramUserId: telegramUser?.id,
       });
 
-      // TODO: Add credits to user's account in database
-      // For now, just send confirmation
+      // Get or create user in database
+      const user = await getOrCreateUser({
+        id: telegramUser.id,
+        username: telegramUser.username,
+        first_name: telegramUser.first_name,
+        last_name: telegramUser.last_name,
+      });
+
+      // Add credits to user's account
+      const plan = STAR_PLANS[payload.planId];
+      const creditsToAdd = plan?.credits || payload.credits;
+
+      await db
+        .update(schema.users)
+        .set({
+          credits: user.credits + creditsToAdd,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.users.id, user.id));
+
+      // Calculate revenue (Telegram takes ~30% for digital goods)
+      const starsAmount = payment.total_amount;
+      const usdPerStar = 0.02; // Approximate: 1 Star ≈ $0.02
+      const grossUsd = starsAmount * usdPerStar;
+      const platformFee = grossUsd * 0.3; // Telegram's 30%
+      const netUsd = grossUsd - platformFee;
+
+      // Record the transaction
+      await recordRevenue({
+        userId: user.id,
+        type: "credits",
+        paymentMethod: "stars",
+        grossAmount: grossUsd,
+        platformFee: platformFee,
+        netAmount: netUsd,
+        currency: "XTR",
+        product: payload.planId,
+        telegramPaymentId: payment.telegram_payment_charge_id,
+      });
+
+      console.log("Payment processed:", {
+        userId: user.id,
+        creditsAdded: creditsToAdd,
+        newBalance: user.credits + creditsToAdd,
+        grossUsd,
+        netUsd,
+      });
 
       await sendMessage(
         chatId,
-        `<b>Payment Received!</b>\n\n` +
-          `Plan: ${payload.planId}\n` +
-          `Credits: ${payload.credits}\n` +
-          `Stars: ${payment.total_amount}\n\n` +
-          `Your credits are now available. Start creating!`
+        `<b>✅ Payment Received!</b>\n\n` +
+          `Plan: ${plan?.title || payload.planId}\n` +
+          `Credits Added: <b>+${creditsToAdd}</b>\n` +
+          `New Balance: <b>${user.credits + creditsToAdd} credits</b>\n\n` +
+          `Your credits are ready. Start creating! 🎨`
       );
 
       return NextResponse.json({ ok: true, type: "payment_processed" });
