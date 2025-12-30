@@ -34,9 +34,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.AI_GATEWAY_API_KEY) {
+    if (!process.env.XAI_API_KEY) {
       return NextResponse.json(
-        { error: "AI_GATEWAY_API_KEY not configured" },
+        { error: "XAI_API_KEY not configured" },
         { status: 500 }
       );
     }

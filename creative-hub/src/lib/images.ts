@@ -1,10 +1,10 @@
 /**
  * Image Generation for Album Artwork
- * Uses Vercel AI Gateway with Gemini for image generation
+ * Uses Vercel AI SDK with xAI Grok for image generation
  */
 
 import { generateImage } from "ai";
-import { google } from "@ai-sdk/google";
+import { xai } from "@ai-sdk/xai";
 import { put } from "@vercel/blob";
 
 export interface GeneratedImage {
@@ -14,23 +14,75 @@ export interface GeneratedImage {
 }
 
 /**
- * Generate album artwork using AI
+ * Generate album artwork using xAI Grok-2 Image
  */
 export async function generateAlbumArt(prompt: string): Promise<GeneratedImage> {
-  // Generate image using Google Imagen
-  const result = await generateImage({
-    model: google.image("imagen-4.0-generate-001"),
-    prompt: `Album cover artwork: ${prompt}. High quality, professional music album art style.`,
-    aspectRatio: "1:1",
+  // Generate image using xAI Grok-2 Image model
+  const { image } = await generateImage({
+    model: xai.image("grok-2-image"),
+    prompt: `Album cover artwork: ${prompt}. High quality, professional music album art style, square format, visually striking.`,
   });
 
   // Get the image data as buffer
-  const buffer = Buffer.from(result.image.uint8Array);
+  const buffer = Buffer.from(image.uint8Array);
 
   // Generate unique filename
   const filename = generateImageFilename("album-art");
 
   // Upload to Vercel Blob
+  const blob = await put(filename, buffer, {
+    access: "public",
+    contentType: "image/png",
+    addRandomSuffix: true,
+  });
+
+  return {
+    imageUrl: blob.url,
+    downloadUrl: blob.downloadUrl,
+    pathname: blob.pathname,
+  };
+}
+
+/**
+ * Generate a logo image from a prompt
+ */
+export async function generateLogo(prompt: string): Promise<GeneratedImage> {
+  const { image } = await generateImage({
+    model: xai.image("grok-2-image"),
+    prompt: `Logo design: ${prompt}. Clean, modern, professional logo, minimal, works at small sizes, no text unless specified.`,
+  });
+
+  const buffer = Buffer.from(image.uint8Array);
+  const filename = generateImageFilename("logo");
+
+  const blob = await put(filename, buffer, {
+    access: "public",
+    contentType: "image/png",
+    addRandomSuffix: true,
+  });
+
+  return {
+    imageUrl: blob.url,
+    downloadUrl: blob.downloadUrl,
+    pathname: blob.pathname,
+  };
+}
+
+/**
+ * Generate a social media banner
+ */
+export async function generateBanner(
+  prompt: string,
+  aspectRatio: "16:9" | "3:1" | "2:1" = "16:9"
+): Promise<GeneratedImage> {
+  const { image } = await generateImage({
+    model: xai.image("grok-2-image"),
+    prompt: `Social media banner (${aspectRatio} aspect ratio): ${prompt}. Professional, eye-catching, suitable for Twitter/Discord/Telegram header.`,
+  });
+
+  const buffer = Buffer.from(image.uint8Array);
+  const filename = generateImageFilename("banner");
+
   const blob = await put(filename, buffer, {
     access: "public",
     contentType: "image/png",
