@@ -78,7 +78,7 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 ## URGENT (Do Today)
 
 ### API Keys & Accounts
-- [ ] **Rotate xAI API key** - You shared it in chat, rotate at https://console.x.ai
+- [x] **Rotate xAI API key** - ✅ Rotated Dec 30, new key "whitetiger" active
 - [ ] **Create npm account** - https://www.npmjs.com/signup (if you don't have one)
 - [ ] **Create npm org "whitetiger"** - https://www.npmjs.com/org/create (for @whitetiger/mcp-music)
 
