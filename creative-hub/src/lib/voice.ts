@@ -662,14 +662,16 @@ export async function composeMusic(
 /**
  * Compose music with a detailed composition plan
  * For full control over sections, styles, and lyrics
+ * Automatically retries with ElevenLabs' suggested plan if content is flagged
  */
 export async function composeMusicWithPlan(
   plan: CompositionPlan,
   options: {
     respectDurations?: boolean;  // Strict timing vs flexible
     outputFormat?: string;
+    _isRetry?: boolean;          // Internal flag to prevent infinite retries
   } = {}
-): Promise<{ audio: Buffer; songId?: string }> {
+): Promise<{ audio: Buffer; songId?: string; usedSuggestedPlan?: boolean }> {
   const apiKey = getApiKey();
 
   const response = await fetch(`${ELEVENLABS_API_BASE}/music`, {
@@ -688,8 +690,38 @@ export async function composeMusicWithPlan(
   });
 
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Music composition error: ${response.status} - ${error}`);
+    const errorText = await response.text();
+
+    // Try to parse as JSON to check for composition_plan_suggestion
+    try {
+      const errorJson = JSON.parse(errorText);
+
+      // Check if ElevenLabs provided a suggested composition plan
+      if (
+        errorJson.detail?.status === "bad_composition_plan" &&
+        errorJson.detail?.data?.composition_plan_suggestion &&
+        !options._isRetry
+      ) {
+        console.log("[ElevenLabs] Content flagged, retrying with suggested composition plan...");
+
+        const suggestedPlan = errorJson.detail.data.composition_plan_suggestion as CompositionPlan;
+
+        // Retry with the suggested plan
+        const retryResult = await composeMusicWithPlan(suggestedPlan, {
+          ...options,
+          _isRetry: true,  // Prevent infinite retries
+        });
+
+        return {
+          ...retryResult,
+          usedSuggestedPlan: true,
+        };
+      }
+    } catch {
+      // Not JSON or no suggestion, fall through to throw error
+    }
+
+    throw new Error(`Music composition error: ${response.status} - ${errorText}`);
   }
 
   const songId = response.headers.get("x-song-id") || undefined;
@@ -698,6 +730,7 @@ export async function composeMusicWithPlan(
   return {
     audio: Buffer.from(arrayBuffer),
     songId,
+    usedSuggestedPlan: false,
   };
 }
 
@@ -881,6 +914,9 @@ export async function threadToHitAudio(
     respectDurations: true,
   });
 
+  if (result.usedSuggestedPlan) {
+    console.log("[ThreadToHit] Content was adjusted by ElevenLabs moderation - song generated with sanitized lyrics");
+  }
   console.log("[ThreadToHit] Song generated successfully!");
 
   return {
