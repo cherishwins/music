@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requirePayment } from "@/lib/x402";
 
 // Social media platform specifications
 const PLATFORM_SPECS = {
@@ -36,6 +37,12 @@ const PLATFORM_SPECS = {
 type Platform = keyof typeof PLATFORM_SPECS;
 
 export async function POST(request: NextRequest) {
+  // Require payment first
+  if (process.env.X402_ENABLED === "true") {
+    const paymentResponse = await requirePayment(request, "/api/generate/social-kit");
+    if (paymentResponse) return paymentResponse;
+  }
+
   try {
     const body = await request.json();
     const {

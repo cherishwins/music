@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateSpeech, VOICES, type VoiceId } from "@/lib/voice";
+import { requirePayment } from "@/lib/x402";
 
 export async function POST(request: NextRequest) {
+  // Require payment first
+  if (process.env.X402_ENABLED === "true") {
+    const paymentResponse = await requirePayment(request, "/api/generate/voice");
+    if (paymentResponse) return paymentResponse;
+  }
+
   try {
     const { text, voiceId, stability, similarityBoost, style } =
       await request.json();

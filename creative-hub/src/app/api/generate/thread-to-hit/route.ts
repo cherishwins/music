@@ -5,8 +5,15 @@ import {
   type MusicStyle,
 } from "@/lib/voice";
 import { uploadTrack, generateTrackFilename } from "@/lib/storage";
+import { requirePayment } from "@/lib/x402";
 
 export async function POST(request: NextRequest) {
+  // Require payment first
+  if (process.env.X402_ENABLED === "true") {
+    const paymentResponse = await requirePayment(request, "/api/generate/thread-to-hit");
+    if (paymentResponse) return paymentResponse;
+  }
+
   try {
     const body = await request.json();
     const {

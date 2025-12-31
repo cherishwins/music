@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateSlideContent } from "@/lib/ai";
+import { requirePayment } from "@/lib/x402";
 
 export async function POST(request: NextRequest) {
+  // Require payment first
+  if (process.env.X402_ENABLED === "true") {
+    const paymentResponse = await requirePayment(request, "/api/generate/slides");
+    if (paymentResponse) return paymentResponse;
+  }
+
   try {
     const { topic, style } = await request.json();
 

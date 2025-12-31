@@ -252,7 +252,23 @@ export const ENDPOINT_PRICING: Record<string, PaymentConfig> = {
   },
   "/api/generate/thread-to-hit": {
     price: "$1.00",
-    description: "Transform thread into full song",
+    description: "Transform thread into full song with vocals",
+  },
+  "/api/generate/voice": {
+    price: "$0.10",
+    description: "Generate AI voice audio",
+  },
+  "/api/generate/slides": {
+    price: "$0.25",
+    description: "Generate AI presentation slides",
+  },
+  "/api/generate/social-kit": {
+    price: "$0.25",
+    description: "Generate social media brand kit",
+  },
+  "/api/generate/video-prompt": {
+    price: "$0.25",
+    description: "Generate optimized video prompts",
   },
 };
 
