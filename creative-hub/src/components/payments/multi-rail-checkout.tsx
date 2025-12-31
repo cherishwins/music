@@ -1,75 +1,30 @@
 "use client";
 
 /**
- * Multi-Rail Checkout Component
- * Let users pay with whatever they have:
- * - Telegram Stars (native TG)
- * - TON (crypto native)
- * - USDC via x402 (web3)
- * - Card via Stripe (traditional)
- * - Coinbase Onramp (fiat → crypto)
+ * Simplified Checkout for Telegram Users
+ * Primary: Telegram Stars (one tap, no friction)
+ * Secondary: TON (for crypto users)
+ * Everything else hidden - too confusing
  */
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import { createTonPayment, TON_PRICING, type TonPlanId } from "@/lib/ton";
-import { createOnrampUrl, CREDIT_PACKAGES, type PackageId } from "@/lib/coinbase";
-import { STAR_PLANS, type PlanId } from "@/lib/telegram";
+import { createTonPayment, type TonPlanId } from "@/lib/ton";
 
 interface CheckoutProps {
   productId: string;
   productName: string;
   priceUsd: number;
-  userId?: string; // Telegram user ID or internal ID
+  userId?: string;
   onSuccess?: (method: string, txId?: string) => void;
   onCancel?: () => void;
 }
 
-type PaymentMethod = "stars" | "ton" | "usdc" | "card" | "onramp";
-
-const PAYMENT_METHODS: Array<{
-  id: PaymentMethod;
-  name: string;
-  icon: string;
-  description: string;
-  available: boolean;
-}> = [
-  {
-    id: "stars",
-    name: "Telegram Stars",
-    icon: "⭐",
-    description: "Pay with Telegram's native currency",
-    available: typeof window !== "undefined" && !!(window as Window & { Telegram?: unknown }).Telegram,
-  },
-  {
-    id: "ton",
-    name: "TON",
-    icon: "💎",
-    description: "Pay with Toncoin from your wallet",
-    available: true,
-  },
-  {
-    id: "usdc",
-    name: "USDC (x402)",
-    icon: "🔷",
-    description: "Auto-pay with USDC on Base",
-    available: true,
-  },
-  {
-    id: "card",
-    name: "Card",
-    icon: "💳",
-    description: "Coming soon",
-    available: false, // Stripe not configured
-  },
-  {
-    id: "onramp",
-    name: "Buy Crypto",
-    icon: "🏦",
-    description: "Buy USDC with Apple Pay or bank",
-    available: true,
-  },
-];
+// Check if we're in Telegram
+const isTelegram = () => {
+  if (typeof window === "undefined") return false;
+  return !!(window as Window & { Telegram?: { WebApp?: unknown } }).Telegram?.WebApp;
+};
 
 export function MultiRailCheckout({
   productId,
@@ -79,97 +34,131 @@ export function MultiRailCheckout({
   onSuccess,
   onCancel,
 }: CheckoutProps) {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
 
   const [tonConnectUI] = useTonConnectUI();
 
-  // Convert USD to other currencies (approximate)
+  // Pricing
   const priceStars = Math.ceil(priceUsd * 100); // ~100 stars per $1
-  const priceTon = (priceUsd / 1.0).toFixed(2); // ~$1 per TON (update with real rate)
-  const priceUsdc = priceUsd.toFixed(2);
+  const priceTon = (priceUsd / 2.5).toFixed(2); // ~$2.50 per TON
 
-  const handlePayment = async () => {
-    if (!selectedMethod) return;
-
+  // ============================================
+  // TELEGRAM STARS - Primary Payment Method
+  // ============================================
+  const handleStarsPayment = useCallback(async () => {
     setLoading(true);
+    setLoadingMethod("stars");
     setError(null);
+    setStatus("Creating invoice...");
 
     try {
-      switch (selectedMethod) {
-        case "stars":
-          await handleStarsPayment();
-          break;
-        case "ton":
-          await handleTonPayment();
-          break;
-        case "usdc":
-          await handleUsdcPayment();
-          break;
-        case "card":
-          await handleCardPayment();
-          break;
-        case "onramp":
-          await handleOnrampPayment();
-          break;
+      // Create invoice
+      const response = await fetch("/api/payments/create-invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          planId: productId,
+          userId: userId || "anonymous",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (!data.invoiceUrl) {
+        throw new Error("Failed to create invoice");
+      }
+
+      // Open Telegram native payment
+      const tg = (window as Window & {
+        Telegram?: {
+          WebApp?: {
+            openInvoice: (url: string, callback?: (status: string) => void) => void
+          }
+        }
+      }).Telegram?.WebApp;
+
+      if (tg?.openInvoice) {
+        setStatus("Opening payment...");
+
+        // Use callback to know when payment completes
+        tg.openInvoice(data.invoiceUrl, (status: string) => {
+          if (status === "paid") {
+            setStatus("Payment complete! ✓");
+            onSuccess?.("stars");
+          } else if (status === "cancelled") {
+            setError("Payment cancelled");
+            setStatus(null);
+          } else if (status === "failed") {
+            setError("Payment failed - please try again");
+            setStatus(null);
+          } else if (status === "pending") {
+            setStatus("Payment pending...");
+          }
+          setLoading(false);
+          setLoadingMethod(null);
+        });
+      } else {
+        // Fallback for non-Telegram browsers
+        window.open(data.invoiceUrl, "_blank");
+        setStatus("Complete payment in new window");
+        // Can't verify - user needs to manually confirm
+        setTimeout(() => {
+          setLoading(false);
+          setLoadingMethod(null);
+          setStatus(null);
+        }, 3000);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment failed");
-    } finally {
+      setStatus(null);
       setLoading(false);
+      setLoadingMethod(null);
     }
-  };
+  }, [productId, userId, onSuccess]);
 
-  const handleStarsPayment = async () => {
-    // Create invoice via API
-    const response = await fetch("/api/payments/create-invoice", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        planId: productId,
-        userId: userId || "anonymous",
-      }),
-    });
+  // ============================================
+  // TON - Secondary Payment Method
+  // ============================================
+  const handleTonPayment = useCallback(async () => {
+    setLoading(true);
+    setLoadingMethod("ton");
+    setError(null);
 
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error);
-    }
-
-    // Open Telegram payment - use Telegram WebApp if available
-    if (data.invoiceUrl) {
-      const tg = (window as Window & { Telegram?: { WebApp?: { openInvoice?: (url: string) => void } } }).Telegram?.WebApp;
-      if (tg?.openInvoice) {
-        // Native Telegram invoice (stays in app)
-        tg.openInvoice(data.invoiceUrl);
-      } else {
-        // Fallback to opening in browser
-        window.open(data.invoiceUrl, "_blank");
+    try {
+      // Connect wallet if not connected
+      if (!tonConnectUI.connected) {
+        setStatus("Connect your wallet...");
+        await tonConnectUI.openModal();
+        setLoading(false);
+        setLoadingMethod(null);
+        setStatus(null);
+        return;
       }
-      onSuccess?.("stars");
-    }
-  };
 
-  const handleTonPayment = async () => {
-    if (!tonConnectUI.connected) {
-      await tonConnectUI.openModal();
-      return;
-    }
+      setStatus("Sending transaction...");
+      const paymentTimestamp = Date.now();
+      const payment = createTonPayment(productId as TonPlanId, userId || "anonymous");
+      const result = await tonConnectUI.sendTransaction(payment);
 
-    const paymentTimestamp = Date.now();
-    const payment = createTonPayment(productId as TonPlanId, userId || "anonymous");
-    const result = await tonConnectUI.sendTransaction(payment);
+      if (!result) {
+        throw new Error("Transaction cancelled");
+      }
 
-    if (result) {
-      // Transaction sent - now verify it on-chain
-      // Wait a moment for blockchain confirmation
-      setError(null);
+      // Transaction sent - verify on chain
+      // Extended polling: 20 attempts x 5s = 100 seconds max
+      setStatus("Confirming on blockchain...");
 
-      // Poll for verification (try up to 5 times)
-      for (let attempt = 0; attempt < 5; attempt++) {
-        await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3s between attempts
+      for (let attempt = 0; attempt < 20; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        setStatus(`Confirming... (${attempt + 1}/20)`);
 
         try {
           const verifyResponse = await fetch("/api/payments/verify-ton", {
@@ -185,7 +174,10 @@ export function MultiRailCheckout({
           const verifyData = await verifyResponse.json();
 
           if (verifyData.success) {
+            setStatus("Payment confirmed! ✓");
             onSuccess?.("ton", verifyData.txHash);
+            setLoading(false);
+            setLoadingMethod(null);
             return;
           }
         } catch (e) {
@@ -193,115 +185,108 @@ export function MultiRailCheckout({
         }
       }
 
-      // If verification didn't succeed after 5 attempts, still call success
-      // (user can manually verify later)
-      setError("Payment sent! Verification pending - credits will be added shortly.");
+      // After 100s, show pending message but don't fail
+      setStatus("Transaction sent! Credits will be added once confirmed.");
+      setError(null);
+
+      // Still call success with the boc - credits will be added by webhook
       onSuccess?.("ton", result.boc);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Payment failed");
+      setStatus(null);
+    } finally {
+      setLoading(false);
+      setLoadingMethod(null);
     }
-  };
+  }, [tonConnectUI, productId, userId, onSuccess]);
 
-  const handleUsdcPayment = async () => {
-    // For x402, the payment happens automatically when making the API call
-    // This is handled by the x402 interceptor in the client
-    onSuccess?.("usdc");
-  };
-
-  const handleCardPayment = async () => {
-    // Create Stripe checkout session
-    const response = await fetch("/api/payments/create-checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        productId,
-        priceUsd,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (data.url) {
-      window.location.href = data.url;
-    }
-  };
-
-  const handleOnrampPayment = async () => {
-    // Get user's wallet address or create one
-    const walletAddress = process.env.NEXT_PUBLIC_TON_WALLET_ADDRESS || "";
-
-    const onrampUrl = createOnrampUrl(walletAddress, priceUsd, {
-      successUrl: `${window.location.origin}/payment-success`,
-    });
-
-    window.open(onrampUrl, "_blank");
-    onSuccess?.("onramp");
-  };
+  // ============================================
+  // UI
+  // ============================================
+  const inTelegram = isTelegram();
 
   return (
     <div className="glass p-6 rounded-xl max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-2">{productName}</h2>
-      <p className="text-gray-400 mb-6">${priceUsd.toFixed(2)} USD</p>
-
-      {/* Payment method selection */}
-      <div className="space-y-3 mb-6">
-        {PAYMENT_METHODS.filter((m) => m.available).map((method) => (
-          <button
-            key={method.id}
-            onClick={() => setSelectedMethod(method.id)}
-            className={`w-full p-4 rounded-lg border transition-all ${
-              selectedMethod === method.id
-                ? "border-gold-500 bg-gold-500/10"
-                : "border-gray-700 hover:border-gray-500"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{method.icon}</span>
-              <div className="text-left flex-1">
-                <div className="font-medium">{method.name}</div>
-                <div className="text-sm text-gray-400">{method.description}</div>
-              </div>
-              <div className="text-right text-sm">
-                {method.id === "stars" && `${priceStars} ⭐`}
-                {method.id === "ton" && `${priceTon} TON`}
-                {method.id === "usdc" && `${priceUsdc} USDC`}
-                {method.id === "card" && `$${priceUsd.toFixed(2)}`}
-                {method.id === "onramp" && `$${priceUsd.toFixed(2)}`}
-              </div>
-            </div>
-          </button>
-        ))}
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h2 className="text-xl font-bold mb-1">{productName}</h2>
+        <p className="text-2xl font-bold text-tiger-400">${priceUsd.toFixed(2)}</p>
       </div>
 
-      {/* Error display */}
+      {/* Status message */}
+      {status && (
+        <div className="mb-4 p-3 bg-tiger-500/20 border border-tiger-500 rounded-lg text-tiger-300 text-sm text-center">
+          {status}
+        </div>
+      )}
+
+      {/* Error message */}
       {error && (
-        <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-400 text-sm">
+        <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-400 text-sm text-center">
           {error}
         </div>
       )}
 
-      {/* Action buttons */}
-      <div className="flex gap-3">
+      {/* Payment buttons - Stars primary, TON secondary */}
+      <div className="space-y-3 mb-6">
+
+        {/* TELEGRAM STARS - Primary */}
         <button
-          onClick={onCancel}
-          className="flex-1 py-3 px-4 rounded-lg border border-gray-600 hover:bg-gray-800 transition-colors"
+          onClick={handleStarsPayment}
+          disabled={loading}
+          className={`w-full p-4 rounded-xl transition-all ${
+            loading && loadingMethod === "stars"
+              ? "bg-tiger-600 cursor-wait"
+              : "bg-gradient-to-r from-tiger-500 to-tiger-600 hover:from-tiger-400 hover:to-tiger-500 active:scale-[0.98]"
+          } text-white font-semibold shadow-lg shadow-tiger-500/25`}
         >
-          Cancel
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-2xl">⭐</span>
+            <div>
+              <div className="text-lg">Pay with Stars</div>
+              <div className="text-sm opacity-80">{priceStars} Stars</div>
+            </div>
+          </div>
+          {!inTelegram && (
+            <div className="text-xs mt-2 opacity-70">
+              Best in Telegram app
+            </div>
+          )}
         </button>
+
+        {/* TON - Secondary */}
         <button
-          onClick={handlePayment}
-          disabled={!selectedMethod || loading}
-          className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors ${
-            selectedMethod && !loading
-              ? "bg-gold-500 hover:bg-gold-600 text-black"
-              : "bg-gray-700 text-gray-400 cursor-not-allowed"
+          onClick={handleTonPayment}
+          disabled={loading}
+          className={`w-full p-4 rounded-xl border-2 transition-all ${
+            loading && loadingMethod === "ton"
+              ? "border-blue-500 bg-blue-500/20 cursor-wait"
+              : "border-gray-600 hover:border-blue-500 hover:bg-blue-500/10 active:scale-[0.98]"
           }`}
         >
-          {loading ? "Processing..." : "Pay Now"}
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-2xl">💎</span>
+            <div>
+              <div className="font-medium">Pay with TON</div>
+              <div className="text-sm text-gray-400">{priceTon} TON</div>
+            </div>
+          </div>
         </button>
       </div>
 
-      {/* x402 badge */}
+      {/* Cancel button */}
+      <button
+        onClick={onCancel}
+        disabled={loading}
+        className="w-full py-3 text-gray-400 hover:text-white transition-colors"
+      >
+        Cancel
+      </button>
+
+      {/* Footer */}
       <div className="mt-4 text-center text-xs text-gray-500">
-        Crypto payments secured by x402 protocol
+        Secure payment • Instant delivery
       </div>
     </div>
   );
