@@ -17,8 +17,10 @@ import {
   Play,
   Palette,
   Coins,
+  X,
 } from "lucide-react";
 import Link from "next/link";
+import { MultiRailCheckout } from "@/components/payments/multi-rail-checkout";
 
 const creationModes = [
   {
@@ -203,12 +205,25 @@ const BRAND_TIERS = [
   { id: "juche", name: "Juche", description: "Revolutionary, bold, purposeful" },
 ];
 
+// Pricing for each mode (in USD)
+const MODE_PRICING: Record<string, number> = {
+  "thread-to-hit": 1.00,
+  "quantum-slides": 0.25,
+  "multiverse-video": 0.25,
+  "voice-studio": 0.10,
+  "brand-forge": 0.25,
+};
+
 export default function CreatePage() {
   const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const [inputType, setInputType] = useState<"text" | "url" | "file">("text");
   const [inputValue, setInputValue] = useState("");
   const [status, setStatus] = useState<GenerationStatus>("idle");
   const [result, setResult] = useState<GenerationResult | null>(null);
+
+  // Payment state
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [pendingRequest, setPendingRequest] = useState<Record<string, string> | null>(null);
 
   // Thread-to-Hit options (music generation)
   const [selectedMusicStyle, setSelectedMusicStyle] = useState("trap");
@@ -223,44 +238,58 @@ export default function CreatePage() {
 
   const selectedModeData = creationModes.find((m) => m.id === selectedMode);
 
+  // Build request body based on mode
+  const buildRequestBody = (): Record<string, string> => {
+    const body: Record<string, string> = {};
+    switch (selectedMode) {
+      case "thread-to-hit":
+        body.content = inputValue;
+        body.style = selectedMusicStyle;
+        body.durationMs = "120000";
+        break;
+      case "quantum-slides":
+        body.topic = inputValue;
+        body.style = "quantum";
+        break;
+      case "multiverse-video":
+        body.concept = inputValue;
+        body.style = "cinematic";
+        break;
+      case "voice-studio":
+        body.text = inputValue;
+        body.voiceId = selectedVoice;
+        break;
+      case "brand-forge":
+        body.concept = inputValue;
+        body.tier = selectedBrandTier;
+        break;
+    }
+    return body;
+  };
+
+  // Step 1: User clicks generate - show checkout
   const handleGenerate = async () => {
     if (!selectedModeData || !inputValue.trim()) return;
+
+    // Save the request for after payment
+    setPendingRequest(buildRequestBody());
+    setShowCheckout(true);
+  };
+
+  // Step 2: After payment success - actually generate
+  const handlePaymentSuccess = async (method: string) => {
+    setShowCheckout(false);
+
+    if (!selectedModeData || !pendingRequest) return;
 
     setStatus("generating");
     setResult(null);
 
     try {
-      const body: Record<string, string> = {};
-
-      // Build request body based on mode
-      switch (selectedMode) {
-        case "thread-to-hit":
-          body.content = inputValue;
-          body.style = selectedMusicStyle;
-          body.durationMs = "120000"; // 2 minutes
-          break;
-        case "quantum-slides":
-          body.topic = inputValue;
-          body.style = "quantum";
-          break;
-        case "multiverse-video":
-          body.concept = inputValue;
-          body.style = "cinematic";
-          break;
-        case "voice-studio":
-          body.text = inputValue;
-          body.voiceId = selectedVoice;
-          break;
-        case "brand-forge":
-          body.concept = inputValue;
-          body.tier = selectedBrandTier;
-          break;
-      }
-
       const response = await fetch(selectedModeData.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(pendingRequest),
       });
 
       const data = await response.json();
@@ -277,7 +306,15 @@ export default function CreatePage() {
         error: error instanceof Error ? error.message : "Generation failed",
       });
       setStatus("error");
+    } finally {
+      setPendingRequest(null);
     }
+  };
+
+  // Cancel payment
+  const handlePaymentCancel = () => {
+    setShowCheckout(false);
+    setPendingRequest(null);
   };
 
   const handleDownloadAudio = (audioData?: string, filename = "audio.mp3") => {
@@ -301,6 +338,39 @@ export default function CreatePage() {
 
   return (
     <div className="min-h-screen bg-obsidian">
+      {/* Payment Checkout Modal */}
+      <AnimatePresence>
+        {showCheckout && selectedMode && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-md"
+            >
+              <button
+                onClick={handlePaymentCancel}
+                className="absolute -top-2 -right-2 z-10 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <MultiRailCheckout
+                productId={selectedMode}
+                productName={selectedModeData?.title || "Generation"}
+                priceUsd={MODE_PRICING[selectedMode] || 0.25}
+                onSuccess={handlePaymentSuccess}
+                onCancel={handlePaymentCancel}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <header className="sticky top-0 z-50 glass-gold border-b border-gold/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
