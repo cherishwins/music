@@ -823,6 +823,74 @@ export default function CreatePage() {
                             </div>
                           </div>
                         )}
+
+                        {/* Brand Forge Result */}
+                        {result.brand && (
+                          <div className="space-y-6">
+                            <div className="flex items-center gap-3">
+                              <Palette className="w-6 h-6 text-gold" />
+                              <h4 className="font-semibold text-xl">
+                                {result.brand.name}
+                              </h4>
+                              <span className="px-2 py-1 bg-gold-500/20 rounded text-gold-400 text-sm font-mono">
+                                ${result.brand.ticker}
+                              </span>
+                            </div>
+
+                            {result.brand.tagline && (
+                              <p className="text-lg text-white/80 italic">
+                                &ldquo;{result.brand.tagline}&rdquo;
+                              </p>
+                            )}
+
+                            {/* Color Palette */}
+                            {result.brand.colors && (
+                              <div className="p-4 bg-white/5 rounded-xl">
+                                <h5 className="text-sm text-white/60 mb-3">Color Palette</h5>
+                                <div className="flex gap-3">
+                                  {Object.entries(result.brand.colors).map(([name, color]) => (
+                                    <div key={name} className="text-center">
+                                      <div
+                                        className="w-12 h-12 rounded-lg border border-white/20 mb-1"
+                                        style={{ backgroundColor: color }}
+                                      />
+                                      <span className="text-xs text-white/50 capitalize">{name}</span>
+                                      <div className="text-xs font-mono text-white/40">{color}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Logo Prompt */}
+                            {result.brand.logoPrompt && (
+                              <div className="p-4 bg-white/5 rounded-xl">
+                                <h5 className="text-sm text-white/60 mb-2">Logo Generation Prompt</h5>
+                                <p className="text-white/80 text-sm">{result.brand.logoPrompt}</p>
+                              </div>
+                            )}
+
+                            {/* Social Bio */}
+                            {result.brand.socialBio && (
+                              <div className="p-4 bg-white/5 rounded-xl">
+                                <h5 className="text-sm text-white/60 mb-2">Social Media Bio</h5>
+                                <p className="text-white/80">{result.brand.socialBio}</p>
+                              </div>
+                            )}
+
+                            {/* Elevator Pitch */}
+                            {result.brand.elevator && (
+                              <div className="p-4 bg-gradient-to-br from-gold-500/10 to-transparent rounded-xl border border-gold-500/20">
+                                <h5 className="text-sm text-gold-400 mb-2">Elevator Pitch</h5>
+                                <p className="text-white/90">{result.brand.elevator}</p>
+                              </div>
+                            )}
+
+                            <div className="text-xs text-white/40">
+                              Tier: {result.tier || "standard"}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </motion.div>
