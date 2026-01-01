@@ -73,8 +73,9 @@ export async function generateWithFal(options: MiniMaxGenerateOptions): Promise<
 }
 
 /**
- * Generate music via Replicate MiniMax API
- * Requires REPLICATE_API_TOKEN in environment
+ * Generate music via Replicate MusicGen API
+ * Fallback when fal.ai fails - uses Meta's MusicGen
+ * Cost: ~$0.10-0.13 per generation (more expensive but reliable)
  */
 export async function generateWithReplicate(options: MiniMaxGenerateOptions): Promise<MiniMaxResult> {
   const REPLICATE_TOKEN = process.env.REPLICATE_API_TOKEN;
@@ -82,7 +83,12 @@ export async function generateWithReplicate(options: MiniMaxGenerateOptions): Pr
     throw new Error('REPLICATE_API_TOKEN not configured');
   }
 
-  // Create prediction
+  // Build prompt - include lyrics if available
+  const fullPrompt = options.lyrics
+    ? `${options.prompt}\n\nLyrics:\n${options.lyrics}`
+    : options.prompt;
+
+  // Create prediction using MusicGen (works with text-only!)
   const createResponse = await fetch('https://api.replicate.com/v1/predictions', {
     method: 'POST',
     headers: {
@@ -90,13 +96,13 @@ export async function generateWithReplicate(options: MiniMaxGenerateOptions): Pr
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      version: 'minimax/music-01', // or music-1.5 for longer tracks
+      version: 'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043055f2a38f2e411f954c8a1e6b',
       input: {
-        prompt: options.prompt,
-        lyrics: options.lyrics,
-        reference_audio: options.referenceAudioUrl,
-        sample_rate: options.sampleRate || 44100,
-        bitrate: options.bitrate || 128000, // bps
+        prompt: fullPrompt,
+        duration: Math.min(options.duration || 30, 30), // MusicGen max 30 seconds
+        model_version: 'stereo-melody-large',
+        output_format: 'mp3',
+        normalization_strategy: 'loudness',
       },
     }),
   });
@@ -125,8 +131,8 @@ export async function generateWithReplicate(options: MiniMaxGenerateOptions): Pr
 
   return {
     audioUrl: result.output,
-    duration: options.duration || 60,
-    cost: 0.035, // Replicate pricing
+    duration: Math.min(options.duration || 30, 30), // MusicGen max 30s
+    cost: 0.10, // MusicGen on Replicate ~$0.10/generation
     provider: 'replicate',
   };
 }
