@@ -1,30 +1,50 @@
 /**
  * /api/generate/anthem - Meme Coin Anthem Generator
  *
- * Optimized for viral meme coin music:
- * - Multi-provider fallback (ElevenLabs → MiniMax → ACE-Step)
- * - Viral tempo/structure optimization
- * - Cost-aware routing
+ * TIERED PRICING:
+ * - free: 30s preview, watermarked ($0.01 cost, $0 price)
+ * - good: 2min full, watermarked ($0.03 cost, $0.50 price)
+ * - better: 2min full, clean ($0.03 cost, $1.00 price)
+ * - best: 2min full, ElevenLabs quality ($0.32 cost, $2.00 price)
  *
  * @see research/MEME_COIN_RECORD_LABEL.md
- * @see research/MEME_COIN_VIRALITY.md
+ * @see docs/GROWTH_ENGINE.md
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { generateMusic as generateWithMiniMax } from '@/lib/minimax';
+import { generateMusic as generateWithFal } from '@/lib/minimax';
 import { generateFullSong } from '@/lib/voice';
+import { applyWatermark } from '@/lib/watermark';
 import {
-  getCheapestProvider,
   formatGenrePrompt,
   VIRAL_CONFIG,
   type MusicProvider,
 } from '@/lib/music-providers';
+
+// Pricing tiers
+type PricingTier = 'free' | 'good' | 'better' | 'best';
+
+const TIER_CONFIG: Record<PricingTier, {
+  maxDuration: number;
+  watermark: boolean;
+  provider: 'fal' | 'elevenlabs';
+  cost: number;
+  price: number;
+}> = {
+  free: { maxDuration: 30, watermark: true, provider: 'fal', cost: 0.01, price: 0 },
+  good: { maxDuration: 120, watermark: true, provider: 'fal', cost: 0.03, price: 0.50 },
+  better: { maxDuration: 120, watermark: false, provider: 'fal', cost: 0.03, price: 1.00 },
+  best: { maxDuration: 120, watermark: false, provider: 'elevenlabs', cost: 0.32, price: 2.00 },
+};
 
 interface AnthemRequest {
   // Core inputs
   tokenName: string;
   ticker: string;
   theme?: string; // "moon mission", "diamond hands", "rug revenge"
+
+  // Pricing tier
+  tier?: PricingTier;
 
   // Optional context (auto-fetched if CA provided)
   contractAddress?: string;
@@ -36,7 +56,7 @@ interface AnthemRequest {
   vibeType?: 'hype' | 'dopamine' | 'chill';
   voiceStyle?: 'male' | 'female' | 'aggressive';
 
-  // Provider preference
+  // Legacy: Provider preference (still supported)
   preferCheap?: boolean;
   preferUncensored?: boolean;
   provider?: MusicProvider;
@@ -48,8 +68,12 @@ interface AnthemResponse {
   audioBase64?: string;
   duration?: number;
   cost?: number;
+  price?: number;
+  tier?: PricingTier;
+  watermarked?: boolean;
   provider?: MusicProvider;
   lyrics?: string;
+  upgradePrompt?: string;
   error?: string;
 }
 
@@ -63,11 +87,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnthemRes
       theme = 'moon mission',
       genre = 'memecoin',
       vibeType = 'hype',
-      voiceStyle = 'aggressive',
-      preferCheap = false,
-      preferUncensored = false,
+      tier = 'free', // Default to free tier
       marketCap,
       priceChange24h,
+      // Legacy support
+      preferCheap,
     } = body;
 
     // Validate required fields
@@ -77,6 +101,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnthemRes
         error: 'tokenName and ticker are required',
       }, { status: 400 });
     }
+
+    // Get tier config (legacy preferCheap maps to 'good')
+    const effectiveTier: PricingTier = preferCheap ? 'good' : tier;
+    const tierConfig = TIER_CONFIG[effectiveTier];
 
     // Get tempo based on vibe type
     const tempoConfig = VIRAL_CONFIG.tempo[vibeType];
@@ -94,61 +122,82 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnthemRes
     // Build optimized genre prompt
     const genrePrompt = formatGenrePrompt(genre, bpm);
 
-    // Determine provider
-    let selectedProvider: MusicProvider = 'elevenlabs';
+    // Build style prompt based on genre
+    const stylePrompts: Record<string, string> = {
+      'phonk': 'drift phonk, distorted 808 bass, cowbell melody, aggressive Memphis samples, dark atmosphere',
+      'trap': 'hard trap beat, heavy 808s, rapid hi-hats, aggressive snare patterns, dark energy',
+      'hyperpop': 'hyperpop, glitchy synths, pitched vocals, chaotic maximalist production',
+      'edm': 'EDM banger, festival energy, massive drops, euphoric synth leads',
+      'memecoin': 'aggressive crypto anthem, pump energy, distorted bass, triumphant synths',
+    };
 
-    if (preferCheap) {
-      const cheapest = getCheapestProvider();
-      if (cheapest) selectedProvider = cheapest.provider;
-    } else if (preferUncensored) {
-      // MiniMax is more permissive than ElevenLabs
-      if (process.env.FAL_KEY) selectedProvider = 'minimax-fal';
-      else if (process.env.REPLICATE_API_TOKEN) selectedProvider = 'minimax-replicate';
-    } else if (body.provider) {
-      selectedProvider = body.provider;
-    }
-
-    // Generate based on provider
+    // Generate based on tier
     let result: { audioUrl?: string; audioBase64?: string; duration: number; cost: number };
+    let selectedProvider: MusicProvider = 'minimax-fal';
 
-    if (selectedProvider.startsWith('minimax')) {
-      // Build style prompt based on genre
-      const stylePrompts: Record<string, string> = {
-        'phonk': 'drift phonk, distorted 808 bass, cowbell melody, aggressive Memphis samples, dark atmosphere',
-        'trap': 'hard trap beat, heavy 808s, rapid hi-hats, aggressive snare patterns, dark energy',
-        'hyperpop': 'hyperpop, glitchy synths, pitched vocals, chaotic maximalist production',
-        'edm': 'EDM banger, festival energy, massive drops, euphoric synth leads',
-        'memecoin': 'aggressive crypto anthem, pump energy, distorted bass, triumphant synths',
-      };
-
-      // Use MiniMax
-      const miniMaxResult = await generateWithMiniMax({
-        prompt: `${genrePrompt}. Create an anthem for the ${tokenName} ($${ticker}) cryptocurrency community.`,
-        lyrics: lyrics,
-        stylePrompt: stylePrompts[genre] || stylePrompts['memecoin'],
-      });
-
-      result = {
-        audioUrl: miniMaxResult.audioUrl,
-        duration: miniMaxResult.duration,
-        cost: miniMaxResult.cost,
-      };
-    } else {
-      // Use ElevenLabs (default)
+    if (tierConfig.provider === 'elevenlabs') {
+      // Best tier: Use ElevenLabs
+      selectedProvider = 'elevenlabs';
       const elevenLabsResult = await generateFullSong(
         lyrics,
         genre === 'trap' ? 'trap' : genre === 'phonk' ? 'phonk' : 'trap',
         { bpm }
       );
 
-      // Convert Buffer to base64
       const audioBase64 = elevenLabsResult.audio.toString('base64');
+      result = {
+        audioBase64,
+        duration: tierConfig.maxDuration,
+        cost: tierConfig.cost,
+      };
+    } else {
+      // Free/Good/Better tiers: Use fal.ai (CassetteAI)
+      const falResult = await generateWithFal({
+        prompt: `${genrePrompt}. Create an anthem for the ${tokenName} ($${ticker}) cryptocurrency community.`,
+        lyrics: lyrics,
+        stylePrompt: stylePrompts[genre] || stylePrompts['memecoin'],
+        duration: tierConfig.maxDuration,
+      });
 
       result = {
-        audioBase64: audioBase64,
-        duration: 120, // Estimated 2 min
-        cost: 0.08 * 2, // ~$0.08/min * 2 min
+        audioUrl: falResult.audioUrl,
+        duration: falResult.duration,
+        cost: tierConfig.cost,
       };
+    }
+
+    // Apply watermark for free/good tiers
+    let watermarked = false;
+    if (tierConfig.watermark && result.audioUrl) {
+      try {
+        // Fetch the audio and apply watermark
+        const audioResponse = await fetch(result.audioUrl);
+        const audioBuffer = Buffer.from(await audioResponse.arrayBuffer());
+
+        const watermarkResult = await applyWatermark({
+          inputBuffer: audioBuffer,
+          inputFormat: 'wav',
+          outputFormat: 'mp3',
+        });
+
+        if (watermarkResult.watermarked) {
+          // Convert watermarked audio to base64
+          result.audioBase64 = watermarkResult.buffer.toString('base64');
+          result.audioUrl = undefined; // Use base64 instead
+          watermarked = true;
+        }
+      } catch (e) {
+        console.warn('Watermarking failed, returning original:', e);
+        // Continue without watermark if it fails
+      }
+    }
+
+    // Build upgrade prompt for free tier
+    let upgradePrompt: string | undefined;
+    if (effectiveTier === 'free') {
+      upgradePrompt = `🎵 This is a 30-second preview. Get the full 2-minute anthem for just $0.50!`;
+    } else if (effectiveTier === 'good') {
+      upgradePrompt = `🎧 Want a clean version without the watermark? Upgrade to Better tier for $1.00`;
     }
 
     return NextResponse.json({
@@ -157,8 +206,12 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnthemRes
       audioBase64: result.audioBase64,
       duration: result.duration,
       cost: result.cost,
+      price: tierConfig.price,
+      tier: effectiveTier,
+      watermarked,
       provider: selectedProvider,
       lyrics: lyrics,
+      upgradePrompt,
     });
 
   } catch (error) {
