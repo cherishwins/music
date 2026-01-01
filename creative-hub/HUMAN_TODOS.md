@@ -1,9 +1,41 @@
 # Human To-Dos
 
-**Last Updated:** December 30, 2025
+**Last Updated:** December 31, 2025
 
 > This is the master checklist for human-in-the-loop tasks. Claude keeps this updated.
 > Check items off as you complete them. Claude will add new tasks as needed.
+
+---
+
+## 🚨 MAJOR DISCOVERY: HUB-AND-SPOKE ARCHITECTURE
+
+**Full plan:** `docs/HUB_SPOKE_ARCHITECTURE.md`
+
+You have a MASSIVE backend already running on Render - **notaryton-bot** (4,662 lines):
+- PostgreSQL database (15+ tables: users, tokens, wallets, KOLs, lottery)
+- 40+ REST API endpoints (already live!)
+- Token crawler (discovers new tokens automatically)
+- Whale detection (holder snapshots, movement alerts)
+- KOL tracking (influencer calls, verified wallets)
+- TON ID authentication
+
+**The Problem:** creative-hub is duplicating rug score functionality that notaryton already has!
+
+### Quick Integration (Pick ONE)
+
+**Option A: Use notaryton's API directly (5 min)**
+```bash
+# Test it now - notaryton already has a rugscore endpoint!
+curl https://notaryton.com/api/v1/rugscore/EQBvW8Z5huBkMJYdnfAEM5JqTNkuWX3diqYENkWsIL0XggGG
+```
+
+**Option B: Merge ton-labels into notaryton (30 min)**
+- [ ] Run migration script to add 2,958 labeled addresses to notaryton's `known_wallets` table
+- [ ] Update notaryton's rugscore endpoint to use labels
+
+### Architecture Decision (Human Input Needed)
+- [ ] **DECIDE:** Should creative-hub proxy to notaryton API, or keep separate?
+- [ ] **DECIDE:** Should all products share one PostgreSQL database (notaryton's)?
 
 ---
 
