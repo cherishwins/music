@@ -148,34 +148,35 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 - [ ] **Test MiniMax Music:** https://replicate.com/minimax/music-01
 > Why: Access to MiniMax + MusicGen + ACE-Step all in one place
 
-### Tier 2: Uncensored Local Pipeline (The Nuclear Option)
+### 🔮 FUTURE: Uncensored Local Pipeline (NOT NEEDED YET)
 
-#### RunPod - GPU Rental (For Training/Heavy Inference)
-- [ ] **Sign up:** https://runpod.io
-- [ ] **Add $20 credits** - First test run
-- [ ] **Bookmark:** RTX 3090 ($0.30/hr) for inference, A100 ($1.50/hr) for training
-> Why: Run Dolphin LLM + RVC + MusicGen locally = ZERO CENSORSHIP
+> **SKIP THIS SECTION** - Only do this when we have $500+ runway and need uncensored generation.
+> If you downloaded RVC voice zips, you can delete them for now.
+
+<details>
+<summary>Click to expand future tasks (don't do these yet)</summary>
+
+#### RunPod - GPU Rental
+- [ ] Sign up: https://runpod.io
+- [ ] Add $20 credits
+> Why: Run local models without content filtering
 
 #### Hugging Face - Model Downloads
-- [ ] **Get access token:** https://huggingface.co/settings/tokens
-- [ ] **Add to .env as `HF_TOKEN`**
-- [ ] **Accept licenses for:**
-  - [ ] ACE-Step: https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B
-  - [ ] MusicGen: https://huggingface.co/facebook/musicgen-medium
-> Why: Download weights for local/RunPod deployment
+- [ ] Get access token: https://huggingface.co/settings/tokens
+- [ ] Accept model licenses
 
-### Tier 3: Voice Cloning (Meme Voices)
+#### RVC Voice Models
+- [ ] Bookmark: https://voice-models.com
+- [ ] Download meme voices when RunPod is set up
 
-#### RVC WebUI - Voice Models
-- [ ] **Bookmark community models:** https://voice-models.com
-- [ ] **Download 5 meme voices** (Trump, Kanye, anime chars, etc.)
-> Why: Convert any TTS to any voice. No content filtering.
+</details>
 
-### Service Priority Order
-1. **fal.ai** - Immediate wins, cheap testing
-2. **Replicate** - Already have token, just test models
-3. **Hugging Face** - Get tokens for model access
-4. **RunPod** - When ready for uncensored pipeline
+### What's Actually Working NOW
+1. **fal.ai CassetteAI** ✅ - LIVE at $0.03/song
+2. **Replicate MusicGen** ✅ - Fallback working
+3. **ElevenLabs** ✅ - Premium tier for $2 tracks
+
+**Everything else is FUTURE. Focus on getting users and revenue first.**
 
 ---
 
@@ -195,13 +196,6 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 - [x] Create ecosystem strategy ✅ `docs/ECOSYSTEM_STRATEGY.md`
 - [x] Add White Tiger CTAs to blockburnnn ✅ (pushed to GitHub)
 - [ ] Add share-to-unlock flow
-
-#### 🔴 HUMAN ACTION NEEDED: Push Schema to Turso
-Run this command to create the new tables (partners, outreach_logs, competition_weeks):
-```bash
-cd /home/jesse/dev/projects/personal/music/creative-hub
-pnpm exec drizzle-kit push
-```
 
 #### Partner Outreach (Human Does)
 - [ ] **Identify 20 target meme coins** - Use DexScreener new pairs
