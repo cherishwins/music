@@ -135,11 +135,12 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ### Tier 1: Cloud APIs (Quick Wins)
 
-#### fal.ai - MiniMax Music ($0.03/song)
-- [ ] **Sign up:** https://fal.ai
-- [ ] **Get API key** - Add to .env as `FAL_KEY`
-- [ ] **Add $10 credits** (gets you ~300+ songs for testing)
-> Why: 40x cheaper than ElevenLabs. S-tier vocals. Style transfer from reference tracks.
+#### fal.ai - CassetteAI ($0.03/song) ✅ DONE
+- [x] **Sign up:** https://fal.ai
+- [x] **Get API key** - Added to .env as `FAL_KEY`
+- [x] **Add $10 credits** (~333 songs for testing)
+- [x] **Integrated CassetteAI** - Text-only generation, no reference audio needed!
+> Status: LIVE at `/api/generate/anthem` - 90% cheaper than ElevenLabs
 
 #### Replicate - Multi-Model Access
 - [ ] **Sign up:** https://replicate.com
@@ -175,6 +176,44 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 2. **Replicate** - Already have token, just test models
 3. **Hugging Face** - Get tokens for model access
 4. **RunPod** - When ready for uncensored pipeline
+
+---
+
+## 🚀 GROWTH ENGINE (Anthem Wars + Partner Pipeline)
+
+**Full Strategy:** `docs/GROWTH_ENGINE.md`
+**Partner Outreach Skill:** `skills/PARTNER_OUTREACH.skill.md`
+
+### Phase 1: This Week
+
+#### Build the Loop (Claude Does)
+- [x] Add tier parameter to /api/generate/anthem
+- [ ] Add 30-second preview mode (free tier)
+- [ ] Add watermark audio to free tracks
+- [ ] Add share-to-unlock flow
+- [ ] Create leaderboard API endpoint
+- [ ] Create partners CRM table in Turso
+
+#### Partner Outreach (Human Does)
+- [ ] **Identify 20 target meme coins** - Use DexScreener new pairs
+- [ ] **Join their Telegram groups**
+- [ ] **Send first 10 outreach messages** - Use templates in PARTNER_OUTREACH.skill.md
+- [ ] **Track responses** in spreadsheet or Turso
+
+#### Pilot Competition
+- [ ] **Sign 1 meme coin partner** for Anthem Wars Week 1
+- [ ] **Set up prize** ($50-100 from their treasury or ours)
+- [ ] **Announce in their community**
+- [ ] **Track submissions and performance**
+
+### Growth Loop Economics
+
+| Action | Cost to Us | Value Created |
+|--------|------------|---------------|
+| Free 30s preview | $0.01 | Email capture |
+| Share-to-unlock | $0.03 | Free marketing |
+| Partner outreach | Time | Pipeline of deals |
+| Competition | $50 prize | Community engagement |
 
 ---
 
