@@ -23,6 +23,29 @@ You have a MASSIVE backend already built and running on Render - **notaryton-bot
 
 ---
 
+## 🚨 CRITICAL FINDING (January 1, 2026)
+
+**Testing revealed creative-hub's scoring is SUPERIOR to notaryton's:**
+
+| Test | notaryton.com | creative-hub | Winner |
+|------|---------------|--------------|--------|
+| Known Scammer | Score 70 (yellow) | Score 0, Grade F, CRITICAL | **creative-hub** |
+| CEX (weex) | "Could not analyze" | Score 812, Grade A, entity info | **creative-hub** |
+| Entity Detection | None | Full ton-labels (2,958 addresses) | **creative-hub** |
+| Grade System | 0-100 simple | 0-1000 with A+-F grades | **creative-hub** |
+| Component Breakdown | None | History/Safety/Behavior with weights | **creative-hub** |
+
+**New Recommendation:** Port creative-hub's minter-score.ts logic TO notaryton, not the reverse.
+
+### What creative-hub has that notaryton needs:
+1. **ton-labels integration** (2,958 labeled addresses including 112 scammers)
+2. **Entity detection** (CEX, DEX, validators, scammers, bridges, etc.)
+3. **Sophisticated scoring** (letter grades, risk levels, component breakdown)
+4. **Scammer detection** (instant F grade with detailed warnings)
+5. **Trust flags** (verified badges, website links)
+
+---
+
 ## Architecture
 
 ```
@@ -170,42 +193,81 @@ All products feed into ONE pot:
 
 ---
 
-## Current Duplication (WASTE)
+## Current Duplication (REVISED)
 
 | Feature | creative-hub | notaryton | Winner |
 |---------|--------------|-----------|--------|
-| Rug Score | minter-score.ts + ton-labels | rugscore + crawler | notaryton (has crawler) |
-| Token Data | Static JSON | PostgreSQL + live crawler | notaryton |
-| Whale Watch | None | holder_snapshots + detection | notaryton |
-| KOL Tracking | None | Full system | notaryton |
-| User Auth | Turso (separate) | PostgreSQL | notaryton |
-| Payments | 5 rails (Turso) | Stars + TON (PostgreSQL) | Merge both |
+| Rug Score Logic | minter-score.ts + ton-labels | Basic rugscore | **creative-hub** (better scoring) |
+| Token Crawler | None | PostgreSQL + live crawler | **notaryton** (data moat) |
+| Entity Labels | 2,958 addresses (ton-labels) | None | **creative-hub** |
+| Whale Watch | None | holder_snapshots + detection | **notaryton** |
+| KOL Tracking | None | Full system | **notaryton** |
+| User Auth | Turso (separate) | PostgreSQL | **notaryton** |
+| Payments | 5 rails (Turso) | Stars + TON (PostgreSQL) | **Merge both** |
+
+**The Path Forward:** Merge creative-hub's scoring intelligence INTO notaryton's data infrastructure.
 
 ---
 
-## Quick Wins (Can Do Today)
+## Quick Wins (REVISED)
 
-1. **Populate known_wallets** in notaryton with ton-labels data
-   ```python
-   # One-time migration script
-   for label in ton_labels:
-       await db.wallets.label_wallet(
-           address=label['address'],
-           label=label['category'],
-           owner_name=label['name']
-       )
-   ```
+### 1. Migrate ton-labels to notaryton (DO THIS FIRST)
+```python
+# notaryton-bot/scripts/import_ton_labels.py
+import json
+import asyncio
+from database import db
 
-2. **Point creative-hub to notaryton** for token safety
-   ```typescript
-   const NOTARYTON_API = "https://notaryton.com/api/v1";
-   const score = await fetch(`${NOTARYTON_API}/rugscore/${address}`);
-   ```
+async def import_labels():
+    with open('ton-labels-compiled.json') as f:
+        data = json.load(f)
 
-3. **Share user context** via Telegram user ID
-   - Both apps run as Mini Apps
-   - Use same `initData` to identify user
-   - notaryton is source of truth for subscriptions
+    for address, info in data['addresses'].items():
+        await db.wallets.label_wallet(
+            address=address,
+            label=info['category'],
+            owner_name=info.get('label', info.get('organization', '')),
+            metadata={
+                'website': info.get('website'),
+                'subcategory': info.get('subcategory'),
+                'tags': info.get('tags', [])
+            }
+        )
+    print(f"Imported {len(data['addresses'])} labels")
+```
+
+### 2. Port scoring logic to notaryton
+```python
+# notaryton-bot/scoring.py
+ENTITY_SCORES = {
+    'cex': 850,      # Grade A
+    'dex': 800,      # Grade A
+    'validator': 900, # Grade A+
+    'bridge': 750,   # Grade B+
+    'scammer': 0,    # Grade F (CRITICAL)
+}
+
+async def calculate_minter_score(address: str) -> dict:
+    # Check entity labels first
+    label = await db.wallets.get_label(address)
+    if label:
+        if label['category'] == 'scammer':
+            return {'score': 0, 'grade': 'F', 'riskLevel': 'CRITICAL'}
+        return {
+            'score': ENTITY_SCORES.get(label['category'], 600),
+            'grade': score_to_grade(score),
+            'entityInfo': label
+        }
+    # Fall back to token analysis
+    ...
+```
+
+### 3. creative-hub proxies to notaryton (after migration)
+Once notaryton has the scoring logic, creative-hub simply proxies:
+```typescript
+// Keep local scoring for now, switch to notaryton after migration
+const NOTARYTON_API = process.env.NOTARYTON_API || "https://notaryton.com/api/v1";
+```
 
 ---
 
@@ -239,14 +301,46 @@ User pays anywhere
 
 ---
 
-## Next Steps
+## Next Steps (REVISED ORDER)
 
-1. [ ] Add ton-labels to notaryton known_wallets (Script)
-2. [ ] Update creative-hub to call notaryton API
-3. [ ] Share Telegram user auth between apps
-4. [ ] Wire casino to real notaryton payments
-5. [ ] Launch unified referral program
+1. [x] Test both APIs to compare scoring quality - **DONE (creative-hub wins)**
+2. [ ] Copy `ton-labels-compiled.json` to notaryton-bot
+3. [ ] Create Python import script (see Quick Win #1)
+4. [ ] Run migration to populate notaryton's known_wallets table
+5. [ ] Port creative-hub's scoring logic to Python (see Quick Win #2)
+6. [ ] Update notaryton's `/api/v1/rugscore` to use new scoring
+7. [ ] Test notaryton with same addresses (should now match creative-hub)
+8. [ ] Switch creative-hub to proxy to notaryton (or keep both)
+9. [ ] Share Telegram user auth between apps
+10. [ ] Wire casino to real notaryton payments
+11. [ ] Launch unified referral program
 
 ---
 
 *"One backend to rule them all, one database to find them, one API to bring them all, and in the ecosystem bind them."*
+
+---
+
+## Test Results (January 1, 2026)
+
+### Scammer Detection Test
+```bash
+# creative-hub (CORRECT)
+curl https://creative-hub-virid.vercel.app/api/minter-score/EQBe-OxgGw8mHgBpbafhc652p7eLgp8dqEwFU8mKh5vsL3a8
+# → score: 0, grade: F, riskLevel: CRITICAL, "🚨 CONFIRMED SCAMMER"
+
+# notaryton (WRONG)
+curl https://notaryton.com/api/v1/rugscore/EQBe-OxgGw8mHgBpbafhc652p7eLgp8dqEwFU8mKh5vsL3a8
+# → score: 70, badge: yellow, verdict: WARNING (NOT detecting scammer!)
+```
+
+### CEX Detection Test
+```bash
+# creative-hub (CORRECT)
+curl https://creative-hub-virid.vercel.app/api/minter-score/EQB4XClemsAbLvlDjobh-VjUn7oEy9CITWPoG9WkTO2qRx_m
+# → score: 812, grade: A, "✅ VERIFIED EXCHANGE - weex"
+
+# notaryton (WRONG)
+curl https://notaryton.com/api/v1/rugscore/EQB4XClemsAbLvlDjobh-VjUn7oEy9CITWPoG9WkTO2qRx_m
+# → score: 70, "Could not analyze token" (NOT recognizing CEX!)
+```
