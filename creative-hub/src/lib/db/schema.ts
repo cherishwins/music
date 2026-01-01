@@ -652,3 +652,144 @@ export type InfraAlert = typeof infraAlerts.$inferSelect;
 export type NewInfraAlert = typeof infraAlerts.$inferInsert;
 export type WhaleWallet = typeof whaleWallets.$inferSelect;
 export type NewWhaleWallet = typeof whaleWallets.$inferInsert;
+
+// ============================================
+// PARTNERS (Meme Coin Partnership CRM)
+// ============================================
+
+export const partners = sqliteTable("partners", {
+  id: text("id").primaryKey(), // UUID
+
+  // Project details
+  projectName: text("project_name").notNull(),
+  ticker: text("ticker").notNull(),
+  contractAddress: text("contract_address"),
+  chain: text("chain", {
+    enum: ["ton", "solana", "base", "ethereum"],
+  }).default("ton"),
+
+  // Contact info
+  telegramGroup: text("telegram_group"),
+  telegramContact: text("telegram_contact"), // DM contact
+  discordServer: text("discord_server"),
+  twitterHandle: text("twitter_handle"),
+
+  // Market data
+  marketCap: real("market_cap"),
+  launchDate: integer("launch_date", { mode: "timestamp" }),
+
+  // Qualification
+  qualificationScore: integer("qualification_score"), // 0-20 based on criteria
+  memberCount: integer("member_count"),
+  hasExistingAnthem: integer("has_existing_anthem", { mode: "boolean" }).default(false),
+
+  // Sales pipeline
+  status: text("status", {
+    enum: [
+      "prospect",     // Identified, not contacted
+      "contacted",    // First outreach sent
+      "responded",    // They replied
+      "trial",        // Using free tier
+      "negotiating",  // Discussing paid deal
+      "closed_won",   // Deal signed
+      "closed_lost",  // Not interested
+      "churned",      // Was a customer, now not
+    ],
+  }).default("prospect"),
+
+  // Deal info
+  dealValue: real("deal_value"),
+  dealType: text("deal_type", {
+    enum: ["one_time", "monthly", "revenue_share"],
+  }),
+
+  // Anthems created
+  anthemsCreated: integer("anthems_created").default(0),
+  totalPlays: integer("total_plays").default(0),
+
+  // Notes
+  notes: text("notes"),
+  lastContactDate: integer("last_contact_date", { mode: "timestamp" }),
+  nextFollowUpDate: integer("next_follow_up_date", { mode: "timestamp" }),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+// ============================================
+// OUTREACH LOGS (Partner communication history)
+// ============================================
+
+export const outreachLogs = sqliteTable("outreach_logs", {
+  id: text("id").primaryKey(), // UUID
+  partnerId: text("partner_id")
+    .references(() => partners.id, { onDelete: "cascade" })
+    .notNull(),
+
+  // Communication details
+  channel: text("channel", {
+    enum: ["telegram", "discord", "twitter", "email"],
+  }).notNull(),
+  templateUsed: text("template_used"), // e.g., "cold_intro", "value_first"
+  messageSent: text("message_sent").notNull(),
+  response: text("response"),
+
+  // Outcome
+  gotResponse: integer("got_response", { mode: "boolean" }).default(false),
+  responseType: text("response_type", {
+    enum: ["positive", "negative", "neutral", "no_response"],
+  }),
+
+  sentAt: integer("sent_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  respondedAt: integer("responded_at", { mode: "timestamp" }),
+});
+
+// ============================================
+// COMPETITION WEEKS (Anthem Wars)
+// ============================================
+
+export const competitionWeeks = sqliteTable("competition_weeks", {
+  id: text("id").primaryKey(), // "week_1", "week_2", etc.
+  weekNumber: integer("week_number").notNull().unique(),
+
+  // Featured project
+  featuredPartnerId: text("featured_partner_id")
+    .references(() => partners.id),
+  featuredTicker: text("featured_ticker"),
+
+  // Dates
+  startDate: integer("start_date", { mode: "timestamp" }).notNull(),
+  endDate: integer("end_date", { mode: "timestamp" }).notNull(),
+
+  // Prizes
+  prizePool: real("prize_pool").default(0),
+  firstPlacePrize: real("first_place_prize"),
+  secondPlacePrize: real("second_place_prize"),
+  thirdPlacePrize: real("third_place_prize"),
+
+  // Results
+  totalSubmissions: integer("total_submissions").default(0),
+  totalPlays: integer("total_plays").default(0),
+  winnerId: text("winner_id").references(() => tracks.id),
+
+  status: text("status", {
+    enum: ["upcoming", "active", "voting", "completed"],
+  }).default("upcoming"),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});
+
+export type Partner = typeof partners.$inferSelect;
+export type NewPartner = typeof partners.$inferInsert;
+export type OutreachLog = typeof outreachLogs.$inferSelect;
+export type NewOutreachLog = typeof outreachLogs.$inferInsert;
+export type CompetitionWeek = typeof competitionWeeks.$inferSelect;
+export type NewCompetitionWeek = typeof competitionWeeks.$inferInsert;

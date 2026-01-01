@@ -186,13 +186,22 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ### Phase 1: This Week
 
-#### Build the Loop (Claude Does)
+#### Build the Loop (Claude Done ✅)
 - [x] Add tier parameter to /api/generate/anthem
-- [ ] Add 30-second preview mode (free tier)
-- [ ] Add watermark audio to free tracks
+- [x] Add 30-second preview mode (free tier) ✅
+- [x] Add watermark audio to free tracks ✅
+- [x] Create leaderboard API endpoint ✅ `/api/leaderboard`
+- [x] Create partners CRM table in Turso ✅ (schema ready)
+- [x] Create ecosystem strategy ✅ `docs/ECOSYSTEM_STRATEGY.md`
+- [x] Add White Tiger CTAs to blockburnnn ✅ (pushed to GitHub)
 - [ ] Add share-to-unlock flow
-- [ ] Create leaderboard API endpoint
-- [ ] Create partners CRM table in Turso
+
+#### 🔴 HUMAN ACTION NEEDED: Push Schema to Turso
+Run this command to create the new tables (partners, outreach_logs, competition_weeks):
+```bash
+cd /home/jesse/dev/projects/personal/music/creative-hub
+pnpm exec drizzle-kit push
+```
 
 #### Partner Outreach (Human Does)
 - [ ] **Identify 20 target meme coins** - Use DexScreener new pairs
@@ -376,6 +385,16 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 ---
 
 ## COMPLETED
+
+### December 31, 2025 (Evening Session)
+- [x] **ECOSYSTEM STRATEGY** - Hub-and-spoke architecture for 13 projects
+- [x] **TIERED PRICING** - Free/Good/Better/Best tiers with watermarking
+- [x] **LEADERBOARD API** - `/api/leaderboard?type=creators|anthems|trending|competition`
+- [x] **PARTNERS CRM SCHEMA** - partners, outreach_logs, competition_weeks tables
+- [x] **BLOCKBURNNN INTEGRATION** - White Tiger CTAs added, pushed to GitHub
+- [x] **ECOSYSTEM FOOTER** - Cross-project links in blockburnnn footer
+- [x] **GROWTH ENGINE DOC** - `docs/GROWTH_ENGINE.md` with business model
+- [x] **PARTNER OUTREACH SKILL** - `skills/PARTNER_OUTREACH.skill.md` with templates
 
 ### December 31, 2025
 - [x] **FULL TON-LABELS INTEGRATION** - 2,958 labeled addresses (was only 112 scammers)
