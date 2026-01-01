@@ -74,6 +74,14 @@ interface MinterCreditScore {
   recommendation: string;
   warnings: string[];
   analyzedAt: string;
+  // Entity info from ton-labels (2,958 labeled addresses)
+  entityInfo?: {
+    category: string | null;
+    label: string | undefined;
+    organization: string | undefined;
+    website: string | undefined;
+    trustFlags: string[];
+  };
 }
 
 interface ScanResult {
@@ -125,11 +133,27 @@ const creditTiers = [
   { score: "0-299", grade: "F", label: "RUG ALERT", color: "red-500", desc: "Do not ape. Likely scam." },
 ];
 
-// Example tokens for quick analysis
+// Example addresses for quick analysis (from ton-labels dataset)
+// These demonstrate the scoring system with known entities
 const exampleTokens = [
-  { address: "EQBynBO23ywHy_CgarY9NK9FTz0yDsG82PtcbSTQgGoXwiuA", name: "STON.fi", verified: true },
-  { address: "EQBlqsm144Dq6SjbPI4jjZvA1hqTIP3CvHovbIfW_t-SCALE", name: "SCALE", verified: true },
-  { address: "EQAvlWFDxGF2lXm67y4yzC17wYKD9A0guwPkMs1gOsM__NOT", name: "NOT", verified: true },
+  {
+    address: "EQB4XClemsAbLvlDjobh-VjUn7oEy9CITWPoG9WkTO2qRx_m",
+    name: "Weex (CEX)",
+    verified: true,
+    expectedGrade: "A"
+  },
+  {
+    address: "EQCNTO0Nh0Z7QNyRW1BLWfk08f2dAOw4izrx9sO6OUPg4GfQ",
+    name: "swap.coffee (DEX)",
+    verified: true,
+    expectedGrade: "B"
+  },
+  {
+    address: "EQBe-OxgGw8mHgBpbafhc652p7eLgp8dqEwFU8mKh5vsL3a8",
+    name: "⚠️ Known Scammer",
+    verified: false,
+    expectedGrade: "F"
+  },
 ];
 
 function getGradeColor(grade: string): string {
@@ -397,6 +421,43 @@ export default function RugScorePage() {
                   </div>
                 </div>
               </div>
+
+              {/* Entity Info (for labeled addresses from ton-labels) */}
+              {scanResult.data.entityInfo && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 rounded-xl bg-tiger/10 border border-tiger/30"
+                >
+                  <div className="flex items-start gap-3">
+                    <Shield className="w-5 h-5 text-tiger flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-semibold text-white">
+                          {scanResult.data.entityInfo.label || scanResult.data.entityInfo.organization || "Known Entity"}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-tiger/20 text-tiger uppercase">
+                          {scanResult.data.entityInfo.category}
+                        </span>
+                      </div>
+                      {scanResult.data.entityInfo.trustFlags.map((flag, i) => (
+                        <p key={i} className="text-sm text-white/70 mb-1">{flag}</p>
+                      ))}
+                      {scanResult.data.entityInfo.website && (
+                        <a
+                          href={scanResult.data.entityInfo.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-neon-cyan hover:underline flex items-center gap-1 mt-2"
+                        >
+                          {scanResult.data.entityInfo.website}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
               {/* Warnings */}
               {scanResult.data.warnings.length > 0 && (
