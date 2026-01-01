@@ -113,12 +113,40 @@ export async function POST(request: NextRequest) {
     // Handle /start command
     if (update.message?.text?.startsWith("/start")) {
       const chatId = update.message.chat.id;
-      await sendMessage(
-        chatId,
-        `<b>Welcome to Creative Hub!</b>\n\n` +
-          `Generate meme coin brands, music, and more with AI.\n\n` +
-          `Open the Mini App to get started.`
-      );
+      const telegramUser = update.message.from;
+
+      // Ensure user exists in database
+      await getOrCreateUser({
+        id: telegramUser.id,
+        username: telegramUser.username,
+        first_name: telegramUser.first_name,
+        last_name: telegramUser.last_name,
+      });
+
+      // Send welcome with inline keyboard
+      const botToken = process.env.TELEGRAM_BOT_TOKEN;
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `🐯 <b>Welcome to White Tiger Studio!</b>\n\n` +
+            `Create AI-powered meme coin anthems in seconds.\n\n` +
+            `✅ <b>FREE</b> - Generate your first anthem\n` +
+            `🎵 Professional AI vocals + beats\n` +
+            `🎨 Album art included\n` +
+            `📱 Share instantly to Telegram\n\n` +
+            `<i>Tap the button below to start creating!</i>`,
+          parse_mode: "HTML",
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: "🎵 Create Your Anthem", web_app: { url: "https://creative-hub-virid.vercel.app" } }],
+              [{ text: "💜 Join @MemeSeal", url: "https://t.me/MemeSeal" }]
+            ]
+          }
+        }),
+      });
+
       return NextResponse.json({ ok: true, type: "start_handled" });
     }
 
