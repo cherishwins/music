@@ -222,6 +222,24 @@ curl https://creative-hub-virid.vercel.app/api/minter-score/UQBZenh5TFhBoxH4VPv1
 
 ## URGENT (Do Today)
 
+### 📢 ADD BOTS TO @MEMSEAL CHANNEL (5 minutes)
+
+**Problem:** I can't post promotional content because the bots aren't channel admins.
+
+**The @MemeSeal channel exists** (ID: -1003169345439) but MSUCOBot gets "bot is not a member of the channel chat" error.
+
+**To Fix (in Telegram):**
+1. **Open @MemeSeal** in Telegram
+2. **Go to Channel Settings → Administrators**
+3. **Add @MSUCOBot as Admin** with "Post Messages" permission
+4. **Add @MemeSealTON_bot** too (for backup)
+
+**After you do this, Claude can:**
+- Auto-post new features & updates
+- Announce Anthem Wars competitions
+- Share user-generated content
+- Cross-promote ecosystem products
+
 ### 🐯 RUG SCORE MARKETING (Revenue Target: $100 in 2 weeks)
 
 **Scammer detection is LIVE!** 112 known scammers in database. Ready to market.
