@@ -19,6 +19,7 @@
     "@react-three/drei": "^9.120.0",
     "@react-three/fiber": "^8.17.0",
     "@react-three/postprocessing": "^2.16.0",
+    "@tanstack/react-query": "^5.90.16",
     "@telegram-apps/sdk": "^3.11.8",
     "@tonconnect/ui-react": "^2.0.9",
     "@twa-dev/sdk": "^7.10.0",
@@ -40,6 +41,7 @@
     "tailwind-merge": "^2.5.0",
     "three": "^0.170.0",
     "viem": "^2.43.3",
+    "wagmi": "^3.1.4",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

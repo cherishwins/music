@@ -2,6 +2,9 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider } from "wagmi";
+import { wagmiConfig } from "@/lib/wallet-config";
 
 const manifestUrl =
   typeof window !== "undefined"
@@ -14,6 +17,7 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   const [mounted, setMounted] = useState(false);
+  const [queryClient] = useState(() => new QueryClient());
 
   useEffect(() => {
     setMounted(true);
@@ -37,9 +41,13 @@ export function Providers({ children }: ProvidersProps) {
   }
 
   return (
-    <TonConnectUIProvider manifestUrl={manifestUrl}>
-      {children}
-    </TonConnectUIProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <TonConnectUIProvider manifestUrl={manifestUrl}>
+          {children}
+        </TonConnectUIProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 
