@@ -12,6 +12,7 @@
     "@ai-sdk/google": "^3.0.1",
     "@ai-sdk/xai": "^3.0.2",
     "@anthropic-ai/sdk": "^0.71.2",
+    "@coinbase/cdp-sdk": "^1.40.1",
     "@coinbase/onchainkit": "^1.1.2",
     "@libsql/client": "^0.15.15",
     "@mux/mux-player-react": "^3.2.0",
@@ -56,6 +57,7 @@
     "eslint-config-next": "14.2.21",
     "postcss": "^8.4.49",
     "sharp": "^0.34.5",
+    "solc": "^0.8.33",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.21.0",
     "typescript": "^5.7.0"
