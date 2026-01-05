@@ -793,3 +793,8 @@ export type OutreachLog = typeof outreachLogs.$inferSelect;
 export type NewOutreachLog = typeof outreachLogs.$inferInsert;
 export type CompetitionWeek = typeof competitionWeeks.$inferSelect;
 export type NewCompetitionWeek = typeof competitionWeeks.$inferInsert;
+
+// ============================================
+// RE-EXPORT CROSS-APP EXTENSIONS
+// ============================================
+export * from "./schema-extensions";
