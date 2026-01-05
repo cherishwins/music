@@ -15,6 +15,7 @@ import {
   Zap,
   Star,
   Terminal,
+  Mic,
 } from "lucide-react";
 
 const navLinks = [
@@ -55,6 +56,13 @@ const navLinks = [
     icon: Terminal,
     description: "Ecosystem Control",
     badge: "OPS",
+  },
+  {
+    name: "Voice AI",
+    href: "/voice",
+    icon: Mic,
+    description: "Talk to the Tiger",
+    badge: "NEW",
   },
 ];
 
