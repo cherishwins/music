@@ -19,7 +19,7 @@ import { generateSpeech, VOICES } from '@/lib/voice'
 // Transcribe audio using OpenAI Whisper
 async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
   const formData = new FormData()
-  const audioBlob = new Blob([audioBuffer], { type: 'audio/webm' })
+  const audioBlob = new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' })
   formData.append('file', audioBlob, 'audio.webm')
   formData.append('model', 'whisper-1')
   formData.append('language', 'en')
@@ -44,7 +44,7 @@ async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
 // Alternative: Use Groq for faster transcription
 async function transcribeWithGroq(audioBuffer: Buffer): Promise<string> {
   const formData = new FormData()
-  const audioBlob = new Blob([audioBuffer], { type: 'audio/webm' })
+  const audioBlob = new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' })
   formData.append('file', audioBlob, 'audio.webm')
   formData.append('model', 'whisper-large-v3')
 
