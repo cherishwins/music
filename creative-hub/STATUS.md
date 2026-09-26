@@ -54,21 +54,21 @@
 All in `/home/jesse/dev/projects/personal/music/creative-hub/.env`:
 
 ```
-TELEGRAM_BOT_TOKEN=7715188456:AAH...  (MSUCOBot)
+TELEGRAM_BOT_TOKEN=<bot-token>  (MSUCOBot)
 NEXT_PUBLIC_TON_WALLET_ADDRESS=UQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf
 
 TURSO_DATABASE_URL=libsql://msuco-lyrics-db-jpanda.aws-us-east-1.turso.io
-TURSO_AUTH_TOKEN=eyJhbGciOiJFZERTQS...
+TURSO_AUTH_TOKEN=<turso-auth-token>
 
 QDRANT_URL=https://fd0f714a-fc22-4577-a32a-19f0980f6f2d.us-east4-0.gcp.cloud.qdrant.io:6333
-QDRANT_API_KEY=eyJhbGciOiJIUzI1NiIs...
+QDRANT_API_KEY=<qdrant-api-key>
 
 X402_ENABLED=true
 X402_PAYMENT_ADDRESS=0x14E6076eAC2420e56b4E2E18c815b2DD52264D54  (Base USDC)
 
-ELEVENLABS_API_KEY=sk_14e8...
-ANTHROPIC_API_KEY=sk-ant-api03-Kc2f...
-REPLICATE_API_TOKEN=r8_8UlA5...
+ELEVENLABS_API_KEY=<elevenlabs-api-key>
+ANTHROPIC_API_KEY=<anthropic-api-key>
+REPLICATE_API_TOKEN=<replicate-api-token>
 ```
 
 ---
