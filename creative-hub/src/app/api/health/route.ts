@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { QdrantClient } from "@qdrant/js-client-rest";
 
+// Report runtime state on every request, never a snapshot taken at build time
+export const dynamic = "force-dynamic";
+
 /**
  * Health check endpoint for all services
  * GET /api/health
