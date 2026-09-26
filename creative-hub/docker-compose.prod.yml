@@ -1,0 +1,47 @@
+# White Tiger on one shared box, behind the host's Caddy reverse proxy.
+#
+# There is no database or worker container here: Turso (libSQL) and Qdrant are
+# hosted services, and the Telegram bot runs as webhook routes inside this same
+# Next.js server. So this file is the web app and nothing else.
+#
+#   cp .env.example .env    # fill in the real secrets (runtime only)
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# NEXT_PUBLIC_* are build args (Next inlines them). Change one -> rebuild:
+#   docker compose -f docker-compose.prod.yml up -d --build
+# Everything else is runtime env from .env and never enters an image layer.
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        NEXT_PUBLIC_TON_WALLET_ADDRESS: ${NEXT_PUBLIC_TON_WALLET_ADDRESS:-}
+        NEXT_PUBLIC_TON_PAYMENT_ADDRESS: ${NEXT_PUBLIC_TON_PAYMENT_ADDRESS:-}
+        NEXT_PUBLIC_TON_MANIFEST_URL: ${NEXT_PUBLIC_TON_MANIFEST_URL:-}
+        NEXT_PUBLIC_COINBASE_PROJECT_ID: ${NEXT_PUBLIC_COINBASE_PROJECT_ID:-}
+        NEXT_PUBLIC_N8N_CONTENT_CREATED_WEBHOOK: ${NEXT_PUBLIC_N8N_CONTENT_CREATED_WEBHOOK:-}
+        NEXT_PUBLIC_N8N_SOCIAL_DISTRIBUTE_WEBHOOK: ${NEXT_PUBLIC_N8N_SOCIAL_DISTRIBUTE_WEBHOOK:-}
+        NEXT_PUBLIC_N8N_USER_SIGNUP_WEBHOOK: ${NEXT_PUBLIC_N8N_USER_SIGNUP_WEBHOOK:-}
+        NEXT_PUBLIC_N8N_PAYMENT_COMPLETE_WEBHOOK: ${NEXT_PUBLIC_N8N_PAYMENT_COMPLETE_WEBHOOK:-}
+        NEXT_PUBLIC_N8N_ANALYTICS_WEBHOOK: ${NEXT_PUBLIC_N8N_ANALYTICS_WEBHOOK:-}
+    restart: unless-stopped
+    # Runtime secrets: Telegram, Turso, Qdrant, ElevenLabs, Anthropic, Replicate,
+    # x402, Stripe, Coinbase, Mux, CRON_SECRET. See .env.example.
+    env_file:
+      - .env
+    # Publish to loopback only; Caddy on the host terminates TLS and proxies in.
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 25s
+      retries: 3
