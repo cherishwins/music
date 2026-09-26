@@ -244,17 +244,19 @@ export async function canGenerateFree(userId?: string | null): Promise<{
   reason: "first_free" | "tier_limit" | "limit_reached" | "must_pay";
   remainingFree?: number;
 }> {
-  // No user = first generation is always free
+  // No user = no free generation. Without a known account there is nothing
+  // to mark as used, so every anonymous request would count as "first".
   if (!userId) {
-    return { allowed: true, reason: "first_free" };
+    return { allowed: false, reason: "must_pay" };
   }
 
   const user = await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.id, userId),
   });
 
+  // User ids are server-generated UUIDs, so an unknown id is made up
   if (!user) {
-    return { allowed: true, reason: "first_free" };
+    return { allowed: false, reason: "must_pay" };
   }
 
   // Check if they've used their free first generation

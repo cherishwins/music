@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { costEvents, transactions, dailyMetrics } from "@/lib/db/schema";
 import { sql, desc, gte, and, eq, sum } from "drizzle-orm";
+import { requireAdmin } from "@/lib/auth";
 
 // Cost rates per service (2025 pricing)
 const COST_RATES = {
@@ -66,6 +67,9 @@ const FREE_TIER_LIMITS = {
 };
 
 export async function GET(request: NextRequest) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     // Get period from query params (default: current month)
     const searchParams = request.nextUrl.searchParams;
@@ -227,6 +231,9 @@ export async function GET(request: NextRequest) {
 
 // Helper to log a cost event
 export async function POST(request: NextRequest) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     const body = await request.json();
 

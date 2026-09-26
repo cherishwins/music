@@ -87,8 +87,15 @@ export async function settleUsdcPayment(params: {
 
   // Method 2: Verify direct USDC transfer (if tx hash provided)
   if (!verified && txHash) {
-    const treasury = (process.env.X402_PAYMENT_ADDRESS ||
-      "0x14E6076eAC2420e56b4E2E18c815b2DD52264D54") as `0x${string}`;
+    const treasury = process.env.X402_PAYMENT_ADDRESS as `0x${string}` | undefined;
+    if (!treasury) {
+      return {
+        success: false,
+        orderId: invoiceId,
+        status: "failed",
+        error: "X402_PAYMENT_ADDRESS is not configured",
+      };
+    }
     const directVerify = await verifyUsdcTransfer(
       txHash,
       treasury,

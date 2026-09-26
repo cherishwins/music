@@ -9,6 +9,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+
+// Adding and deleting voices spends and changes the operator's ElevenLabs
+// account, so every method here is operator-only.
 
 const ELEVENLABS_API_BASE = "https://api.elevenlabs.io/v1";
 
@@ -21,6 +25,9 @@ function getApiKey(): string {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     const formData = await request.formData();
     const name = formData.get("name") as string;
@@ -150,6 +157,9 @@ export async function POST(request: NextRequest) {
 
 // Get user's cloned voices
 export async function GET(request: NextRequest) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     const userId = request.nextUrl.searchParams.get("userId");
 
@@ -208,6 +218,9 @@ export async function GET(request: NextRequest) {
 
 // Delete a cloned voice
 export async function DELETE(request: NextRequest) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     const { voiceId, userId } = await request.json();
 

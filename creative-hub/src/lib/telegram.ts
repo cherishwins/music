@@ -44,6 +44,17 @@ export const STAR_PLANS = {
 export type PlanId = keyof typeof STAR_PLANS;
 
 /**
+ * Look up a plan by id. Unknown ids (including inherited keys such as
+ * "constructor") return undefined, so callers can reject them.
+ */
+export function getStarPlan(planId: unknown) {
+  if (typeof planId !== "string" || !Object.hasOwn(STAR_PLANS, planId)) {
+    return undefined;
+  }
+  return STAR_PLANS[planId as PlanId];
+}
+
+/**
  * Create a Telegram Stars invoice link
  */
 export async function createStarsInvoice(

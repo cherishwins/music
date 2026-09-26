@@ -9,6 +9,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { verifyUsdcTransfer } from "@/lib/cdp-wallet";
 import { settleUsdcPayment, processOrder } from "@/lib/settlement";
 import { ProductId } from "@/lib/cdp-wallet";
+import { safeEqual } from "@/lib/auth";
 
 // Webhook payload from x402 facilitator
 interface X402WebhookPayload {
@@ -24,18 +25,28 @@ interface X402WebhookPayload {
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify webhook signature. Fails closed: no secret, no signature, or a
+    // wrong signature is never processed.
+    const webhookSecret = process.env.X402_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      console.error("[x402 Webhook] X402_WEBHOOK_SECRET is not configured");
+      return NextResponse.json(
+        { error: "Webhook not configured" },
+        { status: 503 }
+      );
+    }
+
     const payload: X402WebhookPayload = await request.json();
 
-    // Verify webhook signature if configured
-    const webhookSecret = process.env.X402_WEBHOOK_SECRET;
-    if (webhookSecret && payload.signature) {
-      const expectedSig = await computeSignature(payload, webhookSecret);
-      if (payload.signature !== expectedSig) {
-        return NextResponse.json(
-          { error: "Invalid signature" },
-          { status: 401 }
-        );
-      }
+    const expectedSig = await computeSignature(payload, webhookSecret);
+    if (
+      typeof payload.signature !== "string" ||
+      !safeEqual(payload.signature, expectedSig)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid signature" },
+        { status: 401 }
+      );
     }
 
     console.log("[x402 Webhook]", {
@@ -75,8 +86,14 @@ async function handlePaymentConfirmed(payload: X402WebhookPayload) {
   const txHash = payload.txHash as `0x${string}`;
 
   // Verify on-chain (belt and suspenders)
-  const treasury = (process.env.X402_PAYMENT_ADDRESS ||
-    "0x14E6076eAC2420e56b4E2E18c815b2DD52264D54") as `0x${string}`;
+  const treasury = process.env.X402_PAYMENT_ADDRESS as `0x${string}` | undefined;
+  if (!treasury) {
+    console.error("[x402 Webhook] X402_PAYMENT_ADDRESS is not configured");
+    return NextResponse.json(
+      { error: "Payment not configured" },
+      { status: 503 }
+    );
+  }
   const verification = await verifyUsdcTransfer(txHash, treasury, BigInt(0));
 
   if (!verification.verified) {

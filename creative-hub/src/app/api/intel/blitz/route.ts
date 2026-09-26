@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SwarmController } from "@/lib/intel/swarm-controller";
 import { SocialBlitz, BlitzConfig, BlitzTargets } from "@/lib/intel/social-blitz";
 import { DistributionChannels } from "@/lib/intel/distribution-channels";
+import { requireAdmin } from "@/lib/auth";
 
 /**
  * Intelligence Blitz API
@@ -90,6 +91,10 @@ function getDistributionConfig() {
 }
 
 export async function POST(request: NextRequest) {
+  // Publishes through the operator's own social accounts: operator-only
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     const body = await request.json();
     const { action } = body;
@@ -239,7 +244,10 @@ export async function POST(request: NextRequest) {
 }
 
 // GET - Status and available platforms
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   const blitzConfig = getBlitzConfig();
   const distConfig = getDistributionConfig();
 
