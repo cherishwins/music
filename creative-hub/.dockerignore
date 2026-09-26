@@ -1,0 +1,44 @@
+# VCS / CI
+.git
+.github
+
+# Dependencies and build output (reinstalled/rebuilt inside the image)
+node_modules
+.pnpm-store
+.next
+out
+build
+
+# Secrets — never copy any local env file into an image layer
+.env
+.env.*
+!.env.example
+
+# Local backups / caches. NOTE: creative-hub/data/ is NOT ignored — it holds
+# committed JSON datasets (ton-labels-compiled.json, scammer-addresses.json)
+# that the app imports at build time.
+backups
+coverage
+.nyc_output
+*.tsbuildinfo
+next-env.d.ts
+
+# Tooling not needed to build or run the web app
+mcp-server
+scripts
+contracts
+research
+docs
+skills
+
+# Editor / OS cruft
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
