@@ -48,3 +48,14 @@ export function requireAdmin(request: NextRequest): NextResponse | null {
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
   return requireSharedSecret(token, process.env.ADMIN_TOKEN, "ADMIN_TOKEN");
 }
+
+/**
+ * Paid-order fulfilment: lib/settlement.ts calls the generate routes itself
+ * once an order is paid, sending SETTLEMENT_SECRET in X-INTERNAL-SETTLEMENT.
+ * True only when the secret is configured and matches; unset never matches.
+ */
+export function isInternalSettlement(request: NextRequest): boolean {
+  const secret = process.env.SETTLEMENT_SECRET;
+  const presented = request.headers.get("x-internal-settlement");
+  return Boolean(secret && presented && safeEqual(presented, secret));
+}
