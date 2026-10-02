@@ -8,7 +8,14 @@ import {
 } from "@/lib/voice";
 import { requirePayment } from "@/lib/x402";
 import { getMasterDJ } from "@/lib/master-dj";
-import { trackFunnelEvent, canGenerateFree, markFreeGenerationUsed, generateId } from "@/lib/db";
+import {
+  trackFunnelEvent,
+  canGenerateFree,
+  markFreeGenerationUsed,
+  incrementGenerations,
+  generateId,
+} from "@/lib/db";
+import { isInternalSettlement } from "@/lib/auth";
 import { applyWatermark, quickWatermark } from "@/lib/watermark";
 
 export async function POST(request: NextRequest) {
@@ -30,14 +37,22 @@ export async function POST(request: NextRequest) {
       userAgent: request.headers.get("user-agent") || undefined,
     }).catch(() => {}); // Don't fail on tracking errors
 
-    // Check if user qualifies for free generation
-    const freeCheck = await canGenerateFree(userId);
+    // Free-tier eligibility needs a verified identity. x-user-id is a plain
+    // header and user ids are public (GET /api/leaderboard), so it is used
+    // for tracking only. Nothing verified reaches this route yet, so nobody
+    // qualifies for the free tier here.
+    const verifiedUserId: string | null = null;
+    const freeCheck = await canGenerateFree(verifiedUserId);
 
     // Determine if payment is required
     let requiresPayment = false;
     let isWatermarked = true;
 
-    if (process.env.X402_ENABLED === "true") {
+    const isPaidOrder = isInternalSettlement(request);
+    if (isPaidOrder) {
+      // A paid order being fulfilled by lib/settlement.ts
+      isWatermarked = false;
+    } else if (process.env.X402_ENABLED === "true") {
       if (freeCheck.allowed && freeCheck.reason === "first_free") {
         // First generation is free! Zero-friction onboarding
         requiresPayment = false;
@@ -170,10 +185,8 @@ export async function POST(request: NextRequest) {
           viralAudio = watermarkResult.buffer;
         }
 
-        // Mark first free generation as used
-        if (userId && freeCheck.reason === "first_free") {
-          await markFreeGenerationUsed(userId).catch(() => {});
-        }
+        // Use up the free allowance that was served
+        if (!isPaidOrder) await recordFreeUse(verifiedUserId, freeCheck.reason);
 
         // Track generation complete
         await trackFunnelEvent({
@@ -216,10 +229,8 @@ export async function POST(request: NextRequest) {
       finalAudio = watermarkResult.buffer;
     }
 
-    // Mark first free generation as used
-    if (userId && freeCheck.reason === "first_free") {
-      await markFreeGenerationUsed(userId).catch(() => {});
-    }
+    // Use up the free allowance that was served
+    if (!isPaidOrder) await recordFreeUse(verifiedUserId, freeCheck.reason);
 
     // Track generation complete
     await trackFunnelEvent({
@@ -248,6 +259,22 @@ export async function POST(request: NextRequest) {
     const message =
       error instanceof Error ? error.message : "Failed to generate music";
     return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+/**
+ * Use up the free allowance a generation was served under, so that tier
+ * limits run out instead of granting unlimited free generations.
+ */
+async function recordFreeUse(
+  userId: string | null,
+  reason: Awaited<ReturnType<typeof canGenerateFree>>["reason"]
+) {
+  if (!userId) return;
+  if (reason === "first_free") {
+    await markFreeGenerationUsed(userId).catch(() => {});
+  } else if (reason === "tier_limit") {
+    await incrementGenerations(userId).catch(() => {});
   }
 }
 

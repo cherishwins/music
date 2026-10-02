@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateMusic as generateWithFal } from '@/lib/minimax';
 import { generateFullSong } from '@/lib/voice';
 import { applyWatermark } from '@/lib/watermark';
+import { requirePayment } from '@/lib/x402';
 import {
   formatGenrePrompt,
   VIRAL_CONFIG,
@@ -104,7 +105,24 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnthemRes
 
     // Get tier config (legacy preferCheap maps to 'good')
     const effectiveTier: PricingTier = preferCheap ? 'good' : tier;
+    if (!Object.hasOwn(TIER_CONFIG, effectiveTier)) {
+      return NextResponse.json({
+        success: false,
+        error: `Invalid tier. Available: ${Object.keys(TIER_CONFIG).join(', ')}`,
+      }, { status: 400 });
+    }
     const tierConfig = TIER_CONFIG[effectiveTier];
+
+    // Paid tiers go through the same x402 gate as every other paid route
+    if (tierConfig.price > 0 && process.env.X402_ENABLED === 'true') {
+      const paymentResponse = await requirePayment(request, '/api/generate/anthem', {
+        price: `$${tierConfig.price.toFixed(2)}`,
+        description: `Generate meme coin anthem (${effectiveTier} tier)`,
+      });
+      if (paymentResponse) {
+        return paymentResponse as NextResponse<AnthemResponse>;
+      }
+    }
 
     // Get tempo based on vibe type
     const tempoConfig = VIRAL_CONFIG.tempo[vibeType];

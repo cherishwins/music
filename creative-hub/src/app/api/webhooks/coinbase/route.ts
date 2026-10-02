@@ -9,6 +9,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { settleUsdcPayment, processOrder } from "@/lib/settlement";
 import { ProductId } from "@/lib/cdp-wallet";
+import { safeEqual } from "@/lib/auth";
 
 // Coinbase Commerce webhook event
 interface CoinbaseWebhookEvent {
@@ -52,24 +53,30 @@ interface CoinbaseWebhookEvent {
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify signature. Fails closed: no secret, no signature, or a wrong
+    // signature is never processed.
+    const webhookSecret = process.env.COINBASE_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      console.error("[Coinbase Webhook] COINBASE_WEBHOOK_SECRET is not configured");
+      return NextResponse.json(
+        { error: "Webhook not configured" },
+        { status: 503 }
+      );
+    }
+
     const signature = request.headers.get("X-CC-Webhook-Signature");
     const rawBody = await request.text();
+    const computedSig = crypto
+      .createHmac("sha256", webhookSecret)
+      .update(rawBody)
+      .digest("hex");
 
-    // Verify signature
-    const webhookSecret = process.env.COINBASE_WEBHOOK_SECRET;
-    if (webhookSecret && signature) {
-      const computedSig = crypto
-        .createHmac("sha256", webhookSecret)
-        .update(rawBody)
-        .digest("hex");
-
-      if (signature !== computedSig) {
-        console.error("[Coinbase Webhook] Invalid signature");
-        return NextResponse.json(
-          { error: "Invalid signature" },
-          { status: 401 }
-        );
-      }
+    if (!signature || !safeEqual(signature, computedSig)) {
+      console.error("[Coinbase Webhook] Missing or invalid signature");
+      return NextResponse.json(
+        { error: "Invalid signature" },
+        { status: 401 }
+      );
     }
 
     const event: CoinbaseWebhookEvent = JSON.parse(rawBody);

@@ -20,6 +20,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  // Absolute base for OG/Twitter image URLs (inlined at build time)
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: "JPanda Ecosystem | Degen Music Studio & Rug Score",
   description:
     "The complete degen toolkit. Create AI music, check token safety, build brands, and launch to the moon. White Tiger Studio, Rug Pull Insurance, Brand Forge, and more.",

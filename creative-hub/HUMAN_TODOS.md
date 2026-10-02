@@ -63,7 +63,7 @@ curl https://notaryton.com/api/v1/rugscore/EQB4XClemsAbLvlDjobh-VjUn7oEy9CITWPoG
 
 ## 💰 RUNWAY & COST DASHBOARD (Check Weekly)
 
-**API Endpoint:** `https://creative-hub-virid.vercel.app/api/admin/costs?period=month`
+**API Endpoint:** `https://creative-hub-virid.vercel.app/api/admin/costs?period=month` (needs `Authorization: Bearer $ADMIN_TOKEN`)
 
 | Metric | Value | Status |
 |--------|-------|--------|
@@ -85,7 +85,7 @@ curl https://notaryton.com/api/v1/rugscore/EQB4XClemsAbLvlDjobh-VjUn7oEy9CITWPoG
 
 **Per Track Cost:** ~$0.23 (music + AI + storage)
 
-> 📊 **Weekly Check:** Hit the API endpoint or run `curl https://creative-hub-virid.vercel.app/api/admin/costs`
+> 📊 **Weekly Check:** Hit the API endpoint or run `curl -H "Authorization: Bearer $ADMIN_TOKEN" https://creative-hub-virid.vercel.app/api/admin/costs`
 
 ---
 

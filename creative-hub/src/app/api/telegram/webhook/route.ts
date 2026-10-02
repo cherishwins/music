@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parsePaymentPayload, sendMessage, STAR_PLANS } from "@/lib/telegram";
+import { getStarPlan, parsePaymentPayload, sendMessage } from "@/lib/telegram";
 import { db, getOrCreateUser, recordRevenue, generateId } from "@/lib/db";
+import { requireSharedSecret } from "@/lib/auth";
 import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 // Telegram sends updates here when payments complete
 export async function POST(request: NextRequest) {
+  // Only Telegram knows the secret_token given to setWebhook. Anything else
+  // could forge a successful_payment and credit itself.
+  const denied = requireSharedSecret(
+    request.headers.get("X-Telegram-Bot-Api-Secret-Token"),
+    process.env.TELEGRAM_WEBHOOK_SECRET,
+    "TELEGRAM_WEBHOOK_SECRET"
+  );
+  if (denied) return denied;
+
   try {
     const update = await request.json();
     console.log("Telegram update:", JSON.stringify(update, null, 2));
@@ -28,6 +38,17 @@ export async function POST(request: NextRequest) {
         telegramUserId: telegramUser?.id,
       });
 
+      // Credits come from our own plan table, never from the payload
+      const plan = getStarPlan(payload.planId);
+      if (!plan) {
+        console.error("Payment for unknown plan - not credited:", {
+          planId: payload.planId,
+          chargeId: payment.telegram_payment_charge_id,
+          telegramUserId: telegramUser?.id,
+        });
+        return NextResponse.json({ ok: false, error: "unknown_plan" });
+      }
+
       // Get or create user in database
       const user = await getOrCreateUser({
         id: telegramUser.id,
@@ -37,8 +58,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Add credits to user's account
-      const plan = STAR_PLANS[payload.planId];
-      const creditsToAdd = plan?.credits || payload.credits;
+      const creditsToAdd = plan.credits;
 
       await db
         .update(schema.users)
@@ -79,7 +99,7 @@ export async function POST(request: NextRequest) {
       await sendMessage(
         chatId,
         `<b>✅ Payment Received!</b>\n\n` +
-          `Plan: ${plan?.title || payload.planId}\n` +
+          `Plan: ${plan.title}\n` +
           `Credits Added: <b>+${creditsToAdd}</b>\n` +
           `New Balance: <b>${user.credits + creditsToAdd} credits</b>\n\n` +
           `Your credits are ready. Start creating! 🎨`
@@ -93,7 +113,16 @@ export async function POST(request: NextRequest) {
       const query = update.pre_checkout_query;
       console.log("Pre-checkout query:", query.id);
 
-      // Answer the pre-checkout query to confirm the payment
+      // Refuse plans we do not sell before the user is charged: a payment
+      // for an unknown plan would never be credited.
+      let plan;
+      try {
+        plan = getStarPlan(parsePaymentPayload(query.invoice_payload).planId);
+      } catch {
+        plan = undefined;
+      }
+
+      // Answer the pre-checkout query to confirm (or refuse) the payment
       const botToken = process.env.TELEGRAM_BOT_TOKEN;
       await fetch(
         `https://api.telegram.org/bot${botToken}/answerPreCheckoutQuery`,
@@ -102,7 +131,8 @@ export async function POST(request: NextRequest) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             pre_checkout_query_id: query.id,
-            ok: true,
+            ok: !!plan,
+            error_message: plan ? undefined : "Unknown plan",
           }),
         }
       );

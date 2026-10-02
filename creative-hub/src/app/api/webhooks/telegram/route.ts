@@ -10,6 +10,7 @@ import { settleUsdcPayment, processOrder } from "@/lib/settlement";
 import { ProductId } from "@/lib/cdp-wallet";
 import { db } from "@/lib/db";
 import { transactions } from "@/lib/db/schema";
+import { requireSharedSecret } from "@/lib/auth";
 
 // Telegram Stars payment update
 interface TelegramPaymentUpdate {
@@ -35,17 +36,18 @@ interface TelegramPaymentUpdate {
 
 export async function POST(request: NextRequest) {
   try {
-    const rawBody = await request.text();
-
-    // Verify Telegram secret token
-    const secretToken = request.headers.get("X-Telegram-Bot-Api-Secret-Token");
-    const expectedToken = process.env.TELEGRAM_WEBHOOK_SECRET;
-
-    if (expectedToken && secretToken !== expectedToken) {
-      console.error("[Telegram Webhook] Invalid secret token");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Verify Telegram secret token (fails closed when the secret is unset)
+    const denied = requireSharedSecret(
+      request.headers.get("X-Telegram-Bot-Api-Secret-Token"),
+      process.env.TELEGRAM_WEBHOOK_SECRET,
+      "TELEGRAM_WEBHOOK_SECRET"
+    );
+    if (denied) {
+      console.error("[Telegram Webhook] Rejected:", denied.status);
+      return denied;
     }
 
+    const rawBody = await request.text();
     const update: TelegramPaymentUpdate = JSON.parse(rawBody);
 
     console.log("[Telegram Webhook]", {

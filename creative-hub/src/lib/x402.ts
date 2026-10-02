@@ -37,9 +37,8 @@ export interface PaymentRequirement {
 const FACILITATOR_URL = process.env.X402_FACILITATOR_URL ||
   "https://x402.org/facilitator";
 
-// Our payment receiving address
-const PAYMENT_ADDRESS = process.env.X402_PAYMENT_ADDRESS ||
-  process.env.NEXT_PUBLIC_TON_WALLET_ADDRESS;
+// Our payment receiving address (an EVM address; unset means no x402 payments)
+const PAYMENT_ADDRESS = process.env.X402_PAYMENT_ADDRESS;
 
 // Supported networks
 const SUPPORTED_NETWORKS = {
@@ -79,7 +78,7 @@ export function createPaymentRequiredResponse(
     console.error("No payment address configured");
     return NextResponse.json(
       { error: "Payment not configured" },
-      { status: 500 }
+      { status: 503 }
     );
   }
 
@@ -274,13 +273,14 @@ export const ENDPOINT_PRICING: Record<string, PaymentConfig> = {
 
 /**
  * Check if request has valid payment for endpoint
- * Use this in individual route handlers
+ * Use this in individual route handlers. Routes whose price depends on the
+ * request (e.g. anthem tiers) pass their own config.
  */
 export async function requirePayment(
   request: NextRequest,
-  endpoint: string
+  endpoint: string,
+  config: PaymentConfig | undefined = ENDPOINT_PRICING[endpoint]
 ): Promise<NextResponse | null> {
-  const config = ENDPOINT_PRICING[endpoint];
 
   if (!config) {
     // No pricing configured - allow free access
@@ -289,7 +289,9 @@ export async function requirePayment(
 
   const paymentHeader = request.headers.get("X-PAYMENT");
 
-  if (!paymentHeader) {
+  // With no address to be paid at, refuse before anything reaches the
+  // facilitator (the 402 builder answers "Payment not configured").
+  if (!paymentHeader || !(config.recipient || PAYMENT_ADDRESS)) {
     return createPaymentRequiredResponse(request, config);
   }
 
