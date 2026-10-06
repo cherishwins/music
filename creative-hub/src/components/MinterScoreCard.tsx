@@ -75,6 +75,10 @@ export function MinterScoreCard({ walletAddress, tokenAddress, compact = false }
         }
 
         const result = await res.json();
+        // No grade without the data behind it
+        if (result.data?.available === false) {
+          throw new Error(result.data.reason || "Rug score unavailable");
+        }
         setData(result.data);
       } catch (e) {
         setError(e instanceof Error ? e.message : "An error occurred");

@@ -1,6 +1,9 @@
 /**
  * TonAPI Integration for TON Blockchain Data
  * Provides wallet info, transaction history, and jetton data
+ *
+ * A failed call returns success: false. It never falls back to invented
+ * data: these results feed risk scores about real addresses.
  */
 
 export interface TonWalletInfo {
@@ -105,8 +108,10 @@ class TonApiClient {
       return { success: true, data };
     } catch (error) {
       console.error("[TonAPI] API Error at", endpoint, ":", error);
-      // Return mock data for development
-      return this.getMockData<T>(endpoint);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "TonAPI request failed",
+      };
     }
   }
 
@@ -160,6 +165,10 @@ class TonApiClient {
 
       // Get jetton transfers to identify token deployments
       const jettonResponse = await this.getJettonTransfers(walletAddress, 100);
+      if (!jettonResponse.success) {
+        // Without it every wallet would look like a minter with no history
+        return { success: false, error: "Failed to fetch jetton transfers" };
+      }
 
       // Analyze transactions for token creation patterns
       // Token creation on TON typically involves:
@@ -216,80 +225,6 @@ class TonApiClient {
         error: error instanceof Error ? error.message : "Failed to analyze minter history",
       };
     }
-  }
-
-  /**
-   * Mock data for development/fallback
-   */
-  private getMockData<T>(endpoint: string): TonAPIResponse<T> {
-    const addressMatch = endpoint.match(/accounts\/([^/]+)/);
-    const address = addressMatch ? addressMatch[1] : "unknown";
-
-    if (endpoint.includes("/events")) {
-      return {
-        success: true,
-        data: {
-          events: Array.from({ length: 10 }, (_, i) => ({
-            hash: `hash_${i}_${Date.now()}`,
-            timestamp: Math.floor(Date.now() / 1000) - i * 3600,
-            from: address,
-            to: `EQ${Math.random().toString(36).slice(2, 42)}`,
-            value: String(Math.floor(Math.random() * 1000000000)),
-            fee: String(Math.floor(Math.random() * 10000000)),
-            success: true,
-            operation: i % 3 === 0 ? "jetton_transfer" : "transfer",
-          })),
-        } as unknown as T,
-      };
-    }
-
-    if (endpoint.includes("/jettons/history")) {
-      return {
-        success: true,
-        data: {
-          events: Array.from({ length: 5 }, (_, i) => ({
-            queryId: `query_${i}`,
-            source: address,
-            destination: `EQ${Math.random().toString(36).slice(2, 42)}`,
-            amount: String(Math.floor(Math.random() * 1000000000)),
-            jettonAddress: `EQ${Math.random().toString(36).slice(2, 42)}`,
-            timestamp: Math.floor(Date.now() / 1000) - i * 86400,
-          })),
-        } as unknown as T,
-      };
-    }
-
-    if (endpoint.includes("/jettons")) {
-      return {
-        success: true,
-        data: {
-          balances: [
-            {
-              jetton: {
-                address: "EQJetton1...",
-                name: "Test Token",
-                symbol: "TEST",
-                decimals: 9,
-              },
-              balance: "1000000000",
-              wallet_address: address,
-            },
-          ],
-        } as unknown as T,
-      };
-    }
-
-    // Default wallet info
-    return {
-      success: true,
-      data: {
-        address,
-        balance: String(Math.floor(Math.random() * 10000000000)),
-        lastActivity: new Date().toISOString(),
-        status: "active",
-        interfaces: ["wallet_v4r2"],
-      } as unknown as T,
-    };
   }
 }
 

@@ -1,6 +1,9 @@
 /**
  * DYOR.io API Integration for TON Token Analysis
  * Provides trust scores, token info, and risk assessment
+ *
+ * Without DYOR_API_KEY every call fails with success: false. These are
+ * statements about real tokens, so nothing here is ever made up.
  */
 
 export interface DYORTrustScore {
@@ -60,9 +63,7 @@ class DYORApiClient {
 
   private async fetch<T>(endpoint: string): Promise<DYORAPIResponse<T>> {
     if (!this.apiKey) {
-      // Return mock data for development
-      console.warn("[DYOR] No API key - returning mock data");
-      return this.getMockData<T>(endpoint);
+      return { success: false, error: "DYOR_API_KEY not configured" };
     }
 
     try {
@@ -117,71 +118,6 @@ class DYORApiClient {
     interval: "1h" | "24h" | "7d" | "30d" = "24h"
   ): Promise<DYORAPIResponse<{ timestamp: number; price: number }[]>> {
     return this.fetch(`/jettons/${tokenAddress}/price-history?interval=${interval}`);
-  }
-
-  /**
-   * Mock data for development when no API key is available
-   */
-  private getMockData<T>(endpoint: string): DYORAPIResponse<T> {
-    // Extract token address from endpoint
-    const addressMatch = endpoint.match(/jettons\/([^/]+)/);
-    const address = addressMatch ? addressMatch[1] : "unknown";
-
-    if (endpoint.includes("trust-score")) {
-      return {
-        success: true,
-        data: {
-          score: Math.floor(Math.random() * 40) + 30, // 30-70 range for mock
-          grade: "C",
-          riskLevel: "MEDIUM",
-          factors: {
-            mintAuthority: Math.random() > 0.5,
-            freezeAuthority: Math.random() > 0.7,
-            liquidityLocked: Math.random() > 0.4,
-            topHolderConcentration: Math.random() * 50 + 20,
-            contractVerified: Math.random() > 0.3,
-            honeypotRisk: Math.random() > 0.8,
-          },
-        } as unknown as T,
-      };
-    }
-
-    if (endpoint.includes("pools")) {
-      return {
-        success: true,
-        data: [
-          {
-            address: `pool_${address.slice(0, 8)}`,
-            dex: "DeDust",
-            token0: address,
-            token1: "TON",
-            liquidity: Math.random() * 100000,
-            volume24h: Math.random() * 50000,
-            locked: Math.random() > 0.5,
-            lockDuration: Math.floor(Math.random() * 365),
-          },
-        ] as unknown as T,
-      };
-    }
-
-    // Default token info
-    return {
-      success: true,
-      data: {
-        address,
-        name: "Mock Token",
-        symbol: "MOCK",
-        decimals: 9,
-        totalSupply: "1000000000",
-        price: Math.random() * 0.001,
-        priceChange24h: (Math.random() - 0.5) * 50,
-        marketCap: Math.random() * 100000,
-        liquidity: Math.random() * 50000,
-        holders: Math.floor(Math.random() * 1000) + 100,
-        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-        deployer: `EQ${address.slice(0, 40)}...`,
-      } as unknown as T,
-    };
   }
 }
 

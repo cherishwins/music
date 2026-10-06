@@ -243,6 +243,7 @@ const GRADES = {
 type Grade = keyof typeof GRADES;
 
 export interface MinterCreditScore {
+  available: true;
   score: number; // 0-1000
   grade: Grade;
   gradeInfo: (typeof GRADES)[Grade];
@@ -261,6 +262,8 @@ export interface MinterCreditScore {
     safety: {
       score: number;
       weight: 0.4;
+      /** false when no token trust score was fetched: details are defaults, not findings */
+      measured: boolean;
       details: {
         mintAuthority: boolean;
         freezeAuthority: boolean;
@@ -294,13 +297,40 @@ export interface MinterCreditScore {
   };
 }
 
+/**
+ * What we return when the data a score is built from could not be fetched.
+ * No score, no grade: an invented rating of a real address is worse than
+ * none. Only ton-labels findings (a published dataset) are passed through.
+ */
+export interface UnavailableMinterScore {
+  available: false;
+  reason: string;
+  warnings: string[];
+  analyzedAt: string;
+  entityInfo?: MinterCreditScore["entityInfo"];
+}
+
+export type MinterScoreResult = MinterCreditScore | UnavailableMinterScore;
+
 export interface TokenAnalysis {
   tokenAddress: string;
   minterAddress: string;
   tokenInfo: DYORTokenInfo | null;
   trustScore: DYORTrustScore | null;
   pools: DYORPoolInfo[];
-  minterScore: MinterCreditScore;
+  minterScore: MinterScoreResult;
+}
+
+function entityInfoFor(
+  addressLabels: ReturnType<typeof getAddressLabels>
+): MinterCreditScore["entityInfo"] {
+  return addressLabels.isLabeled ? {
+    category: addressLabels.category,
+    label: addressLabels.label?.label,
+    organization: addressLabels.label?.organization,
+    website: addressLabels.label?.website,
+    trustFlags: addressLabels.trustFlags,
+  } : undefined;
 }
 
 /**
@@ -309,7 +339,7 @@ export interface TokenAnalysis {
 export async function calculateMinterScore(
   walletAddress: string,
   tokenAddress?: string
-): Promise<MinterCreditScore> {
+): Promise<MinterScoreResult> {
   // Check ton-labels for known entities FIRST
   const addressLabels = getAddressLabels(walletAddress);
 
@@ -321,6 +351,25 @@ export async function calculateMinterScore(
       ? dyorApi.getTrustScore(tokenAddress)
       : Promise.resolve({ success: false, data: undefined }),
   ]);
+
+  // Score only from real data. A missing source would otherwise be filled
+  // with defaults and still produce a grade for a real address.
+  const missing: string[] = [];
+  if (!minterHistoryRes.success || !walletInfoRes.success) {
+    missing.push("TON chain data (TonAPI)");
+  }
+  if (tokenAddress && !trustScoreRes.success) {
+    missing.push("token safety data (DYOR)");
+  }
+  if (missing.length > 0) {
+    return {
+      available: false,
+      reason: `Rug score unavailable: could not fetch ${missing.join(" or ")}.`,
+      warnings: addressLabels.riskFlags,
+      analyzedAt: new Date().toISOString(),
+      entityInfo: entityInfoFor(addressLabels),
+    };
+  }
 
   const minterHistory = minterHistoryRes.data;
   const walletInfo = walletInfoRes.data;
@@ -384,6 +433,7 @@ export async function calculateMinterScore(
   }
 
   return {
+    available: true,
     score: finalScore,
     grade,
     gradeInfo: GRADES[grade],
@@ -397,6 +447,7 @@ export async function calculateMinterScore(
       safety: {
         score: safetyScore.score,
         weight: 0.4,
+        measured: safetyScore.measured,
         details: safetyScore.details,
       },
       behavior: {
@@ -409,13 +460,7 @@ export async function calculateMinterScore(
     warnings,
     analyzedAt: new Date().toISOString(),
     // Add new fields for UI
-    entityInfo: addressLabels.isLabeled ? {
-      category: addressLabels.category,
-      label: addressLabels.label?.label,
-      organization: addressLabels.label?.organization,
-      website: addressLabels.label?.website,
-      trustFlags: addressLabels.trustFlags,
-    } : undefined,
+    entityInfo: entityInfoFor(addressLabels),
   };
 }
 
@@ -496,12 +541,14 @@ function calculateHistoryScore(history?: MinterHistory): {
 
 function calculateSafetyScore(trustScore?: DYORTrustScore): {
   score: number;
+  measured: boolean;
   details: MinterCreditScore["components"]["safety"]["details"];
 } {
   if (!trustScore) {
     // No token to analyze - return neutral
     return {
       score: 50,
+      measured: false,
       details: {
         mintAuthority: false,
         freezeAuthority: false,
@@ -534,6 +581,7 @@ function calculateSafetyScore(trustScore?: DYORTrustScore): {
 
   return {
     score: Math.max(0, Math.min(100, score)),
+    measured: true,
     details: {
       mintAuthority: factors.mintAuthority,
       freezeAuthority: factors.freezeAuthority,
@@ -621,23 +669,26 @@ function generateWarnings(
     warnings.push("Short-lived tokens: Average lifespan under 7 days");
   }
 
-  // Safety warnings
-  if (safety.details.mintAuthority) {
-    warnings.push("CRITICAL: Mint authority enabled - can create unlimited tokens");
-  }
-  if (safety.details.freezeAuthority) {
-    warnings.push("WARNING: Freeze authority enabled - can freeze your wallet");
-  }
-  if (safety.details.honeypotRisk) {
-    warnings.push("CRITICAL: Honeypot detected - you may not be able to sell");
-  }
-  if (!safety.details.liquidityLocked) {
-    warnings.push("WARNING: Liquidity not locked - rug pull risk");
-  }
-  if (safety.details.topHolderConcentration > 50) {
-    warnings.push(
-      `High concentration: Top holders control ${safety.details.topHolderConcentration}%`
-    );
+  // Safety warnings, only from a real trust score (the defaults used when
+  // there is no token would otherwise warn about liquidity on a wallet)
+  if (safety.measured) {
+    if (safety.details.mintAuthority) {
+      warnings.push("CRITICAL: Mint authority enabled - can create unlimited tokens");
+    }
+    if (safety.details.freezeAuthority) {
+      warnings.push("WARNING: Freeze authority enabled - can freeze your wallet");
+    }
+    if (safety.details.honeypotRisk) {
+      warnings.push("CRITICAL: Honeypot detected - you may not be able to sell");
+    }
+    if (!safety.details.liquidityLocked) {
+      warnings.push("WARNING: Liquidity not locked - rug pull risk");
+    }
+    if (safety.details.topHolderConcentration > 50) {
+      warnings.push(
+        `High concentration: Top holders control ${safety.details.topHolderConcentration}%`
+      );
+    }
   }
 
   // Behavior warnings

@@ -109,7 +109,8 @@ export default function CommandPage() {
       const demoAddress = "EQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf";
       const res = await fetch(`/api/minter-score/${demoAddress}`);
       const data = await res.json();
-      if (data.success && data.data) {
+      // Unavailable scores carry no grade to show
+      if (data.success && data.data?.available) {
         setRecentScores([data.data]);
       }
     } catch (e) {
