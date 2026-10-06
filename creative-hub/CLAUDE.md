@@ -37,7 +37,7 @@ git add . && git commit -m "update" && git push
 
 ## Project Overview
 
-White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators** and **hip hop artists**. Users pay with **5 different payment rails** to generate viral-optimized music, album art, and brand packages.
+White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators** and **hip hop artists**. Users pay with Telegram Stars or TON to generate viral-optimized music, album art, and brand packages.
 
 ### Core Features
 - **AI Music Generation** (ElevenLabs) - x402 protected, $0.50/track
@@ -45,7 +45,7 @@ White Tiger is a **Telegram Mini App** for AI-powered music creation targeting *
 - **Album Art Generation** (Gemini) - x402 protected, $0.10/image
 - **Brand Package Generation** - x402 protected, $0.25/package
 - **Hip Hop Viral Intelligence** - 4,832 tracks analyzed for viral patterns
-- **Multi-Rail Payments** (Stars, TON, USDC, Card, Onramp)
+- **Payments** - Telegram Stars and TON (x402 USDC off unless configured)
 
 ### Viral Intelligence (NEW - Dec 30)
 - **Collection**: `hiphop_viral` in Qdrant (4,832 vectors)
@@ -113,14 +113,30 @@ White Tiger is a **Telegram Mini App** for AI-powered music creation targeting *
 
 ---
 
-## Current Status (December 30, 2025)
+## Current Status (October 2026)
 
-### What's LIVE
+### Payments (what actually works)
+- **Telegram Stars**: server side works once `TELEGRAM_BOT_TOKEN` and
+  `TELEGRAM_WEBHOOK_SECRET` are set (the webhook routes answer 503 until then;
+  pass the same secret as `secret_token` to setWebhook). Paid-order fulfilment
+  also needs `SETTLEMENT_SECRET` and `NEXT_PUBLIC_APP_URL`.
+- **TON**: `/api/payments/verify-ton` credits a starter/creator/studio plan once
+  per transaction, only to the Telegram id named in the payment comment
+  (`creative-hub:<plan>:<telegramId>:<ts>`).
+- Neither is reachable from `/create` yet: its checkout sends mode ids
+  (`thread-to-hit`, ...) that are not Stars or TON plans.
+- **x402 USDC**: off. Paid routes answer 503 "Payment method unavailable" unless
+  `X402_NETWORK=base` and `X402_PAYMENT_ADDRESS` are set (`base-sepolia` only
+  outside production). The facilitator request is not spec-correct yet, so keep
+  it off until it is ported.
+- **Stripe, Coinbase Onramp**: not wired.
+
+### Other services
 - **@MSUCOBot** - Telegram bot with Mini App menu button
-- **5 Payment Rails** - Stars, TON, x402 USDC, Coinbase Onramp, Stripe
 - **Qdrant** - 4,832 hip hop vectors in `hiphop_viral` collection
 - **Turso** - 9 tables (users, tracks, cloned_voices, transactions, etc.)
-- **x402 Protected APIs** - Music ($0.50), Album Art ($0.10), Brand ($0.25)
+- **Rug score** - says "unavailable" rather than grading without real data
+  (`DYOR_API_KEY` for tokens, TonAPI for wallets)
 - **Daily Keep-Alive Cron** - Prevents Qdrant free tier auto-delete
 - **Health Check** - `/api/health` monitors all services
 
@@ -210,11 +226,11 @@ creative-hub/
 
 | Rail | Status | Config Needed |
 |------|--------|---------------|
-| **Telegram Stars** | Ready | `TELEGRAM_BOT_TOKEN` |
-| **TON Connect** | Ready | `NEXT_PUBLIC_TON_WALLET_ADDRESS` |
-| **x402 USDC** | Ready | `X402_PAYMENT_ADDRESS` (Base network) |
-| **Coinbase Onramp** | Needs setup | `COINBASE_PROJECT_ID` |
-| **Stripe** | Needs setup | `STRIPE_SECRET_KEY` |
+| **Telegram Stars** | Works when configured | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `SETTLEMENT_SECRET` |
+| **TON Connect** | Verification works; no live checkout | `NEXT_PUBLIC_TON_WALLET_ADDRESS` |
+| **x402 USDC** | Off unless Base mainnet is configured | `X402_ENABLED=true`, `X402_NETWORK=base`, `X402_PAYMENT_ADDRESS`, a spec-correct facilitator |
+| **Coinbase Onramp** | Not wired | - |
+| **Stripe** | Not wired | - |
 
 ---
 

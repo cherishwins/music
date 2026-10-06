@@ -29,6 +29,7 @@ import {
 
 // Types matching our API response
 interface MinterCreditScore {
+  available: true;
   score: number;
   grade: string;
   gradeInfo: {
@@ -51,6 +52,7 @@ interface MinterCreditScore {
     safety: {
       score: number;
       weight: number;
+      measured: boolean;
       details: {
         mintAuthority: boolean;
         freezeAuthority: boolean;
@@ -84,11 +86,20 @@ interface MinterCreditScore {
   };
 }
 
+// No score or grade when the data behind it could not be fetched
+interface UnavailableScore {
+  available: false;
+  reason: string;
+  warnings: string[];
+  analyzedAt: string;
+  entityInfo?: MinterCreditScore["entityInfo"];
+}
+
 interface ScanResult {
   success: boolean;
   type: string;
   address: string;
-  data: MinterCreditScore;
+  data: MinterCreditScore | UnavailableScore;
   error?: string;
 }
 
@@ -206,6 +217,8 @@ export default function RugScorePage() {
       setIsScanning(false);
     }
   };
+
+  const score = scanResult?.data?.available ? scanResult.data : null;
 
   const copyAddress = () => {
     navigator.clipboard.writeText(tokenAddress);
@@ -377,29 +390,44 @@ export default function RugScorePage() {
             className="px-6 pb-20"
           >
             <div className="max-w-4xl mx-auto">
+              {/* Unavailable: say so, never show a grade */}
+              {!score && (
+                <div className="p-8 rounded-3xl glass mb-8 text-center">
+                  <Shield className="w-10 h-10 text-white/40 mx-auto mb-4" />
+                  <h2 className="text-2xl font-headline text-white mb-2">Rug score unavailable</h2>
+                  <p className="text-white/60 mb-4">
+                    {scanResult.data.available === false
+                      ? scanResult.data.reason
+                      : "We could not get the data needed to score this address."}
+                  </p>
+                  <code className="text-sm text-white/40 font-mono break-all">{scanResult.address}</code>
+                </div>
+              )}
+
               {/* Main Score Card */}
+              {score && (
               <div className="p-8 rounded-3xl glass-neon mb-8">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   {/* Score Circle */}
                   <div className="relative">
                     <div className="w-40 h-40 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border-4 border-white/10">
                       <div className="text-center">
-                        <div className={`text-5xl font-bold ${getGradeColor(scanResult.data.grade)}`}>
-                          {scanResult.data.grade}
+                        <div className={`text-5xl font-bold ${getGradeColor(score.grade)}`}>
+                          {score.grade}
                         </div>
-                        <div className="text-3xl font-semibold text-white/80">{scanResult.data.score}</div>
+                        <div className="text-3xl font-semibold text-white/80">{score.score}</div>
                         <div className="text-xs text-white/40">/ 1000</div>
                       </div>
                     </div>
-                    <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-semibold border ${getRiskBg(scanResult.data.riskLevel)}`}>
-                      {scanResult.data.riskLevel} RISK
+                    <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-semibold border ${getRiskBg(score.riskLevel)}`}>
+                      {score.riskLevel} RISK
                     </div>
                   </div>
 
                   {/* Info */}
                   <div className="flex-1 text-center md:text-left">
                     <h2 className="text-2xl font-headline text-white mb-2">
-                      {scanResult.data.gradeInfo.description}
+                      {score.gradeInfo.description}
                     </h2>
                     <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
                       <code className="text-sm text-white/60 font-mono truncate max-w-[200px]">
@@ -417,10 +445,11 @@ export default function RugScorePage() {
                         <ExternalLink className="w-4 h-4" />
                       </a>
                     </div>
-                    <p className="text-white/60">{scanResult.data.recommendation}</p>
+                    <p className="text-white/60">{score.recommendation}</p>
                   </div>
                 </div>
               </div>
+              )}
 
               {/* Entity Info (for labeled addresses from ton-labels) */}
               {scanResult.data.entityInfo && (
@@ -487,6 +516,7 @@ export default function RugScorePage() {
               )}
 
               {/* Component Scores */}
+              {score && (
               <div className="grid md:grid-cols-3 gap-6">
                 {/* History */}
                 <motion.div
@@ -504,29 +534,29 @@ export default function RugScorePage() {
                       <p className="text-xs text-white/40">35% weight</p>
                     </div>
                     <div className="ml-auto text-2xl font-bold text-purple-400">
-                      {Math.round(scanResult.data.components.history.score)}
+                      {Math.round(score.components.history.score)}
                     </div>
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-white/60">Tokens Launched</span>
-                      <span className="text-white">{scanResult.data.components.history.details.totalLaunches}</span>
+                      <span className="text-white">{score.components.history.details.totalLaunches}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Survival Rate</span>
-                      <span className={scanResult.data.components.history.details.survivalRate > 50 ? "text-green-400" : "text-red-400"}>
-                        {scanResult.data.components.history.details.survivalRate}%
+                      <span className={score.components.history.details.survivalRate > 50 ? "text-green-400" : "text-red-400"}>
+                        {score.components.history.details.survivalRate}%
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Rug Rate</span>
-                      <span className={scanResult.data.components.history.details.rugRate < 20 ? "text-green-400" : "text-red-400"}>
-                        {scanResult.data.components.history.details.rugRate}%
+                      <span className={score.components.history.details.rugRate < 20 ? "text-green-400" : "text-red-400"}>
+                        {score.components.history.details.rugRate}%
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Avg Lifespan</span>
-                      <span className="text-white">{scanResult.data.components.history.details.averageLifespan} days</span>
+                      <span className="text-white">{score.components.history.details.averageLifespan} days</span>
                     </div>
                   </div>
                 </motion.div>
@@ -547,13 +577,17 @@ export default function RugScorePage() {
                       <p className="text-xs text-white/40">40% weight</p>
                     </div>
                     <div className="ml-auto text-2xl font-bold text-neon-green">
-                      {Math.round(scanResult.data.components.safety.score)}
+                      {score.components.safety.measured ? Math.round(score.components.safety.score) : "–"}
                     </div>
                   </div>
+                  {/* Wallet-only scans have no token to check: show no findings */}
+                  {!score.components.safety.measured ? (
+                    <p className="text-sm text-white/40">No token analyzed</p>
+                  ) : (
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between items-center">
                       <span className="text-white/60">Mint Authority</span>
-                      {scanResult.data.components.safety.details.mintAuthority ? (
+                      {score.components.safety.details.mintAuthority ? (
                         <XCircle className="w-4 h-4 text-red-400" />
                       ) : (
                         <CheckCircle className="w-4 h-4 text-green-400" />
@@ -561,7 +595,7 @@ export default function RugScorePage() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-white/60">Freeze Authority</span>
-                      {scanResult.data.components.safety.details.freezeAuthority ? (
+                      {score.components.safety.details.freezeAuthority ? (
                         <XCircle className="w-4 h-4 text-red-400" />
                       ) : (
                         <CheckCircle className="w-4 h-4 text-green-400" />
@@ -569,7 +603,7 @@ export default function RugScorePage() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-white/60">Liquidity Locked</span>
-                      {scanResult.data.components.safety.details.liquidityLocked ? (
+                      {score.components.safety.details.liquidityLocked ? (
                         <CheckCircle className="w-4 h-4 text-green-400" />
                       ) : (
                         <XCircle className="w-4 h-4 text-red-400" />
@@ -577,7 +611,7 @@ export default function RugScorePage() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-white/60">Honeypot Risk</span>
-                      {scanResult.data.components.safety.details.honeypotRisk ? (
+                      {score.components.safety.details.honeypotRisk ? (
                         <XCircle className="w-4 h-4 text-red-400" />
                       ) : (
                         <CheckCircle className="w-4 h-4 text-green-400" />
@@ -585,11 +619,12 @@ export default function RugScorePage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Top Holder %</span>
-                      <span className={scanResult.data.components.safety.details.topHolderConcentration < 50 ? "text-green-400" : "text-orange-400"}>
-                        {scanResult.data.components.safety.details.topHolderConcentration}%
+                      <span className={score.components.safety.details.topHolderConcentration < 50 ? "text-green-400" : "text-orange-400"}>
+                        {score.components.safety.details.topHolderConcentration}%
                       </span>
                     </div>
                   </div>
+                  )}
                 </motion.div>
 
                 {/* Behavior */}
@@ -608,25 +643,25 @@ export default function RugScorePage() {
                       <p className="text-xs text-white/40">25% weight</p>
                     </div>
                     <div className="ml-auto text-2xl font-bold text-neon-cyan">
-                      {Math.round(scanResult.data.components.behavior.score)}
+                      {Math.round(score.components.behavior.score)}
                     </div>
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-white/60">Wallet Age</span>
-                      <span className="text-white">{scanResult.data.components.behavior.details.walletAge} days</span>
+                      <span className="text-white">{score.components.behavior.details.walletAge} days</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Transactions</span>
-                      <span className="text-white">{scanResult.data.components.behavior.details.transactionCount}</span>
+                      <span className="text-white">{score.components.behavior.details.transactionCount}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Diversification</span>
-                      <span className="text-white">{scanResult.data.components.behavior.details.diversification}%</span>
+                      <span className="text-white">{score.components.behavior.details.diversification}%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-white/60">Social Verified</span>
-                      {scanResult.data.components.behavior.details.socialVerified ? (
+                      {score.components.behavior.details.socialVerified ? (
                         <CheckCircle className="w-4 h-4 text-green-400" />
                       ) : (
                         <span className="text-white/40 text-xs">Coming Soon</span>
@@ -635,6 +670,7 @@ export default function RugScorePage() {
                   </div>
                 </motion.div>
               </div>
+              )}
 
               {/* Timestamp */}
               <div className="mt-6 text-center text-white/40 text-xs">

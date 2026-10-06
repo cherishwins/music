@@ -153,7 +153,7 @@ export const transactions = sqliteTable("transactions", {
 
   // External IDs for reconciliation
   telegramPaymentId: text("telegram_payment_id"),
-  tonTransactionHash: text("ton_transaction_hash"),
+  tonTransactionHash: text("ton_transaction_hash").unique(), // one credit per on-chain payment
   x402PaymentId: text("x402_payment_id"),
   stripePaymentId: text("stripe_payment_id"),
 

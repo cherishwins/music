@@ -8,9 +8,14 @@
  * 3. Client signs USDC transfer with their wallet
  * 4. Client retries with X-PAYMENT header
  * 5. We verify and settle, then serve content
+ *
+ * Off unless lib/x402-network.ts says otherwise (X402_NETWORK=base plus
+ * X402_PAYMENT_ADDRESS; testnet only outside production). When off, paid
+ * routes answer 503 "Payment method unavailable" instead of a 402.
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { resolveX402Network, type X402Network } from "./x402-network";
 
 // Payment configuration for each endpoint
 export interface PaymentConfig {
@@ -41,7 +46,7 @@ const FACILITATOR_URL = process.env.X402_FACILITATOR_URL ||
 const PAYMENT_ADDRESS = process.env.X402_PAYMENT_ADDRESS;
 
 // Supported networks
-const SUPPORTED_NETWORKS = {
+const SUPPORTED_NETWORKS: Record<X402Network, { chainId: string; asset: string }> = {
   "base-sepolia": {
     chainId: "eip155:84532",
     asset: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // USDC on Base Sepolia
@@ -50,9 +55,27 @@ const SUPPORTED_NETWORKS = {
     chainId: "eip155:8453",
     asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base Mainnet
   },
-} as const;
+};
 
-type NetworkId = keyof typeof SUPPORTED_NETWORKS;
+/** The network this deployment takes x402 payments on, or null when off */
+function configuredNetwork(recipient: string | undefined): X402Network | null {
+  return resolveX402Network({
+    network: process.env.X402_NETWORK,
+    payTo: recipient,
+    vercelEnv: process.env.VERCEL_ENV,
+    nodeEnv: process.env.NODE_ENV,
+  });
+}
+
+function paymentMethodUnavailable(): NextResponse {
+  return NextResponse.json(
+    {
+      error: "Payment method unavailable",
+      message: "USDC (x402) payments are not enabled on this deployment.",
+    },
+    { status: 503 }
+  );
+}
 
 /**
  * Parse price string to USDC amount (6 decimals)
@@ -68,19 +91,17 @@ function parsePrice(price: string): string {
  */
 export function createPaymentRequiredResponse(
   request: NextRequest,
-  config: PaymentConfig,
-  network: NetworkId = "base-sepolia"
+  config: PaymentConfig
 ): NextResponse {
-  const networkConfig = SUPPORTED_NETWORKS[network];
   const recipient = config.recipient || PAYMENT_ADDRESS;
+  const network = configuredNetwork(recipient);
 
-  if (!recipient) {
-    console.error("No payment address configured");
-    return NextResponse.json(
-      { error: "Payment not configured" },
-      { status: 503 }
-    );
+  // Never ask for money on a network we are not configured for
+  if (!recipient || !network) {
+    console.error("[x402] Not configured for a network this deployment may use");
+    return paymentMethodUnavailable();
   }
+  const networkConfig = SUPPORTED_NETWORKS[network];
 
   const requirement: PaymentRequirement = {
     scheme: "exact",
@@ -185,6 +206,10 @@ export function withPayment(
   handler: (request: NextRequest) => Promise<NextResponse>
 ) {
   return async function paymentHandler(request: NextRequest): Promise<NextResponse> {
+    if (!configuredNetwork(config.recipient || PAYMENT_ADDRESS)) {
+      return paymentMethodUnavailable();
+    }
+
     // Check for payment header
     const paymentHeader = request.headers.get("X-PAYMENT");
 
@@ -287,11 +312,14 @@ export async function requirePayment(
     return null;
   }
 
-  const paymentHeader = request.headers.get("X-PAYMENT");
+  // Not configured for a usable network: refuse before anything reaches
+  // the facilitator, and do not emit a 402 asking for payment.
+  if (!configuredNetwork(config.recipient || PAYMENT_ADDRESS)) {
+    return paymentMethodUnavailable();
+  }
 
-  // With no address to be paid at, refuse before anything reaches the
-  // facilitator (the 402 builder answers "Payment not configured").
-  if (!paymentHeader || !(config.recipient || PAYMENT_ADDRESS)) {
+  const paymentHeader = request.headers.get("X-PAYMENT");
+  if (!paymentHeader) {
     return createPaymentRequiredResponse(request, config);
   }
 

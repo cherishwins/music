@@ -8,14 +8,14 @@
 
 ## Project Overview
 
-White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators**. Users pay with **5 different payment rails** to generate music, album art, and brand packages.
+White Tiger is a **Telegram Mini App** for AI-powered music creation targeting **meme coin creators**. Users pay with Telegram Stars or TON to generate music, album art, and brand packages.
 
 ### Core Features
 - AI music generation (ElevenLabs)
 - Album art generation (Gemini)
 - Brand package generation
 - Lyric intelligence with pattern analysis
-- Multi-rail payments (Stars, TON, USDC, Card, Onramp)
+- Payments: Telegram Stars and TON (x402 USDC off unless configured)
 
 ---
 
@@ -77,14 +77,30 @@ White Tiger is a **Telegram Mini App** for AI-powered music creation targeting *
 
 ---
 
-## Current Status (December 2025)
+## Current Status (October 2026)
 
-### What's LIVE
+### Payments (what actually works)
+- **Telegram Stars**: server side works once `TELEGRAM_BOT_TOKEN` and
+  `TELEGRAM_WEBHOOK_SECRET` are set (the webhook routes answer 503 until then;
+  pass the same secret as `secret_token` to setWebhook). Paid-order fulfilment
+  also needs `SETTLEMENT_SECRET` and `NEXT_PUBLIC_APP_URL`.
+- **TON**: `/api/payments/verify-ton` credits a starter/creator/studio plan once
+  per transaction, only to the Telegram id named in the payment comment
+  (`creative-hub:<plan>:<telegramId>:<ts>`).
+- Neither is reachable from `/create` yet: its checkout sends mode ids
+  (`thread-to-hit`, ...) that are not Stars or TON plans.
+- **x402 USDC**: off. Paid routes answer 503 "Payment method unavailable" unless
+  `X402_NETWORK=base` and `X402_PAYMENT_ADDRESS` are set (`base-sepolia` only
+  outside production). The facilitator request is not spec-correct yet, so keep
+  it off until it is ported.
+- **Stripe, Coinbase Onramp**: not wired.
+
+### Other services
 - **@MSUCOBot** - Telegram bot with Mini App menu button
-- **5 Payment Rails** - Stars, TON, x402 USDC, Coinbase Onramp, Stripe
 - **Qdrant** - 1000 lyric vectors in `lyric_patterns` collection
 - **Turso** - 8 tables (users, tracks, transactions, etc.)
-- **x402 Protected APIs** - Music ($0.50), Album Art ($0.10), Brand ($0.25)
+- **Rug score** - says "unavailable" rather than grading without real data
+  (`DYOR_API_KEY` for tokens, TonAPI for wallets)
 - **Canva MCP** - Connected for brand asset generation
 
 ### Credentials (all in `.env`)
@@ -146,11 +162,11 @@ creative-hub/
 
 | Rail | Status | Config Needed |
 |------|--------|---------------|
-| **Telegram Stars** | Ready | `TELEGRAM_BOT_TOKEN` |
-| **TON Connect** | Ready | `NEXT_PUBLIC_TON_WALLET_ADDRESS` |
-| **x402 USDC** | Ready | `X402_PAYMENT_ADDRESS` (Base network) |
-| **Coinbase Onramp** | Needs setup | `COINBASE_PROJECT_ID` |
-| **Stripe** | Needs setup | `STRIPE_SECRET_KEY` |
+| **Telegram Stars** | Works when configured | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `SETTLEMENT_SECRET` |
+| **TON Connect** | Verification works; no live checkout | `NEXT_PUBLIC_TON_WALLET_ADDRESS` |
+| **x402 USDC** | Off unless Base mainnet is configured | `X402_ENABLED=true`, `X402_NETWORK=base`, `X402_PAYMENT_ADDRESS`, a spec-correct facilitator |
+| **Coinbase Onramp** | Not wired | - |
+| **Stripe** | Not wired | - |
 
 ---
 

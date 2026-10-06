@@ -62,7 +62,7 @@ export async function extractStory(content: string): Promise<{
     messages: [
       {
         role: "user",
-        content: `Analyze this content and extract a compelling story suitable for a motivational/hype song in the style of NEFFEX or similar artists.
+        content: `Analyze this content and extract a compelling story suitable for a motivational/hype song: driven, self-belief anthems with high-energy hip-hop production.
 
 Content:
 ${content}
@@ -122,7 +122,7 @@ Emotion: ${story.emotion}
 Verse Ideas: ${story.verses.join("\n")}
 Chorus Concept: ${story.chorus}
 
-Write in a modern hip-hop/motivational style like NEFFEX, NF, or Eminem.
+Write in a modern hip-hop/motivational style: intense, introspective, rapid-fire delivery with dense internal rhymes and an anthemic chorus.
 Include:
 - [Intro]
 - [Verse 1]

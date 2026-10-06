@@ -161,9 +161,16 @@ export function MultiRailCheckout({
         setStatus(`Confirming... (${attempt + 1}/20)`);
 
         try {
+          // Signed by Telegram, so the server can trust who is asking
+          const initData = (window as Window & {
+            Telegram?: { WebApp?: { initData?: string } };
+          }).Telegram?.WebApp?.initData;
           const verifyResponse = await fetch("/api/payments/verify-ton", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              ...(initData ? { "X-Telegram-Init-Data": initData } : {}),
+            },
             body: JSON.stringify({
               telegramId: userId ? parseInt(userId) : 0,
               planId: productId,

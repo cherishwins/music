@@ -21,6 +21,7 @@ import {
 } from "@/lib/wallet-config";
 import { Loader2, CheckCircle2, XCircle, ExternalLink } from "lucide-react";
 import { WalletButton } from "./wallet-button";
+import { publicX402Network } from "@/lib/x402-network";
 
 interface USDCPaymentProps {
   productId: ProductId;
@@ -47,8 +48,9 @@ export function USDCPayment({
   const product = PRODUCTS[productId];
   const amount = BigInt(product.priceUsdc);
 
-  // Use testnet for now
-  const targetChainId = baseSepolia.id;
+  // Only the network this deployment is configured for (null: USDC is off)
+  const network = publicX402Network();
+  const targetChainId = network === "base" ? base.id : baseSepolia.id;
   const usdcAddress = USDC_ADDRESSES[targetChainId];
   const isCorrectChain = chainId === targetChainId;
 
@@ -134,7 +136,18 @@ export function USDCPayment({
   };
 
   const hasEnoughBalance = balance && balance >= amount;
-  const explorerUrl = `https://sepolia.basescan.org/tx/${txHash}`;
+  const explorerUrl =
+    network === "base"
+      ? `https://basescan.org/tx/${txHash}`
+      : `https://sepolia.basescan.org/tx/${txHash}`;
+
+  if (!network) {
+    return (
+      <div className="p-6 rounded-2xl bg-crucible border border-white/10 text-center text-white/60">
+        USDC payments are not available right now.
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 rounded-2xl bg-crucible border border-white/10">
@@ -159,7 +172,7 @@ export function USDCPayment({
         {step === "switch" && (
           <div className="text-center">
             <p className="text-white/60 mb-4">
-              Please switch to Base Sepolia network
+              Please switch to {network === "base" ? "Base" : "Base Sepolia"} network
             </p>
             <Button onClick={handleSwitchChain} className="bg-tiger hover:bg-tiger-muted">
               Switch Network

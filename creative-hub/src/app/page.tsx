@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useSpring, useInView } from "framer-mo
 import Link from "next/link";
 import Image from "next/image";
 import { MainNav } from "@/components/navigation/main-nav";
+import { publicX402Network } from "@/lib/x402-network";
 import {
   Zap,
   Music,
@@ -22,6 +23,9 @@ import {
 } from "lucide-react";
 
 // Ecosystem pillars data
+// USDC is advertised only when this deployment takes it
+const usdcEnabled = publicX402Network() !== null;
+
 const pillars = [
   {
     id: "studio",
@@ -753,7 +757,7 @@ export default function HomePage() {
               { icon: Eye, title: "Real-time Analysis", desc: "Blockchain data processed instantly", color: "#E040FB" },
               { icon: Volume2, title: "8 Voice Styles", desc: "From hard trap to smooth R&B", color: "#00E5FF" },
               { icon: Zap, title: "Instant Delivery", desc: "Minutes, not weeks", color: "#4ADE80" },
-              { icon: Lock, title: "Secure Payments", desc: "TON, Stars, and USDC", color: "#F472B6" },
+              { icon: Lock, title: "Secure Payments", desc: usdcEnabled ? "TON, Stars, and USDC" : "TON and Stars", color: "#F472B6" },
               { icon: Users, title: "Community Reports", desc: "Crowd-sourced intel", color: "#7C4DFF" },
               { icon: Shield, title: "Whale Tracking", desc: "Know the big players", color: "#00E5FF" },
             ].map((feature, index) => (
@@ -913,8 +917,12 @@ export default function HomePage() {
               <span className="text-[#E040FB]">Stars</span>
               <span>•</span>
               <span className="text-[#00E5FF]">TON</span>
-              <span>•</span>
-              <span className="text-white/50">USDC</span>
+              {usdcEnabled && (
+                <>
+                  <span>•</span>
+                  <span className="text-white/50">USDC</span>
+                </>
+              )}
             </div>
           </div>
         </div>

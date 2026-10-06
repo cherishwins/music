@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parsePaymentComment, TON_PRICING, type TonPlanId } from "@/lib/ton";
-import { db, getOrCreateUser, recordRevenue } from "@/lib/db";
+import { TON_PRICING } from "@/lib/ton";
+import { db, generateId, getOrCreateUser } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
-import { eq, and, gte } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+import { parseInitData, validateInitData } from "@/lib/telegram";
+import {
+  findClaimableTonPayments,
+  isTonPlanId,
+  isUniqueViolation,
+  parseTelegramId,
+  type IncomingTonTransfer,
+} from "@/lib/ton-claim";
 
 const TON_CENTER_API = "https://toncenter.com/api/v2";
 const TON_WALLET = process.env.NEXT_PUBLIC_TON_WALLET_ADDRESS;
@@ -21,17 +29,59 @@ interface TonTransaction {
 }
 
 /**
+ * A transaction hash may be credited once. The schema declares this index
+ * (transactions.tonTransactionHash is unique), but the live database only
+ * gets it on the next `drizzle-kit push`, so make sure it exists before
+ * crediting anything. Same name drizzle-kit gives it, so push sees no diff.
+ */
+let tonHashIndexReady: Promise<unknown> | null = null;
+function ensureTonHashUnique(): Promise<unknown> {
+  if (!tonHashIndexReady) {
+    tonHashIndexReady = db
+      .run(
+        sql`CREATE UNIQUE INDEX IF NOT EXISTS transactions_ton_transaction_hash_unique ON transactions (ton_transaction_hash)`
+      )
+      .catch((error) => {
+        tonHashIndexReady = null;
+        throw error;
+      });
+  }
+  return tonHashIndexReady;
+}
+
+/**
  * Verify TON payment by checking blockchain transactions
  *
  * POST /api/payments/verify-ton
  * Body: { telegramId: number, planId: string, timestamp: number }
+ * Header (optional): X-Telegram-Init-Data - when present it must verify,
+ * and the user it names replaces body.telegramId.
+ *
+ * Only a payment whose comment names the user being credited is accepted,
+ * so asking with someone else's id can at most credit them for their own
+ * payment.
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { telegramId, planId, timestamp } = body;
+    const body = await request.json().catch(() => ({}));
+    const { planId, timestamp } = body;
 
-    if (!telegramId || !planId) {
+    let telegramId = parseTelegramId(body.telegramId);
+    const initData = request.headers.get("x-telegram-init-data");
+    if (initData) {
+      const verifiedId = validateInitData(initData)
+        ? parseTelegramId(parseInitData(initData)?.user?.id)
+        : null;
+      if (verifiedId === null) {
+        return NextResponse.json(
+          { error: "Invalid Telegram init data" },
+          { status: 401 }
+        );
+      }
+      telegramId = verifiedId;
+    }
+
+    if (telegramId === null || !planId) {
       return NextResponse.json(
         { error: "Missing telegramId or planId" },
         { status: 400 }
@@ -45,17 +95,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get expected amount for this plan
-    const plan = TON_PRICING[planId as TonPlanId];
-    if (!plan) {
+    if (!isTonPlanId(planId)) {
       return NextResponse.json(
         { error: "Invalid plan" },
         { status: 400 }
       );
     }
+    const plan = TON_PRICING[planId];
 
-    const expectedNanotons = BigInt(parseFloat(plan.ton) * 1e9);
-    const searchAfter = timestamp ? Math.floor(timestamp / 1000) - 300 : Math.floor(Date.now() / 1000) - 3600;
+    const searchAfter =
+      typeof timestamp === "number" && Number.isFinite(timestamp)
+        ? Math.floor(timestamp / 1000) - 300
+        : Math.floor(Date.now() / 1000) - 3600;
 
     // Fetch recent transactions to our wallet
     const response = await fetch(
@@ -84,103 +135,105 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transactions: TonTransaction[] = data.result;
+    const transfers: IncomingTonTransfer[] = (data.result as TonTransaction[])
+      .filter((tx) => tx.in_msg?.value)
+      .map((tx) => ({
+        hash: tx.transaction_id.hash,
+        utime: tx.utime,
+        value: tx.in_msg!.value,
+        message: tx.in_msg!.message || "",
+      }));
 
-    // Look for matching transaction
-    for (const tx of transactions) {
-      // Skip if too old
-      if (tx.utime < searchAfter) continue;
+    const candidates = findClaimableTonPayments(transfers, {
+      planId,
+      telegramId,
+      notBefore: searchAfter,
+    });
 
-      // Check incoming message
-      const inMsg = tx.in_msg;
-      if (!inMsg || !inMsg.value) continue;
-
-      const value = BigInt(inMsg.value);
-      const message = inMsg.message || "";
-
-      // Check if amount matches (allow 1% tolerance for fees)
-      const minAmount = expectedNanotons * BigInt(99) / BigInt(100);
-      if (value < minAmount) continue;
-
-      // Parse the payment comment
-      const parsed = parsePaymentComment(message);
-      if (!parsed) continue;
-
-      // Check if this matches our expected payment
-      if (parsed.planId !== planId) continue;
-
-      // Found a matching transaction!
-      const txHash = tx.transaction_id.hash;
-
-      // Check if we already processed this transaction
-      const existing = await db.query.transactions.findFirst({
-        where: (t, { eq }) => eq(t.tonTransactionHash, txHash),
-      });
-
-      if (existing) {
-        return NextResponse.json({
-          success: true,
-          already_processed: true,
-          message: "Payment already credited",
-          txHash,
-        });
-      }
-
-      // Get or create user
-      const user = await getOrCreateUser({
-        id: telegramId,
-        username: undefined,
-        first_name: undefined,
-        last_name: undefined,
-      });
-
-      // Add credits
-      const creditsToAdd = plan.credits;
-      await db
-        .update(schema.users)
-        .set({
-          credits: user.credits + creditsToAdd,
-          updatedAt: new Date(),
-        })
-        .where(eq(schema.users.id, user.id));
-
-      // Record transaction
-      const tonAmount = Number(value) / 1e9;
-      const usdAmount = tonAmount * 1.0; // Approximate rate
-      const platformFee = 0; // No platform fee for TON
-
-      await recordRevenue({
-        userId: user.id,
-        type: "credits",
-        paymentMethod: "ton",
-        grossAmount: usdAmount,
-        platformFee,
-        netAmount: usdAmount,
-        currency: "TON",
-        product: planId,
-        tonTransactionHash: txHash,
-      });
-
-      console.log("TON payment verified:", {
-        userId: user.id,
-        txHash,
-        amount: tonAmount,
-        credits: creditsToAdd,
-      });
-
+    if (candidates.length === 0) {
       return NextResponse.json({
-        success: true,
-        message: "Payment verified and credits added",
-        txHash,
-        creditsAdded: creditsToAdd,
-        newBalance: user.credits + creditsToAdd,
+        success: false,
+        message: "Payment not found yet. Please wait a moment and try again.",
       });
     }
 
-    // No matching transaction found
+    try {
+      await ensureTonHashUnique();
+    } catch (error) {
+      // Without the index two requests could both credit one payment
+      console.error("TON verification disabled: cannot ensure unique tx hash index:", error);
+      return NextResponse.json(
+        { error: "TON verification unavailable" },
+        { status: 503 }
+      );
+    }
+
+    const user = await getOrCreateUser({
+      id: telegramId,
+      username: undefined,
+      first_name: undefined,
+      last_name: undefined,
+    });
+
+    const creditsToAdd = plan.credits;
+
+    // Claim by inserting first: the unique index on the hash lets exactly
+    // one request record a payment, and the credit is in the same batch,
+    // so it is applied if and only if that insert succeeded.
+    for (const candidate of candidates) {
+      const tonAmount = Number(candidate.nanotons) / 1e9;
+      const usdAmount = tonAmount * 1.0; // Approximate rate
+
+      try {
+        const [, updated] = await db.batch([
+          db.insert(schema.transactions).values({
+            id: generateId(),
+            userId: user.id,
+            type: "credits",
+            paymentMethod: "ton",
+            grossAmount: usdAmount,
+            platformFee: 0, // No platform fee for TON
+            netAmount: usdAmount,
+            currency: "TON",
+            product: planId,
+            tonTransactionHash: candidate.hash,
+            status: "completed",
+          }),
+          db
+            .update(schema.users)
+            .set({
+              credits: sql`${schema.users.credits} + ${creditsToAdd}`,
+              updatedAt: new Date(),
+            })
+            .where(eq(schema.users.id, user.id))
+            .returning({ credits: schema.users.credits }),
+        ]);
+
+        console.log("TON payment verified:", {
+          userId: user.id,
+          txHash: candidate.hash,
+          amount: tonAmount,
+          credits: creditsToAdd,
+        });
+
+        return NextResponse.json({
+          success: true,
+          message: "Payment verified and credits added",
+          txHash: candidate.hash,
+          creditsAdded: creditsToAdd,
+          newBalance: updated[0]?.credits,
+        });
+      } catch (error) {
+        if (isUniqueViolation(error)) continue; // already credited
+        throw error;
+      }
+    }
+
     return NextResponse.json({
-      success: false,
-      message: "Payment not found yet. Please wait a moment and try again.",
+      success: true,
+      already_processed: true,
+      message: "Payment already credited",
+      txHash: candidates[0].hash,
     });
 
   } catch (error) {

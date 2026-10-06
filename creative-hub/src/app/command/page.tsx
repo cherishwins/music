@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { publicX402Network } from "@/lib/x402-network";
 
 // Types
 interface HealthData {
@@ -109,7 +110,8 @@ export default function CommandPage() {
       const demoAddress = "EQBZenh5TFhBoxH4VPv1HDS16XcZ9_2XVZcUSMhmnzxTJUxf";
       const res = await fetch(`/api/minter-score/${demoAddress}`);
       const data = await res.json();
-      if (data.success && data.data) {
+      // Unavailable scores carry no grade to show
+      if (data.success && data.data?.available) {
         setRecentScores([data.data]);
       }
     } catch (e) {
@@ -368,7 +370,7 @@ export default function CommandPage() {
                     step={3}
                     title="Monetization"
                     time="$0.50"
-                    desc="Stars • TON • x402"
+                    desc={publicX402Network() ? "Stars • TON • x402" : "Stars • TON"}
                     last
                   />
                 </div>
