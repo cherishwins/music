@@ -4,12 +4,15 @@ import { useState } from "react";
 import { USDCPayment } from "@/components/payments";
 import { WalletButton } from "@/components/payments";
 import { PRODUCTS, type ProductId } from "@/lib/wallet-config";
+import { publicX402Network } from "@/lib/x402-network";
 import { ArrowLeft, Shield, Zap, Wallet } from "lucide-react";
 import Link from "next/link";
 
 export default function PayPage() {
   const [selectedProduct, setSelectedProduct] = useState<ProductId | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
+  // Off unless this deployment is configured for a network it may use
+  const network = publicX402Network();
 
   const handleSuccess = (hash: string) => {
     setTxHash(hash);
@@ -59,7 +62,14 @@ export default function PayPage() {
         </div>
 
         {/* Product selection or payment */}
-        {!selectedProduct ? (
+        {!network ? (
+          <div className="max-w-md mx-auto p-6 rounded-2xl bg-crucible border border-white/10 text-center">
+            <p className="font-medium mb-2">USDC payments are not available right now.</p>
+            <p className="text-sm text-white/60">
+              Pay with Telegram Stars or TON in the app instead.
+            </p>
+          </div>
+        ) : !selectedProduct ? (
           <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
             {Object.entries(PRODUCTS).map(([id, product]) => (
               <button
@@ -115,9 +125,11 @@ export default function PayPage() {
             <li>3. USDC goes directly to our treasury</li>
             <li>4. We verify the tx on-chain and deliver your content</li>
           </ol>
-          <p className="text-xs text-white/50 mt-4">
-            Currently on Base Sepolia testnet. Get test USDC from a faucet to try it out.
-          </p>
+          {network === "base-sepolia" && (
+            <p className="text-xs text-white/50 mt-4">
+              Currently on Base Sepolia testnet. Get test USDC from a faucet to try it out.
+            </p>
+          )}
         </div>
       </main>
     </div>

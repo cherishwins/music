@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { publicX402Network } from "@/lib/x402-network";
 
 // Types
 interface HealthData {
@@ -369,7 +370,7 @@ export default function CommandPage() {
                     step={3}
                     title="Monetization"
                     time="$0.50"
-                    desc="Stars • TON • x402"
+                    desc={publicX402Network() ? "Stars • TON • x402" : "Stars • TON"}
                     last
                   />
                 </div>
