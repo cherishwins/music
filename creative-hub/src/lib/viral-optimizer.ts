@@ -284,8 +284,8 @@ export function generateViralBeatPrompt(
 ): string {
   const stylePrompts = {
     phonk: "phonk, Memphis rap samples, dark cowbell patterns, aggressive 808 bass, drift culture aesthetic, distorted kicks, hard-hitting drops",
-    trap: "trap, 808 sub bass with distortion, crisp hi-hats with rolls, Metro Boomin style, dark ambient pads, punchy kicks",
-    drill: "UK drill, sliding 808 bass, dark minor key piano, aggressive energy, 808 Melo style, eerie melodies",
+    trap: "trap, 808 sub bass with distortion, crisp hi-hats with rolls, dark cinematic trap production, dark ambient pads, punchy kicks",
+    drill: "UK drill, sliding 808 bass, dark minor key piano, aggressive energy, syncopated drill hi-hats and snares, eerie melodies",
     kphonk: "K-phonk, Korean phonk fusion, aggressive 808s, K-pop melodic hooks, Seoul street racing vibes, dark synth layers",
   };
 

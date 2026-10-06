@@ -174,16 +174,16 @@ const VOICE_STYLES = [
 
 // Music styles (for Thread-to-Hit) - Grammy-level production
 const MUSIC_STYLES = [
-  { id: "trap", name: "Trap", description: "Metro Boomin style, 808s, hi-hats" },
+  { id: "trap", name: "Trap", description: "Dark cinematic trap, 808s, hi-hats" },
   { id: "drill", name: "Drill", description: "UK drill, sliding 808s, aggressive" },
-  { id: "boombap", name: "Boom Bap", description: "J Dilla style, 90s samples" },
-  { id: "piano", name: "Piano Ballad", description: "Adele style, grand piano, emotional" },
-  { id: "rnb", name: "R&B", description: "The Weeknd style, smooth, soulful" },
-  { id: "gospel", name: "Gospel", description: "Kirk Franklin style, choir, uplifting" },
-  { id: "cinematic", name: "Cinematic", description: "Hans Zimmer style, orchestral, epic" },
-  { id: "afrobeats", name: "Afrobeats", description: "Burna Boy style, danceable groove" },
-  { id: "pop", name: "Pop", description: "Max Martin style, radio-ready hits" },
-  { id: "soul", name: "Soul", description: "Motown inspired, live band feel" },
+  { id: "boombap", name: "Boom Bap", description: "Swung drums, 90s samples" },
+  { id: "piano", name: "Piano Ballad", description: "Soulful ballad, grand piano, emotional" },
+  { id: "rnb", name: "R&B", description: "Dark synth R&B, smooth, soulful" },
+  { id: "gospel", name: "Gospel", description: "Contemporary gospel, choir, uplifting" },
+  { id: "cinematic", name: "Cinematic", description: "Blockbuster score, orchestral, epic" },
+  { id: "afrobeats", name: "Afrobeats", description: "Afro-fusion, danceable groove" },
+  { id: "pop", name: "Pop", description: "Tight hooks, radio-ready hits" },
+  { id: "soul", name: "Soul", description: "Classic 60s soul, live band feel" },
   { id: "lofi", name: "Lo-Fi", description: "Chill beats, vinyl texture, relaxing" },
 ];
 
