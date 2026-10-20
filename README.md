@@ -1,3 +1,10 @@
+# LEGACY
+
+> **LEGACY REPOSITORY. Not under active development.**
+> The only active repo is **[cherishwins/x402-facilitator](https://github.com/cherishwins/x402-facilitator)**. Work there.
+> White Tiger, the AI music Mini App. No payment rail ever took money.
+> Marked legacy 20 October 2026 so this repo stops being opened by mistake. Archive it in Settings when convenient.
+
 <p align="center">
   <img src="https://creative-hub-virid.vercel.app/assets/brand/social/og-image-1200x630.jpg" alt="White Tiger Studio" width="100%">
 </p>
